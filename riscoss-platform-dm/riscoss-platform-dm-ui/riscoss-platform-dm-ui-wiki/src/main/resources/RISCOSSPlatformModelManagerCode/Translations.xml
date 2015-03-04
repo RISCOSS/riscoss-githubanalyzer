@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc>
+  <web>RISCOSSPlatformModelManagerCode</web>
+  <name>Translations</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformModelManagerCode.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>0</creationDate>
+  <date>0</date>
+  <contentUpdateDate>0</contentUpdateDate>
+  <version>1.1</version>
+  <title>Translations</title>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <object>
+    <class>
+      <name>XWiki.TranslationDocumentClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <scope>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>scope</name>
+        <number>1</number>
+        <prettyName>Scope</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>GLOBAL|WIKI|USER|ON_DEMAND</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </scope>
+    </class>
+    <name>RISCOSSPlatformModelManagerCode.Translations</name>
+    <number>0</number>
+    <className>XWiki.TranslationDocumentClass</className>
+    <guid>090eeacc-842e-45c8-b02d-3868d7ae933f</guid>
+    <property>
+      <scope>GLOBAL</scope>
+    </property>
+  </object>
+  <content>riscossPlatform.modelManager.newGoalModel=New goal model
+riscossPlatform.modelManager.goalModelName=Goal model name
+riscossPlatform.modelManager.goalModelsList.title=RISCOSS Platform Goal Models
+riscossPlatform.modelManager.goalModelsTable.doc.name=Goal model
+riscossPlatform.modelManager.goalModelsTable.description=Description
+riscossPlatform.modelManager.newRiskCategory=New risk category
+riscossPlatform.modelManager.riskCategoryName=Risk category name
+riscossPlatform.modelManager.uploadRiskModel=Upload risk model XML
+riscossPlatform.modelManager.uploadImpactModel=Upload impact model XML
+riscossPlatform.modelManager.uploadGoalModel=Upload goal model XML
+riscossPlatform.modelManager.goalModelIndex=Goal model index
+riscossPlatform.modelManager.newRiskModel=New risk model
+riscossPlatform.modelManager.riskModelName=Risk model name
+riscossPlatform.modelManager.riskModelsList.title=RISCOSS Platform Risk Models
+riscossPlatform.modelManager.riskModelsTable.doc.name=Risk model
+riscossPlatform.modelManager.riskModelsTable.description=Description
+riscossPlatform.modelManager.newRiskCategory=New risk category
+riscossPlatform.modelManager.riskCategoryName=Risk category name
+riscossPlatform.modelManager.uploadRiskModel=Upload risk model XML
+riscossPlatform.modelManager.uploadImpactModel=Upload impact model XML
+riscossPlatform.modelManager.uploadRiskModel=Upload risk model XML
+riscossPlatform.modelManager.riskModelIndex=Risk model index
+
+</content>
+</xwikidoc>

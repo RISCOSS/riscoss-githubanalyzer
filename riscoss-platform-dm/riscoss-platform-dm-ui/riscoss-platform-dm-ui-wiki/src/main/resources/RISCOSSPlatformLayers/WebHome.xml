@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc>
+  <web>RISCOSSPlatformLayers</web>
+  <name>WebHome</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>Main.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>0</creationDate>
+  <date>0</date>
+  <contentUpdateDate>0</contentUpdateDate>
+  <version>1.1</version>
+  <title>$services.localization.render("riscossPlatform.layerManager.layersList.title")</title>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>{{include document="RISCOSSPlatformCode.Macros"/}}
+{{velocity}}
+{{html wiki="true"}}
+&lt;span class="buttonwrapper"&gt;
+#generateCreateDialogLink({
+     "space": "RISCOSSPlatformLayers",
+     "template": "RISCOSSPlatformLayerManagerCode.LayerTemplate",
+     "linkLabel": $services.localization.render("riscossPlatform.layerManager.newLayer"),
+     "dialogTitle": $services.localization.render("riscossPlatform.layerManager.newLayer"),
+     "fieldLabel": $services.localization.render("riscossPlatform.layerManager.layerName")
+   })
+&lt;/span&gt;
+{{/html}}
+
+#set($columns = ['layer', 'child', 'createEntityLink'])
+#set($columnsProperties = {
+    'layer' : { 'type' : 'text', 'html' : 'true', 'link' : 'field' },
+    'child' : { 'type' : 'text' , 'size' : 50, 'link' : 'field', 'html' : 'true', 'filterable' : 'false', 'sortable' : 'false' },
+    'createEntityLink' : { 'type' : 'text', 'html' : 'true', 'filterable' : 'false', 'sortable' : 'false' }
+})
+#set($options = {
+   'resultPage' : 'RISCOSSPlatformLayerManagerCode.LayersLiveTableResults',
+   'rowCount' : 10,
+   'translationPrefix' : 'riscossPlatform.layerManager.layersTable.'
+})
+#livetable('layers', $columns, $columnsProperties, $options)
+{{/velocity}}</content>
+</xwikidoc>

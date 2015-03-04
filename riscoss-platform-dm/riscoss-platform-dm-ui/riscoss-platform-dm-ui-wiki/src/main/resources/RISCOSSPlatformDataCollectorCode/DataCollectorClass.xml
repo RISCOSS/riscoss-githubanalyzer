@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc>
+  <web>RISCOSSPlatformDataCollectorCode</web>
+  <name>DataCollectorClass</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>xwiki:XWiki.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>0</creationDate>
+  <date>0</date>
+  <contentUpdateDate>0</contentUpdateDate>
+  <version>1.1</version>
+  <title/>
+  <template/>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>This xclass represents a Data Collector, a script or application which collects a data-point about an OSS project by making a request over the internet. For example, a data collector might be capable of collecting the number of contributors to a project which is hosted on github by using the github API. This xclass contains meta-information about a data collector such as it's name and the command to execute it. Each Data Collector contains it's own xclass which defined the collector-specific configuration parameters such as a URL to access the API.
+</content>
+  <class>
+    <name>RISCOSSPlatformDataCollectorCode.DataCollectorClass</name>
+    <customClass/>
+    <customMapping/>
+    <defaultViewSheet/>
+    <defaultEditSheet/>
+    <defaultWeb/>
+    <nameField/>
+    <validationScript/>
+    <command>
+      <disabled>0</disabled>
+      <name>command</name>
+      <number>1</number>
+      <prettyName>Command</prettyName>
+      <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      <rows>5</rows>
+      <size>40</size>
+      <customDisplay/>
+      <editor>---</editor>
+      <picker>0</picker>
+      <validationMessage/>
+      <validationRegExp/>
+    </command>
+  </class>
+</xwikidoc>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc>
+  <web>RISCOSSPlatformLayerManagerCode</web>
+  <name>EntitiesLiveTableResults</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformLayerManagerCode.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>0</creationDate>
+  <date>0</date>
+  <contentUpdateDate>0</contentUpdateDate>
+  <version>1.1</version>
+  <title/>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>{{velocity wiki="false"}}
+
+## Output fields:
+##   entity
+##   layer
+## Filterable fields:
+##   entity
+##   layer
+## Orderable fields:
+##   entity
+##   layer
+
+#set($offset = $mathtool.toInteger($request.get('offset')))
+## offset starts from 0 in velocity and 1 in javascript
+#set($offset = $offset - 1)
+#if (!$offset || $offset &lt; 0)
+  #set($offset = 0)
+#end
+#set($limit = $mathtool.toInteger($request.get('limit')))
+#if (!$limit)
+  #set ($limit = 15)
+#end
+
+## Add filter clauses
+#if($request.entity)
+  #set($filter = " AND upper(doc.title) LIKE upper(:entityFilter)")
+#end
+
+#if($request.layer)
+  #set($filter = "$!{filter} AND upper(entity.layer) LIKE upper(:layerFilter)")
+#end
+
+## Add order by clauses
+#if($request.sort == "entity")
+  #set($orderBy = "ORDER BY doc.title")
+#elseif($request.sort == "layer")
+  #set($orderBy = "ORDER BY entity.layer")
+#end
+
+#if($orderBy)
+  #if($request.dir == "desc")
+    #set($orderBy = "${orderBy} DESC")
+  #else
+    #set($orderBy = "${orderBy} ASC")
+  #end
+#end
+
+## Build the query
+#set($xwql = "SELECT doc.fullName, doc.title, entity.layer FROM Document doc, doc.object(RISCOSSPlatformLayerManagerCode.EntityClass) AS entity WHERE doc.space='RISCOSSPlatformEntities' $!{filter} $!{orderBy}")
+#set($query = $services.query.xwql($xwql))
+#if($request.entity)
+  #set($discard = $query.bindValue("entityFilter", "%${request.entity}%"))
+#end
+#if($request.layer)
+  #set($discard = $query.bindValue("layerFilter", "%${request.layer}%"))
+#end
+#set($results = $query.execute())
+
+## Count total results
+#set($hql = "SELECT count(doc) FROM XWikiDocument doc, BaseObject obj WHERE doc.fullName=obj.name and obj.className='RISCOSSPlatformLayerManagerCode.EntityClass'")
+#set($countResult = $services.query.hql($hql).execute())
+
+## Build the result JSON
+#set($resultMap = {})
+#set($discard = $resultMap.put("totalrows", $util.parseInt($countResult[0]))) 
+#set($discard = $resultMap.put("returnedrows", $mathtool.min($results.size(), $limit)))
+#set($discard = $resultMap.put("offset", $mathtool.add($offset, 1)))
+#set($discard = $resultMap.put("reqNo", $util.parseInt($request.reqNo)))
+#set($rows = [])
+#foreach($result in $results)
+  #set($row = {})
+  #set($discard = $row.put("doc_viewable", true))
+  #set($discard = $row.put("entity", $result[1]))
+  #set($discard = $row.put("entity_url", $xwiki.getURL($result[0], "view")))
+  #if($result[2])
+    #set($discard = $row.put("layer", $xwiki.getDocument($result[2]).title))
+    #set($discard = $row.put("layer_url", $xwiki.getURL($result[2])))
+  #end
+  #set($discard = $rows.add($row))
+#end
+#set($discard = $resultMap.put("rows", $rows))
+
+$jsontool.serialize($resultMap)
+
+{{/velocity}}</content>
+</xwikidoc>

@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc>
+  <web>RISCOSSPlatformCode</web>
+  <name>Create</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformCode.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>0</creationDate>
+  <date>0</date>
+  <contentUpdateDate>0</contentUpdateDate>
+  <version>1.1</version>
+  <title>#if($request.formTitle) $request.formTitle #else Create #end</title>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <object>
+    <class>
+      <name>XWiki.JavaScriptExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <disabled>0</disabled>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage=Always on this page|onDemand=On demand|always=Always on this wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <name>RISCOSSPlatformCode.Create</name>
+    <number>0</number>
+    <className>XWiki.JavaScriptExtension</className>
+    <guid>94245c00-75ba-4e62-aee0-89693e3d2e87</guid>
+    <property>
+      <cache>forbid</cache>
+    </property>
+    <property>
+      <code>var XWiki = (function(XWiki) {
+  XWiki.RISCOSSPlatform = XWiki.RISCOSSPlatform || {};
+  
+  /* Setup the validation logic for a create form. */
+  var initializeCreateForm = function(dialogContent) {
+    var showErrorMessage = function(element, message) {
+      if(!element.classList.contains('xErrorField')) {
+        element.addClassName('xErrorField');
+        element.insert({'after' : '&lt;div class="xErrorMsg"&gt;' + message + '&lt;/div&gt;'});
+      }
+    };
+    
+    var removeErrorMessage = function(element) {
+      if(element.classList.contains('xErrorField')) {
+        element.removeClassName('xErrorField');
+        var errorMessage = element.next('.xErrorMsg');
+        errorMessage &amp;&amp; errorMessage.remove();
+      }
+    };
+    
+    var form = dialogContent.down('.createForm');
+    var targetNameInput = dialogContent.down('.targetName');
+    var targetSpaceInput = dialogContent.down('.targetSpace');
+    
+    targetNameInput.focus();
+    
+    form.observe('submit', function(event) {
+      event.stop();
+      
+      removeErrorMessage(targetNameInput);
+      
+      if(targetNameInput.value.strip().length == 0) {
+        showErrorMessage(targetNameInput, '$services.localization.render("riscossPlatform.createForm.valueRequired")');
+
+        return;
+      }
+   
+      var targetRestURL = XWiki.Document.RestURLTemplate.replace("__wiki__", XWiki.Document.currentWiki).replace("__space__", targetSpaceInput.value.strip()).replace("__page__", targetNameInput.value.strip());
+
+      new Ajax.Request(targetRestURL, {
+        method: 'GET',
+        onComplete: function(response) {
+          if(404 == response.status) {
+            form.submit();
+          }
+          else {
+            showErrorMessage(targetNameInput, '$services.localization.render("riscossPlatform.createForm.alreadyExistingItem")');
+          }
+        },
+        onError: function(response) {
+          showErrorMessage(targetNameInput, '$services.localization.render("riscossPlatform.createForm.networkError")');
+        }
+      });
+    });
+  };
+  
+  XWiki.RISCOSSPlatform.initializeCreateDialog = function(dialog) {
+    var dialogContent = dialog.content;
+    initializeCreateForm(dialogContent);
+    
+    var cancelButton = dialogContent.down('.secondary');
+    cancelButton.observe('click', function(event) {
+      event.stop();
+      dialog.closeDialog();
+    });
+  }
+      
+  /* This is used to initialize the create forms that are present in the loaded page, if any. */
+  var createForms = $$('.createForm');
+  for(i = 0; i &lt; createForms.length; i++) {
+    initializeCreateForm(createForms[i]);
+  }
+  
+  return XWiki;
+}(XWiki || {}));</code>
+    </property>
+    <property>
+      <name/>
+    </property>
+    <property>
+      <parse>1</parse>
+    </property>
+    <property>
+      <use>currentPage</use>
+    </property>
+  </object>
+  <content>{{velocity}}
+#if($request.create)
+  $request.parent
+  $request.space
+  $request.template
+  $request.name
+
+  #set($documentReference = $services.model.createDocumentReference(null, $request.space, $request.name))
+
+  #set($cancelRedirect = $xwiki.getURL("${request.space}.WebHome"))
+  #set($redirect = $xwiki.getURL($documentReference, "edit", "template=${request.template}&amp;parent=${request.space}.WebHome&amp;title=${request.name}&amp;cancelredirect=${cancelRedirect}"))
+  
+  $response.sendRedirect($redirect)
+#elseif(!($request.space &amp;&amp; $request.template &amp;&amp; $request.fieldLabel))
+  {{error}}Missing parameter{{/error}}
+#else
+{{html}}
+&lt;form action="$doc.getURL()" method="POST" class="xform third createForm"&gt;
+  &lt;input type="hidden" name="create" value="true"/&gt;
+  &lt;input type="hidden" name="parent" value="${request.space}.WebHome"/&gt;
+  &lt;input type="hidden" name="space" class="targetSpace" value="${request.space}"/&gt;
+  &lt;input type="hidden" name="template" value="${request.template}"/&gt;
+  &lt;dl&gt;
+    &lt;dt&gt;&lt;label for="page"&gt;$request.fieldLabel&lt;/label&gt;&lt;dt&gt;
+    &lt;dd&gt;&lt;input type="text" name="name" class="targetName"/&gt;&lt;/dd&gt;
+  &lt;/dl&gt;
+  &lt;div class="buttons"&gt;
+    &lt;span class="buttonwrapper"&gt;
+      &lt;input type="submit" value="$services.localization.render("create")" class="button"/&gt;
+    &lt;/span&gt;
+    &lt;span class="buttonwrapper"&gt;
+      &lt;a class="secondary button" href="#"&gt;$services.localization.render("cancel")&lt;/a&gt;
+    &lt;/span&gt;
+  &lt;/div&gt;
+&lt;/form&gt;
+{{/html}}
+#end
+{{/velocity}}</content>
+</xwikidoc>

@@ -1,0 +1,148 @@
+<h1>Introduction</h1>
+
+<p>The <a href="http://www.riscoss.eu">RISCOSS project</a> will offer novel risk identification, management and mitigation tools and methods for community-based and industry-supported OSS development. </p>
+
+<p>RISCOSS will deliver a decision-making management platform integrated in a business-oriented decision-making framework, which together support placing technical OSS adoption decisions into organizational, business strategy and broader OSS community context.</p>
+
+<p>This is the main repository for the RISCOSS Platform code.</p>
+
+<h1>Project structure</h1>
+
+<p>The project structure reflects the structure of the RISCOSS Platform architecture:</p>
+
+<ul>
+<li>riscoss-platform-dm contains the code of the Domain Manager (DM)</li>
+<li>riscoss-platform-rdr contains the code for the Risk Data Repository (RDR)</li>
+<li>riscoss-platform-analyser is the engine which calculates risk based on data-points stored in the RDR.</li>
+<li>riscoss-platform-jsmile is a wrapper around the proprietary jSmile project which is used by the riscoss-platform-analyser.</li>
+</ul>
+
+<p>Please refer to the <a href="http://www.riscoss.eu/bin/download/Discover/Whitepaper/RISCOSS-Whitepaper.pdf">RISCOSS White Paper</a> for a more detailed description.</p>
+
+<h1>Building</h1>
+
+<h2>Prerequisites</h2>
+
+<p>In order to build the RISCOSS Platform you need to:</p>
+
+<ul>
+<li>Install <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html">Java JDK7</a></li>
+<li>Install <a href="http://maven.apache.org">Maven 3.0.5</a></li>
+<li>Set the environment variable <code>MAVEN_OPTS</code> to the value <code>-Xmx1024m -XX:MaxPermSize=256m</code></li>
+<li>Put the file <code>settings.xml</code> in your local Maven directory (usually located under <code>.m2</code> in your home directory). The <code>settings.xml</code> file is available in the <code>etc</code> directory of this repository.</li>
+<li>Donwload and copy the <a href="https://dslpitt.org/genie">Smile</a> binary library to <code>riscoss-platform-jsmile/src/main/resources/</code>. The library to copy depends on your operating system. For Linux/X86_64 it's called <code>libjsmile.so</code></li>
+</ul>
+
+<h2>How to build</h2>
+
+<p>To build the RISCOSS Platform just run the command <code>mvn install</code> from the root directory.</p>
+
+<p>Depending on your connection speed, and the number of artifacts to download, it will take between 5 and 20 minutes to build the whole platform.</p>
+
+<h1>Deploying the RISCOSS Platform (single domain)</h1>
+
+<p>After having built the RISCOSS Platform you will need the following artifacts in order to deploy it:</p>
+
+<ul>
+<li>The RISCOSS Platform Domain Manager WEB application, located in <code>riscoss-platform/riscoss-platform-dm/riscoss-platform-dm-war/target</code></li>
+<li>The RISCOSS Platform Domain Manager XAR application, located in <code>riscoss-platform/riscoss-platform-dm/riscoss-platform-dm-distribution/riscoss-platform-dm-ui-wiki-all/target</code></li>
+<li>The RISCOSS Platform Risk Data Repository WEB application, located in <code>riscoss-platform/riscoss-platform-rdr/riscoss-platform-rdr-war/target</code></li>
+<li>A servlet container</li>
+<li>A database driver</li>
+</ul>
+
+<p>In this document we will deploy the RISCOSS Platform using <a href="http://tomcat.apache.org">Tomcat 7.0</a> and the <a href="http://hsqldb.org">HSQLDB</a> database.</p>
+
+<h2>Installing Tomcat</h2>
+
+<p>Please refer to http://tomcat.apache.org for installation instruction.</p>
+
+<h2>Unpacking RISCOSS Platform WEB applications</h2>
+
+<ul>
+<li>Create a directory <code>riscoss</code> in the <code>webapps</code> directory of your Tomcat installation.</li>
+<li>Unpack the RISCOSS Platform Domain Manager WEB application in this directory using the command <code>jar xvf riscoss-platform-dm-war-VERSION.war</code></li>
+<li>Create a directory <code>rdr</code> in the <code>webapps</code> directory of your Tomcat installation.</li>
+<li>Unpack RISCOSS Platform Risk Data Repository WEB application in this directory using the command <code>jar xvf riscoss-platform-rdr-war-VERSION.war</code></li>
+</ul>
+
+<h2>Installing the database driver</h2>
+
+<ul>
+<li>Download the HSQLDB database driver from <code>http://search.maven.org/remotecontent?filepath=hsqldb/hsqldb/1.8.0.10/hsqldb-1.8.0.10.jar</code></li>
+<li>Copy it under <code>webapps/riscoss/WEB-INF/lib</code> of your Tomcat installation</li>
+</ul>
+
+<h2>Starting the server and installing the RISCOSS Platform Domain Manager XAR application</h2>
+
+<ul>
+<li>Open the file <code>webapps/riscoss/WEB-INF/xwiki.cfg</code> and uncomment the line <code>xwiki.superadminpassword=system</code></li>
+<li>Start the Tomcat server using the script <code>bin/startup.sh</code> in your Tomcat installation.</li>
+<li>Open a browser and go to the following URL: <code>http://localhost:8080/riscoss/bin/login/XWiki/XWikiLogin</code></li>
+<li>Login as <code>superadmin</code> with password <code>system</code></li>
+<li>In the top <code>Wiki: xwiki</code> menu choose <code>Administration</code></li>
+<li>Click on the button <code>Choose a file</code> and select on your filesystem the file <code>riscoss-platform-dm-ui-wiki-all.xar</code> located in <code>riscoss-platform/riscoss-platform-dm/riscoss-platform-dm-distribution/riscoss-platform-dm-ui-wiki-all/target</code> of the source code repository</li>
+<li>Click on the link <code>riscoss-platform-dm-ui-wiki-all.xar</code> in the availabe packages section. A list of documents should appear on the right half of the page.</li>
+<li>Go down this list and click on the <code>Import</code> button</li>
+<li>Once finished click on the <code>Log-out</code> button on the top right</li>
+<li>You can now re-login using the <code>Admin</code> user name, and <code>admin</code> as a password.</li>
+</ul>
+
+<p>The RISCOSS Platform Domain Manager is built on top of the XWiki Platform. For more information you can also look at http://platform.xwiki.org/xwiki/bin/view/Main/Documentation</p>
+
+<h1>How to contribute</h1>
+
+<p>In this section we will describe how to contribute to the RISCOSS platform.</p>
+
+<p>Let's say that you want to contribute to the riscoss-platform repository. The first thing that you will do is to create a clone of the repository on Gitorious:</p>
+
+<ul>
+<li>Go to the repository home page: http://gitorious.ow2.org/riscoss/riscoss-platform</li>
+<li>Click on the "Clone repository" button.</li>
+<li>Give a name for the cloned repository. Gitorious will propose you a name consisting of your user name followed by the original repository name. You can keep it and click directly on the "Clone repository" button. </li>
+</ul>
+
+<p>Once the clone is completed you will be redirected to the home page of your cloned repository that resides under your account.</p>
+
+<p>Now you can clone the private repository on your computer by using git. Select and copy the SSH clone URI from the Gitorious page, and paste it on the <code>git</code> command line: <code>git clone SSH_CLONE_URI_FOR_YOUR_PRIVATE_REPOSITORY</code></p>
+
+<p>Setup the upstream remote for pulling changes from the original repository. Go to the original project repository (i.e., http://gitorious.ow2.org/riscoss/riscoss-platform) and select and copy the GIT clone URI from the Gitorious page, and paste it on the git command line: <code>git remote add upstream GIT_URI_OF_THE_ORIGINAL_REPOSITORY</code></p>
+
+<p>What we did here? We added a remote for retrieving changes form the original repository (see later).</p>
+
+<p>If you type <code>git remote -v</code> you should see something like this:</p>
+
+<pre><code>origin  git@gitorious.ow2.org:~fmancinelli/riscoss/fmancinellis-riscoss-platform-dev.git (fetch)
+origin  git@gitorious.ow2.org:~fmancinelli/riscoss/fmancinellis-riscoss-platform-dev.git (push)
+upstream    git://gitorious.ow2.org/riscoss/riscoss-platform-dev.git (fetch)
+upstream    git://gitorious.ow2.org/riscoss/riscoss-platform-dev.git (push)
+</code></pre>
+
+<p>For the upstream repository we used the GIT clone URI because it is read-only. This would prevent us to mistakenly commit to the original repository.</p>
+
+<p>At this point you have a working copy of the RISCOSS platform on your computer. You must do these steps only ONCE, the first time you clone a repository.</p>
+
+<p>Before you start to write anything, create a branch by giving it a meaningful name about what you will be coding. You can do it with this command: <code>git checkout -b BRANCHNAME</code></p>
+
+<p>You can always check on which branch you are by using the git branch command. The current branch is the one with a  <code>*</code>  next to it.</p>
+
+<p>Now you can really start to code. Write your code and commit it periodically as you advance.</p>
+
+<p>Since in the meanwhile the master branch could have had some changes, you must periodically merge these changes to your branch in order to always have an up-to-date version of the code base. You can do it with the following command: <code>git pull upstream master</code></p>
+
+<p>This will retrieve all the latest commit from the master branch of the upstream remote (i.e., from the original repository) and merge them to your local branch.</p>
+
+<p>When you're satified with the state of the code and want to make it become part of the RISCOSS Platform you will have to create a merge request:</p>
+
+<ul>
+<li>Push your local branch to Gitorious: <code>git push origin BRANCHNAME</code></li>
+<li>Go to the Gitorious page of your private repository and click on the <code>Request merge</code> button.</li>
+<li>Fill the forms with useful information about your work.</li>
+<li>Select the target repository where you want the changes to be merged, in this case <code>riscoss-platform</code></li>
+<li>Select the target branch where you want the changes to be merged, in this case <code>master</code></li>
+<li>Select the source branch from where to take the changes, in this case <code>BRANCHNAME</code> (i.e., the name you gave to the branch that you pushed)</li>
+<li>Select the commit that represet the state of the code that you want to merge</li>
+<li>Click on "Create merge request"</li>
+</ul>
+
+<p>At this point you're done. A new merge request will be added to the original repository so that it can be code-reviewed and, if everything is fine, it can be finally merge into the master branch of the riscoss-platform becoming part of it.</p>

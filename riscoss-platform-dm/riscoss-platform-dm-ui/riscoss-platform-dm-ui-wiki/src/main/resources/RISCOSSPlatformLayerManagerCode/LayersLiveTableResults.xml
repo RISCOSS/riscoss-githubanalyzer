@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc>
+  <web>RISCOSSPlatformLayerManagerCode</web>
+  <name>LayersLiveTableResults</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformLayerManagerCode.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>0</creationDate>
+  <date>0</date>
+  <contentUpdateDate>0</contentUpdateDate>
+  <version>1.1</version>
+  <title/>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>{{include document="RISCOSSPlatformCode.Macros"/}}
+{{velocity wiki="false"}}
+## Output fields:
+##   layer
+##   child
+##   createLayerLink
+## Orderable fields:
+##   layer
+
+#set($offset = $mathtool.toInteger($request.get('offset')))
+## offset starts from 0 in velocity and 1 in javascript
+#set($offset = $offset - 1)
+#if (!$offset || $offset &lt; 0)
+  #set($offset = 0)
+#end
+#set($limit = $mathtool.toInteger($request.get('limit')))
+#if (!$limit)
+  #set ($limit = 15)
+#end
+
+## Add filter clauses
+#if($request.layer)
+  #set($layerFilter = " AND upper(doc.title) LIKE upper(:layerFilter)")
+#end
+
+## Add order by clauses
+#if($request.sort == "layer")
+  #set($orderBy = "ORDER BY doc.title")
+#elseif($request.sort == "child")
+  #set($orderBy = "ORDER BY prop.value")
+#end
+
+#if($orderBy)
+  #if($request.dir == "desc")
+    #set($orderBy = "${orderBy} DESC")
+  #else
+    #set($orderBy = "${orderBy} ASC")
+  #end
+#end
+
+## Build the query
+#set($hql = "SELECT doc.fullName, doc.title, prop.value FROM XWikiDocument doc, BaseObject obj, StringProperty prop WHERE doc.space='RISCOSSPlatformLayers' AND doc.fullName=obj.name and obj.className='RISCOSSPlatformLayerManagerCode.LayerClass' and prop.id.id=obj.id and prop.name='child' $!{layerFilter} $!{orderBy}")
+#set($query = $services.query.hql($hql))
+#if($request.layer)
+  #set($discard = $query.bindValue("layerFilter", "%${request.layer}%"))
+#end
+#set($results = $query.execute())
+
+## Count total results
+#set($hql = "SELECT count(doc) FROM XWikiDocument doc, BaseObject obj WHERE doc.fullName=obj.name and obj.className='RISCOSSPlatformLayerManagerCode.LayerClass'")
+#set($countResult = $services.query.hql($hql).execute())
+
+## Build the result JSON
+#set($resultMap = {})
+#set($discard = $resultMap.put("totalrows", $util.parseInt($countResult[0]))) 
+#set($discard = $resultMap.put("returnedrows", $mathtool.min($results.size(), $limit)))
+#set($discard = $resultMap.put("offset", $mathtool.add($offset, 1)))
+#set($discard = $resultMap.put("reqNo", $util.parseInt($request.reqNo)))
+#set($rows = [])
+#foreach($result in $results)
+  #set($row = {})
+  #set($discard = $row.put("doc_viewable", true))
+  #set($discard = $row.put("layer", "&lt;span class='buttonwrapper'&gt;&lt;p&gt;$result[1]&lt;/p&gt;&lt;/span&gt;"))
+  #set($discard = $row.put("layer_url", $xwiki.getURL($result[0], "view")))
+  #if($result[2] != "")
+    #set($discard = $row.put("child", "$xwiki.getDocument($result[2]).title"))
+    #set($discard = $row.put("child_url", $xwiki.getURL($result[2])))
+  #else
+    #set($discard = $row.put("child", ""))
+  #end
+  #set($params = {"space": "RISCOSSPlatformEntities", 
+                  "template": "${result[0]}Template", 
+                  "linkLabel": "$services.localization.render('riscossPlatform.layerManager.createEntity.title') ${result[1]}", 
+                  "formTitle": "$services.localization.render('riscossPlatform.layerManager.createEntity.title') ${result[1]}", 
+                  "fieldLabel": "$services.localization.render('riscossPlatform.layerManager.createEntity.entityName', ${result[1]})"})
+  #set($createEntityWikiLink = "#generateCreateLink($params)")
+  #set($createEntityLink = $doc.getRenderedContent($createEntityWikiLink, "xwiki/2.1"))
+  #set($createEntityLink = "&lt;span class='buttonwrapper'&gt;${createEntityLink}&lt;/span&gt;")
+  #set($discard = $row.put("createEntityLink", $createEntityLink))
+  #set($discard = $rows.add($row))
+#end
+#set($discard = $resultMap.put("rows", $rows))
+
+$jsontool.serialize($resultMap)
+
+{{/velocity}}</content>
+</xwikidoc>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc>
+  <web>RISCOSSPlatformDataCollectorCode</web>
+  <name>DataCollectorScheduler</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformDataCollectorCode.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>0</creationDate>
+  <date>0</date>
+  <contentUpdateDate>0</contentUpdateDate>
+  <version>1.1</version>
+  <title/>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <class>
+    <name>RISCOSSPlatformDataCollectorCode.DataCollectorScheduler</name>
+    <customClass/>
+    <customMapping/>
+    <defaultViewSheet/>
+    <defaultEditSheet/>
+    <defaultWeb/>
+    <nameField/>
+    <validationScript/>
+    <collectorName>
+      <customDisplay/>
+      <disabled>0</disabled>
+      <name>collectorName</name>
+      <number>2</number>
+      <picker>0</picker>
+      <prettyName>collectorName</prettyName>
+      <size>30</size>
+      <unmodifiable>0</unmodifiable>
+      <validationMessage/>
+      <validationRegExp/>
+      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+    </collectorName>
+    <periodicity>
+      <cache>0</cache>
+      <customDisplay/>
+      <disabled>0</disabled>
+      <displayType>select</displayType>
+      <multiSelect>0</multiSelect>
+      <name>periodicity</name>
+      <number>1</number>
+      <picker>0</picker>
+      <prettyName>periodicity</prettyName>
+      <relationalStorage>0</relationalStorage>
+      <separator> </separator>
+      <separators> ,|</separators>
+      <size>1</size>
+      <sort>none</sort>
+      <unmodifiable>0</unmodifiable>
+      <validationMessage/>
+      <validationRegExp/>
+      <values>monthly|weekly|daily|hourly|minutely</values>
+      <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+    </periodicity>
+    <timeLastRun>
+      <customDisplay/>
+      <disabled>0</disabled>
+      <name>timeLastRun</name>
+      <number>3</number>
+      <numberType>long</numberType>
+      <prettyName>timeLastRun</prettyName>
+      <size>30</size>
+      <unmodifiable>0</unmodifiable>
+      <validationMessage/>
+      <validationRegExp/>
+      <classType>com.xpn.xwiki.objects.classes.NumberClass</classType>
+    </timeLastRun>
+  </class>
+  <object>
+    <class>
+      <name>XWiki.SchedulerJobClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <contextDatabase>
+        <disabled>0</disabled>
+        <name>contextDatabase</name>
+        <number>9</number>
+        <prettyName>Job execution context database</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </contextDatabase>
+      <contextLang>
+        <disabled>0</disabled>
+        <name>contextLang</name>
+        <number>8</number>
+        <prettyName>Job execution context lang</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </contextLang>
+      <contextUser>
+        <disabled>0</disabled>
+        <name>contextUser</name>
+        <number>7</number>
+        <prettyName>Job execution context user</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </contextUser>
+      <cron>
+        <disabled>0</disabled>
+        <name>cron</name>
+        <number>5</number>
+        <prettyName>Cron Expression</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </cron>
+      <jobClass>
+        <disabled>0</disabled>
+        <name>jobClass</name>
+        <number>3</number>
+        <prettyName>Job Class</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </jobClass>
+      <jobDescription>
+        <disabled>0</disabled>
+        <name>jobDescription</name>
+        <number>2</number>
+        <prettyName>Job Description</prettyName>
+        <rows>10</rows>
+        <size>45</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </jobDescription>
+      <jobName>
+        <disabled>0</disabled>
+        <name>jobName</name>
+        <number>1</number>
+        <prettyName>Job Name</prettyName>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </jobName>
+      <script>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>script</name>
+        <number>6</number>
+        <prettyName>Job Script</prettyName>
+        <rows>10</rows>
+        <size>60</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </script>
+      <status>
+        <disabled>0</disabled>
+        <name>status</name>
+        <number>4</number>
+        <prettyName>Status</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </status>
+    </class>
+    <name>RISCOSSPlatformDataCollectorCode.DataCollectorScheduler</name>
+    <number>0</number>
+    <className>XWiki.SchedulerJobClass</className>
+    <guid>ee75dc1f-fb07-455d-b8f2-0d29b152ff8e</guid>
+    <property>
+      <contextLang>en</contextLang>
+    </property>
+    <property>
+      <contextUser>xwiki:XWiki.Admin</contextUser>
+    </property>
+    <property>
+      <cron>0 * * * * ?</cron>
+    </property>
+    <property>
+      <jobClass>com.xpn.xwiki.plugin.scheduler.GroovyJob</jobClass>
+    </property>
+    <property>
+      <jobDescription>The schedule which is used to invoke data collectors for all RISCOSS entities.</jobDescription>
+    </property>
+    <property>
+      <jobName>Data Collector Schedule</jobName>
+    </property>
+    <property>
+      <script>try{
+    xwiki.parseGroovyFromPage("RISCOSSPlatformDataCollectorCode.DataCollectorGroovy").main(xcontext, services, xwiki);
+} catch (Exception e) { e.printStackTrace(); }</script>
+    </property>
+    <property>
+      <status>Normal</status>
+    </property>
+  </object>
+  <content>{{info}}This document contains code which schedules DataCollectors{{/info}}</content>
+</xwikidoc>

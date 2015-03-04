@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc>
+  <web>RISCOSSPlatformCode</web>
+  <name>Macros</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformCode.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>0</creationDate>
+  <date>0</date>
+  <contentUpdateDate>0</contentUpdateDate>
+  <version>1.1</version>
+  <title/>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>{{velocity output="false"}}
+#macro(generateCreateLink $params)
+  [[${params.get('linkLabel')}&gt;&gt;RISCOSSPlatformCode.Create||queryString="space=${params.get('space')}&amp;template=${params.get('template')}&amp;formTitle=${params.get('formTitle')}&amp;fieldLabel=${params.get('fieldLabel')}" #if($params.get('linkClass')) class="${params.get('linkClass')}" #end]]
+#end
+
+#macro(generateCreateDialogLink $params)
+  [[${params.get('linkLabel')}&gt;&gt;RISCOSSPlatformCode.Create||queryString="xpage=plain&amp;space=${params.get('space')}&amp;template=${params.get('template')}&amp;fieldLabel=${params.get('fieldLabel')}" class="openDialog" title="${params.get('dialogTitle')}" callback="XWiki.RISCOSSPlatform.initializeCreateDialog"]]
+#end
+
+#macro(generateCustomCreateDialogLink $params)
+  [[${params.get('linkLabel')}&gt;&gt;RISCOSSPlatformCode.CustomCreate||queryString="xpage=plain&amp;action=${params.get('action')}&amp;space=${params.get('space')}&amp;fieldLabel=${params.get('fieldLabel')}" class="openDialog" title="${params.get('dialogTitle')}" callback="XWiki.RISCOSSPlatform.initializeCreateDialog"]]
+#end
+
+{{/velocity}}</content>
+</xwikidoc>

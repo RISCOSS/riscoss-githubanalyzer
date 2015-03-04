@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc>
+  <web>RISCOSSPlatformRiskAnalysisManagerCode</web>
+  <name>SaveSessionPopupForm</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformRiskAnalysisManagerCode.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>0</creationDate>
+  <date>0</date>
+  <contentUpdateDate>0</contentUpdateDate>
+  <version>1.1</version>
+  <title>SaveSessionPopupForm</title>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>{{velocity}}
+
+{{html}}
+
+#if($request.xpage == 'plain')
+
+&lt;form class="xform" id="saveSessionPopup:form"&gt;
+  &lt;dl&gt;
+    &lt;dt&gt;&lt;label&gt;Session name&lt;/label&gt;&lt;dt&gt;
+    &lt;dd&gt;&lt;input type="text" name="sessionName" id="saveSessionPopup:sessionNameInput"/&gt;&lt;/dd&gt;
+  &lt;/dl&gt;
+  &lt;div class="buttons"&gt;
+    &lt;span class="buttonwrapper"&gt;
+      &lt;input type="submit" value="$services.localization.render("create")" class="button"/&gt;
+    &lt;/span&gt;
+    &lt;span class="buttonwrapper"&gt;
+      &lt;a class="secondary button" id="saveSessionPopup:cancel" href="#"&gt;$services.localization.render("cancel")&lt;/a&gt;
+    &lt;/span&gt;
+  &lt;/div&gt;
+&lt;/form&gt;
+
+#end
+
+{{/html}}
+
+{{/velocity}}</content>
+</xwikidoc>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>riscoss-platform-dm</artifactId>
+    <groupId>eu.riscoss</groupId>
+    <version>0.24-SNAPSHOT</version>
+  </parent>
+  <artifactId>riscoss-platform-dm-ui</artifactId>
+  <packaging>pom</packaging>
+
+  <name>RISCOSS Platform - Domain Manager - UI - Parent POM</name>
+
+  <modules>
+    <module>riscoss-platform-dm-ui-mainwiki</module>
+    <module>riscoss-platform-dm-ui-common</module>
+    <module>riscoss-platform-dm-ui-wiki</module>
+  </modules>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.xwiki.commons</groupId>
+          <artifactId>xwiki-commons-tool-xar-plugin</artifactId>
+          <version>${commons.version}</version>
+          <configuration>
+            <!-- Don't add missing license headers by default -->
+            <formatLicense>false</formatLicense>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>

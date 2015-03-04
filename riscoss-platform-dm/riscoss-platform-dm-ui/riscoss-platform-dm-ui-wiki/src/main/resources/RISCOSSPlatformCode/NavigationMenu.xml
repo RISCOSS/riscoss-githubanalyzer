@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc>
+  <web>RISCOSSPlatformCode</web>
+  <name>NavigationMenu</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformCode.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>0</creationDate>
+  <date>0</date>
+  <contentUpdateDate>0</contentUpdateDate>
+  <version>1.1</version>
+  <title/>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <object>
+    <class>
+      <name>XWiki.UIExtensionClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <content>
+        <disabled>0</disabled>
+        <name>content</name>
+        <number>3</number>
+        <prettyName>Extension Content</prettyName>
+        <rows>10</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </content>
+      <extensionPointId>
+        <disabled>0</disabled>
+        <name>extensionPointId</name>
+        <number>1</number>
+        <prettyName>Extension Point ID</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </extensionPointId>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>2</number>
+        <prettyName>Extension ID</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parameters>
+        <disabled>0</disabled>
+        <name>parameters</name>
+        <number>4</number>
+        <prettyName>Extension Parameters</prettyName>
+        <rows>10</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </parameters>
+      <scope>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>scope</name>
+        <number>5</number>
+        <prettyName>Extension Scope</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>wiki=Current Wiki|user=Current User|global=Global</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </scope>
+    </class>
+    <name>RISCOSSPlatformCode.NavigationMenu</name>
+    <number>0</number>
+    <className>XWiki.UIExtensionClass</className>
+    <guid>3f681290-10f4-430f-a594-7d1dce3693c4</guid>
+    <property>
+      <content>{{menu type="horizontal fixedWidth"}}{{include reference="RISCOSSPlatformCode.NavigationMenu" /}}{{/menu}}</content>
+    </property>
+    <property>
+      <extensionPointId>org.xwiki.platform.template.header.after</extensionPointId>
+    </property>
+    <property>
+      <name>RISCOSSPlatformCode.NavigationMenu</name>
+    </property>
+    <property>
+      <parameters/>
+    </property>
+    <property>
+      <scope>wiki</scope>
+    </property>
+  </object>
+  <content>{{include document="RISCOSSPlatformCode.Macros"/}}{{velocity}}
+$xwiki.jsx.use("RISCOSSPlatformCode.Create", {"minify" : false}) ##
+## Needed for the XWiki.RISCOSSPlatform.initializeCreateDialog callback
+$xwiki.jsx.use("RISCOSSPlatformCode.ShowInDialog") ##
+#set($mainWikiId = $services.wiki.mainWikiId) ##
+#set($currentWikiId = $services.wiki.currentWikiId) ##
+##
+#if($currentWikiId == 'xwiki' || ($mainWikiId != $currentWikiId))
+  #set($wikiName = $services.wiki.getById($services.wiki.getCurrentWikiId()).prettyName)
+* $services.localization.render("riscossPlatform.domain") **$!wikiName**
+  #if($hasAdmin) 
+** [[$services.localization.render("riscossPlatform.adminUsers")&gt;&gt;RISCOSSPlatformCode.AdminUsers]]
+** $services.localization.render("riscossPlatform.adminRoles")
+** ----
+  #end
+** [[$services.localization.render("logout")&gt;&gt;$xwiki.getDocument("XWiki.XWikiLogout").getExternalURL("logout")]]   
+#else
+* **$services.localization.render("riscossPlatform.domainManager")**
+#end
+##
+#if(!$isGuest)
+  #if($currentWikiId == 'xwiki' || ($mainWikiId != $currentWikiId))
+    #set($layers = $services.query.xwql("SELECT doc.fullName, doc.title FROM Document doc, doc.object(RISCOSSPlatformLayerManagerCode.LayerClass) as layer WHERE doc.space = 'RISCOSSPlatformLayers'").execute())
+* $services.localization.render("riscossPlatform.layerManager")
+** #generateCreateDialogLink({
+     "space": "RISCOSSPlatformLayers",
+     "template": "RISCOSSPlatformLayerManagerCode.LayerTemplate",
+     "linkLabel": $services.localization.render("riscossPlatform.layerManager.newLayer"),
+     "dialogTitle": $services.localization.render("riscossPlatform.layerManager.newLayer"),
+     "fieldLabel": $services.localization.render("riscossPlatform.layerManager.layerName")
+   })
+** $services.localization.render("riscossPlatform.layerManager.newEntity")
+    #foreach($layer in $layers)
+*** #generateCreateDialogLink({
+      "space": "RISCOSSPlatformEntities", 
+      "template": "${layer[0]}Template", 
+      "linkLabel": $layer[1], 
+      "dialogTitle": "$services.localization.render('riscossPlatform.layerManager.createEntity.title') $layer[1]", 
+      "fieldLabel": "$services.localization.render('riscossPlatform.layerManager.createEntity.entityName', $layer[1])"
+    })
+    #end
+** ----
+** [[$services.localization.render("riscossPlatform.layerManager.layerIndex")&gt;&gt;RISCOSSPlatformLayers.WebHome]]
+** [[$services.localization.render("riscossPlatform.layerManager.entityIndex")&gt;&gt;RISCOSSPlatformEntities.WebHome]]
+* $services.localization.render("riscossPlatform.riskConfigurationManager")
+** #generateCreateDialogLink({
+      "space": "RISCOSSPlatformRiskConfigurations",
+      "template": "RISCOSSPlatformRiskConfigurationManagerCode.RiskConfigurationTemplate",
+      "linkLabel": $services.localization.render("riscossPlatform.riskConfigurationManager.newRiskConfiguration"),
+      "dialogTitle": $services.localization.render("riscossPlatform.riskConfigurationManager.newRiskConfiguration"),
+      "fieldLabel": $services.localization.render("riscossPlatform.riskConfigurationManager.riskConfigurationName")
+    })
+** #generateCreateDialogLink({
+      "space": "RISCOSSPlatformRiskCategories",
+      "template": "RISCOSSPlatformRiskConfigurationManagerCode.RiskCategoryTemplate",
+      "linkLabel": $services.localization.render("riscossPlatform.riskConfigurationManager.newRiskCategory"),
+      "dialogTitle": $services.localization.render("riscossPlatform.riskConfigurationManager.newRiskCategory"),
+      "fieldLabel": $services.localization.render("riscossPlatform.riskConfigurationManager.riskCategoryName")
+    })
+** ----
+** [[$services.localization.render("riscossPlatform.riskConfigurationManager.riskConfigurationIndex")&gt;&gt;RISCOSSPlatformRiskConfigurations.WebHome]]
+** [[$services.localization.render("riscossPlatform.riskConfigurationManager.riskCategoryIndex")&gt;&gt;RISCOSSPlatformRiskCategories.WebHome]]
+* Risk Analysis
+** [[New risk analysis session&gt;&gt;RISCOSSPlatformRiskAnalysisManagerCode.ConfigureAnalysis]]
+## ** #generateCustomCreateDialogLink({     
+##     "action": "$xwiki.getURL('RISCOSSPlatformRiskAnalysisManagerCode.SetRiskAnalysisSessionData')",
+##     "space": "RISCOSSPlatformRiskAnalysisSessions",
+##     "linkLabel": "New risk analysis session",
+##     "dialogTitle": "New risk analysis session",
+##     "fieldLabel": "Session name"
+##   })
+** ----
+** [[Risk analysis sessions&gt;&gt;RISCOSSPlatformRiskAnalysisSessions.WebHome]]
+* Model manager
+** #generateCreateDialogLink({
+      "space": "RISCOSSPlatformRiskModels",
+      "template": "RISCOSSPlatformModelManagerCode.RiskModelTemplate",
+      "linkLabel": $services.localization.render("riscossPlatform.modelManager.newRiskModel"),
+      "dialogTitle": $services.localization.render("riscossPlatform.modelManager.newRiskModel"),
+      "fieldLabel": $services.localization.render("riscossPlatform.modelManager.riskModelName")
+    })
+** #generateCreateDialogLink({
+      "space": "RISCOSSPlatformGoalModels",
+      "template": "RISCOSSPlatformModelManagerCode.GoalModelTemplate",
+      "linkLabel": $services.localization.render("riscossPlatform.modelManager.newGoalModel"),
+      "dialogTitle": $services.localization.render("riscossPlatform.modelManager.newGoalModel"),
+      "fieldLabel": $services.localization.render("riscossPlatform.modelManager.goalModelName")
+    })
+** ----
+** [[$services.localization.render("riscossPlatform.modelManager.riskModelIndex")&gt;&gt;RISCOSSPlatformRiskModels.WebHome]]
+** [[$services.localization.render("riscossPlatform.modelManager.goalModelIndex")&gt;&gt;RISCOSSPlatformGoalModels.WebHome]]
+  #end  
+#end
+{{/velocity}}
+
+(((
+</content>
+</xwikidoc>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc>
+  <web>RISCOSSPlatformRiskAnalysisManagerCode</web>
+  <name>SaveSession</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformRiskAnalysisManagerCode.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>0</creationDate>
+  <date>0</date>
+  <contentUpdateDate>0</contentUpdateDate>
+  <version>1.1</version>
+  <title>SaveSession</title>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>{{velocity}}
+
+#if($request.entity &amp;&amp; $request.riskConfiguration &amp;&amp; $request.sessionName &amp;&amp; $request.resultData)
+  #set($riskAnalysisSessionDocument = $xwiki.getDocument("RISCOSSPlatformRiskAnalysisSessions.${request.sessionName}"))
+  #set($riskAnalysisSession = $riskAnalysisSessionDocument.getObject("RISCOSSPlatformRiskAnalysisManagerCode.RiskAnalysisSessionClass", true))
+  $riskAnalysisSession.set("entity", $request.entity)
+  #set($riskEvaluation = $riskAnalysisSessionDocument.getObject("RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationClass", true))
+  $riskEvaluation.set("riskConfiguration", $request.riskConfiguration)
+  $riskEvaluation.set("inputData", $request.inputData)
+  $riskEvaluation.set("result", $request.resultData)
+  
+  $riskAnalysisSessionDocument.save();
+  
+  $response.sendRedirect($riskAnalysisSessionDocument.getURL())
+#else 
+  {{error}}Missing parameters{{/error}}
+#end
+
+{{/velocity}}</content>
+</xwikidoc>

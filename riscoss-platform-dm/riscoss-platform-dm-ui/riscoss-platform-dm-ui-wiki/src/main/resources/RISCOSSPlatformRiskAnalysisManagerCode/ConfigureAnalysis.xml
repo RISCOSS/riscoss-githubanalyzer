@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc>
+  <web>RISCOSSPlatformRiskAnalysisManagerCode</web>
+  <name>ConfigureAnalysis</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformRiskAnalysisManagerCode.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>0</creationDate>
+  <date>0</date>
+  <contentUpdateDate>0</contentUpdateDate>
+  <version>1.1</version>
+  <title>Configure Risk Analysis Session</title>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <object>
+    <class>
+      <name>XWiki.JavaScriptExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <disabled>0</disabled>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage=Always on this page|onDemand=On demand|always=Always on this wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <name>RISCOSSPlatformRiskAnalysisManagerCode.ConfigureAnalysis</name>
+    <number>0</number>
+    <className>XWiki.JavaScriptExtension</className>
+    <guid>6c83603f-61df-4203-851b-c813a754834e</guid>
+    <property>
+      <cache>forbid</cache>
+    </property>
+    <property>
+      <code>var XWiki = (function(XWiki) {
+  var getDocumentFullNameFromURI = function(uri) {
+    //Dirty hack to retrieve the risk model document name from a URI
+    var components = decodeURI(uri).replace(/\+/g, ' ').split('/');
+    var space = components[components.length - 2];
+    var page = components[components.length - 1];
+
+    return space + "." + page;
+  }  
+  function init() {
+    var editSections = $$('.edit_section');
+    for(i = 0; i &lt; editSections.length; i++) {
+      editSections[i].hide();
+    }
+
+    $('entities').on('click', function(e) {
+      if(e.target.localName == 'a') {
+        e.stop();
+        $('selectedEntityText').innerHTML = e.target.innerHTML;
+        $('entity').value = getDocumentFullNameFromURI(e.target.href);
+      }
+    });
+
+    $('riskConfigurations').on('click', function(e) {
+      if(e.target.localName == 'a') {
+        e.stop();
+        $('selectedRiskConfigurationText').innerHTML = e.target.innerHTML;
+        $('riskConfiguration').value = getDocumentFullNameFromURI(e.target.href);
+      }
+    });
+
+    $('evaluate').on('click', function(e) {
+      if($('entity').value == '') {
+        alert('Please select an entity');
+        e.stop();
+        return;
+      }
+
+      if($('riskConfiguration').value == '') {
+        alert('Please select a risk configuration');
+        e.stop();
+        return;
+      }
+
+    });
+  }
+
+  //Wait for dom load
+  (XWiki.domIsLoaded &amp;&amp; init()) || document.observe("xwiki:dom:loaded", init);
+   
+  //End XWiki augmentation
+  return XWiki;
+}(XWiki || {}))</code>
+    </property>
+    <property>
+      <name/>
+    </property>
+    <property>
+      <parse/>
+    </property>
+    <property>
+      <use>currentPage</use>
+    </property>
+  </object>
+  <content>{{velocity}}
+
+{{html wiki="true"}}
+
+&lt;form action='$xwiki.getDocument('RISCOSSPlatformRiskAnalysisManagerCode.EvaluateInteractive').getURL()' method='POST'&gt;
+
+&lt;input type='hidden' name='entity' value='' id='entity'/&gt;
+&lt;input type='hidden' name='riskConfiguration' value='' id='riskConfiguration'/&gt;
+
+&lt;h1&gt;Selected entity: &lt;span id='selectedEntityText'&gt;{{info}}Please select and entity to run risk analysis on{{/info}}&lt;/span&gt;&lt;/h1&gt;
+
+#set($columns = ['entity', 'layer'])
+#set($columnsProperties = {
+    'entity' : { 'type' : 'text', 'link' : 'field', 'sortable' : 'true', 'filterable' : 'true'},    
+    'layer' : { 'type' : 'text', 'link' : 'field', 'sortable' : 'true', 'filterable' : 'true' }
+})
+#set($options = {
+   'resultPage' : 'RISCOSSPlatformLayerManagerCode.EntitiesLiveTableResults',   
+   'rowCount' : 10,
+   'pageSize' : false,
+   'tagCloud' : false,
+   'translationPrefix' : 'riscossPlatform.layerManager.entitiesTable.'
+})
+#livetable('entities', $columns, $columnsProperties, $options)
+
+----
+
+&lt;h1&gt;Selected risk configuration: &lt;span id='selectedRiskConfigurationText'&gt;{{info}}Please select the risk to be analysed{{/info}}&lt;/span&gt;&lt;/h1&gt;
+
+#set($columns = ["doc.name", "description"])
+#set($columnsProperties = {
+    "doc.name" : { "type" : "text" , "size" : 20, "link" : "view"},
+    "description" : { "type" : "text", "html" : "true", "filterable" : "false"}
+})
+#set($options = { 
+   "className":"RISCOSSPlatformRiskConfigurationManagerCode.RiskConfigurationClass",
+   'pageSize' : false,
+   'translationPrefix' : "riscossPlatform.riskConfigurationManager.riskConfigurationsTable.",
+   'tagCloud' : false,
+   'rowCount': 10
+})
+#livetable("riskConfigurations" $columns $columnsProperties $options)
+
+&lt;br/&gt;
+
+----
+
+&lt;input type='submit' value='Perform evaluation' id='evaluate' class='button' style='width:100%'/&gt;
+
+&lt;/form&gt;
+
+{{/html}}
+
+
+
+{{/velocity}}</content>
+</xwikidoc>

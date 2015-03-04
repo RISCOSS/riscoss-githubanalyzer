@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc version="1.1">
+  <web>RISCOSSPlatformLayerManagerCode</web>
+  <name>EntityViewSheet</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <creationDate>0</creationDate>
+  <parent>RISCOSSPlatformLayerManagerCode.EntityClass</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <date>0</date>
+  <contentUpdateDate>0</contentUpdateDate>
+  <version>1.1</version>
+  <title>#if($doc.name == 'EntitySheet')Entity Sheet#{else}$services.display.title($doc, {'displayerHint': 'default'})#end</title>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>{{velocity}}
+
+#set($layer = $doc.getObject("RISCOSSPlatformLayerManagerCode.EntityClass").getProperty("layer").value)
+#set($layerDocument = $xwiki.getDocument($layer))
+
+; $services.localization.render("riscossPlatform.layerManager.layer")
+: $layerDocument.title
+
+----
+
+#set($class = $doc.getObject($layer).xWikiClass)
+#foreach($prop in $class.properties)
+  ; $prop.prettyName
+  : $doc.display($prop.getName())
+#end
+
+{{html wiki="true"}}
+
+----
+
+#if($!layerDocument.getObject("RISCOSSPlatformLayerManagerCode.LayerClass").getProperty("child").value != "")
+
+&lt;form action="$xwiki.getDocument("RISCOSSPlatformLayerManagerCode.AddEntityChildren").getURL()" method="GET"&gt;
+    &lt;input type="hidden" name="entity" value="$doc.fullName"/&gt;    
+    &lt;h1&gt;$services.localization.render("riscossPlatform.layerManager.children") &lt;input type="image" src="$xwiki.getSkinFile("icons/silk/add.png")"/&gt;&lt;/h1&gt;
+&lt;/form&gt;
+
+#set($removeChildAction = $xwiki.getDocument("RISCOSSPlatformLayerManagerCode.RemoveEntityChild").getURL())
+
+#foreach($entityChild in $doc.getObjects("RISCOSSPlatformLayerManagerCode.EntityChildClass"))
+  #set($child = $entityChild.getProperty("child").value)
+| [[$child]] | &lt;form action="$removeChildAction" method="POST"&gt;&lt;input type="hidden" name="entity" value="$doc.fullName"/&gt;&lt;input type="hidden" name="child" value="$child"/&gt;&lt;input type="image" src="$xwiki.getSkinFile("icons/silk/delete.png")"/&gt;&lt;/form&gt;
+#end
+
+#else
+&lt;form&gt;
+  &lt;h1&gt;$services.localization.render("riscossPlatform.layerManager.children")&lt;/h1&gt;
+&lt;/form&gt;
+
+  {{info}}This entity cannot have associated children because layer [[$layerDocument]] doesn't have any children{{/info}}
+#end
+
+----
+
+= Risk analysis performed for this entity
+
+#set($query = "from doc.object(RISCOSSPlatformRiskAnalysisManagerCode.RiskAnalysisSessionClass) as ras where ras.entity = '${doc.fullName}'")
+#set($riskAnalysisSessionDocumentNames = $services.query.xwql($query).execute())
+
+|= Risk analysis session |= Analyzed risk configurations
+#foreach($riskAnalysisSessionDocumentName in $riskAnalysisSessionDocumentNames)  
+  #set($riskAnalysisDocument = $xwiki.getDocument($services.model.resolveDocument($riskAnalysisSessionDocumentName)))
+  #set($riskEvaluations = $riskAnalysisDocument.getObjects("RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationClass"))
+| [[$riskAnalysisDocument]] | (((
+#foreach($riskEvaluation in $riskEvaluations)
+* [[$riskEvaluation.getProperty("riskConfiguration").value]]
+#end
+)))
+#end
+
+{{include document="RISCOSSPlatformDataCollectorCode.DataCollectorManager"/}}
+
+----
+
+#set($xredirect = $xwiki.getDocument("RISCOSSPlatformEntities.WebHome").getURL())
+&lt;span class="buttonwrapper"&gt;
+[[Edit entity&gt;&gt;$doc.getExternalURL("edit")]] | [[Delete entity&gt;&gt;$doc.getExternalURL("delete", "xredirect=${xredirect}")]]
+&lt;/span&gt;
+{{/html}}
+{{/velocity}}
+
+
+</content>
+  <object>
+    <name>RISCOSSPlatformLayerManagerCode.EntityViewSheet</name>
+    <number>0</number>
+    <className>XWiki.SheetDescriptorClass</className>
+    <guid>d114b1d8-88f7-4f21-b836-b89c3029d213</guid>
+    <class>
+      <name>XWiki.SheetDescriptorClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <action>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <name>action</name>
+        <number>1</number>
+        <picker>0</picker>
+        <prettyName>Action</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </action>
+    </class>
+    <property>
+      <action>view</action>
+    </property>
+  </object>
+</xwikidoc>

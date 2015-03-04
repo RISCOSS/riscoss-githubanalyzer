@@ -1,0 +1,18 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+  <class name="eu.riscoss.rdr.api.internal.RiskDataEntity" table="RISK_DATA_ENTITY">
+    <composite-id>
+      <key-property name="id" column="RISK_DATA_ENTITY_ID"/>
+      <key-property name="target" column="RISK_DATA_ENTITY_TARGET" />
+      <key-property name="date" type="timestamp" column="RISK_DATA_ENTITY_DATE" />
+    </composite-id>
+    <property name="type" column="RISK_DATA_ENTITY_TYPE">
+      <type name="org.hibernate.type.EnumType">
+        <param name="enumClass">eu.riscoss.rdc.model.RiskDataType</param>
+      </type>
+    </property>
+    <property name="serializedValue" type="text" column="RISK_DATA_ENTITY_VALUE"/>
+  </class>
+</hibernate-mapping>

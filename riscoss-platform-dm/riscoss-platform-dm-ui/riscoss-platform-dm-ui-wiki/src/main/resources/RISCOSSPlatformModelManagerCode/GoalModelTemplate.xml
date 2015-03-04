@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc>
+  <web>RISCOSSPlatformModelManagerCode</web>
+  <name>GoalModelTemplate</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformModelManagerCode.GoalModelClass</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>0</creationDate>
+  <date>0</date>
+  <contentUpdateDate>0</contentUpdateDate>
+  <version>1.1</version>
+  <title>GoalModel Template</title>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <object>
+    <class>
+      <name>RISCOSSPlatformModelManagerCode.GoalModelClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <description>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <editor>---</editor>
+        <name>description</name>
+        <number>1</number>
+        <picker>0</picker>
+        <prettyName>Description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <goalModelData>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <name>goalModelData</name>
+        <number>2</number>
+        <picker>0</picker>
+        <prettyName>Goal model data</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </goalModelData>
+    </class>
+    <name>RISCOSSPlatformModelManagerCode.GoalModelTemplate</name>
+    <number>0</number>
+    <className>RISCOSSPlatformModelManagerCode.GoalModelClass</className>
+    <guid>bcc7543d-1c27-491f-9938-de2a017c1065</guid>
+    <property>
+      <description/>
+    </property>
+    <property>
+      <goalModelData/>
+    </property>
+  </object>
+  <content/>
+</xwikidoc>

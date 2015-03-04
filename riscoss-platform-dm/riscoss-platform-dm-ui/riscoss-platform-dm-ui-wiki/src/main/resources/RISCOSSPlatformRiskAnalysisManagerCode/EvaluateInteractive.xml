@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc version="1.1">
+  <web>RISCOSSPlatformRiskAnalysisManagerCode</web>
+  <name>EvaluateInteractive</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <creationDate>0</creationDate>
+  <parent>RISCOSSPlatformRiskAnalysisManagerCode.WebHome</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <date>0</date>
+  <contentUpdateDate>0</contentUpdateDate>
+  <version>1.1</version>
+  <title>Evaluate interactive</title>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>{{velocity output="false"}}
+$xwiki.jsx.use($doc.fullName, {"minify" : false})
+
+#if(!($request.entity &amp;&amp; $request.riskConfiguration))
+  #set($error = "{{error}} Missing parameters {{/error}}")
+#else
+  ## Load all the models associated to the layer of the entity under analysis.
+  #set($entityDocumentReference = $services.model.createDocumentReference(null, "RISCOSSPlatformEntities", $request.entity.split("\.", 2)[1]))
+  #set($entityDocument = $xwiki.getDocument($entityDocumentReference))
+  #set($layer = $entityDocument.getObject("RISCOSSPlatformLayerManagerCode.EntityClass").getProperty("layer").value)
+  #set($rdids = $entityDocument.getObject("RISCOSSPlatformLayerManagerCode.EntityClass").getProperty("rdids").value)
+  #set($riskConfigurationDocument = $xwiki.getDocument($request.riskConfiguration))
+  #set($raeUtils = $services.riscoss.riskAnalysisEngineUtilsService)
+  #set($rae = $services.riscoss.riskAnalysisEngineService.createInstance())
+  #set($riskModelReferences = $riskConfigurationDocument.getObjects("RISCOSSPlatformRiskConfigurationManagerCode.RiskModelClass", "layer", $layer))    
+
+  #set($goalModelDocumentName = $riskConfigurationDocument.getObject("RISCOSSPlatformRiskConfigurationManagerCode.RiskConfigurationClass").getProperty("goalModel").value)
+  #if($goalModelDocumentName)    
+    #set($goalModelDocument = $xwiki.getDocument($services.model.resolveDocument($goalModelDocumentName)))
+    #set($goalModelDataName = $goalModelDocument.getObject("RISCOSSPlatformModelManagerCode.GoalModelClass").getProperty("goalModelData").value)
+    #set($goalModelData = $goalModelDocument.getAttachment($goalModelDataName).getContentAsString())
+  #end
+  
+  #if($riskModelReferences.size() == 0) 
+    #set($error = "{{error}}No risk models defined in risk configuration '[[$riskConfigurationDocument]]' for layer [[$layer]]. Please associate a model to this layer and redo the evaluation.{{/error}}")
+  #end
+  
+  #if($goalModelData) 
+    $rae.loadModel($goalModelData)
+  #end
+  
+  #foreach($riskModelReference in $riskModelReferences)
+    #set($riskModelDocumentName = $riskModelReference.getProperty("riskModel").value)
+    #set($riskModelDocument = $xwiki.getDocument($riskModelDocumentName))
+    #set($riskModelDataName = $riskModelDocument.getObject("RISCOSSPlatformModelManagerCode.RiskModelClass").getProperty("riskModelData").value)
+    #set($riskModelData = $riskModelDocument.getAttachment($riskModelDataName).getContentAsString())
+
+    $rae.loadModel($riskModelData)
+  #end
+  
+  ## This is the risk data that will contain the final aggregated risk data ready to be evaluated
+  #set($riskData = {})
+  #set($errors = {})
+
+  ## Get risk data from the request. This also initializes the default values when they're missing.
+  #set($riskDataFromRequest = $raeUtils.getRiskDataFromRequest($rae, $request.parameterMap))
+  $riskData.putAll($riskDataFromRequest.riskData) ## This is used for initializing   
+ 
+  ## If we haven't received new data via the set data form, populate with RDR data. setDataFromRequest is
+  ## sent by the SetData form when the user provides/overrides actual data.
+  #if(!$request.setDataFromRequest)
+    #set($rdr = $xwiki.getDocument("RISCOSSPlatformCode.RISCOSSConfiguration").get("rdr"))
+    #if($!rdids != "")
+      $riskData.putAll($raeUtils.fetchRiskData($rae, $rdr, $rdids))
+    #else
+      $riskData.putAll($raeUtils.fetchRiskData($rae, $rdr, $entityDocument.name))
+    #end
+  #end  
+  
+  $raeUtils.setRiskData($rae, $riskData)
+  ##set($result = $raeUtils.runAnalysis($rae))
+  #set($structuredResults = $raeUtils.runAnalysisWithStructuredResults($rae))
+  
+  #set($inputData = {})
+  #set($inputChunks = $services.riscoss.riskAnalysisEngineUtilsService.getInputs($rae))
+  #foreach($inputChunk in $inputChunks)
+    #set($question = $services.riscoss.riskAnalysisEngineUtilsService.getQuestion($rae, $inputChunk))
+    #set($value = $!riskData.get($inputChunk.id))
+    #set($inputInfo = {"question" : $question, "value" : $value})
+    #set($discard = $inputData.put($inputChunk.id, $inputInfo))
+  #end  
+#end
+{{/velocity}}
+
+{{velocity}}
+#if(!$error)
+= Risk evaluation results
+
+; Entity
+: [[$entityDocument]]
+
+; Risk configuration
+: [[$riskConfigurationDocument]]
+
+{{html}}
+&lt;div id='resultData' style='display: none'&gt;
+$escapetool.url($jsontool.serialize($structuredResults))
+&lt;/div&gt;
+
+&lt;div id='inputData' style='display: none'&gt;
+$escapetool.url($jsontool.serialize($inputData))
+&lt;/div&gt;
+{{/html}}
+
+----
+
+#set($inputChunks = $services.riscoss.riskAnalysisEngineUtilsService.getInputs($rae)) ##
+== Inputs used for the analysis
+#foreach($inputChunk in $inputChunks)
+|= #if($!inputData.get($inputChunk.id).get("question") != "") $inputData.get($inputChunk.id).get("question") #else Input for '$inputChunk.id' #end | $!inputData.get($inputChunk.id).get("value")
+#end
+
+{{html}}
+&lt;table border='0' style='border: 0px'&gt;
+&lt;tr&gt;
+  &lt;td&gt;
+    &lt;form action='$xwiki.getDocument("RISCOSSPlatformRiskAnalysisManagerCode.SetData").getURL()' method='POST'&gt;
+      &lt;input type='hidden' name='entity' value='$request.entity'/&gt;
+      &lt;input type='hidden' name='riskConfiguration' value='$request.riskConfiguration'/&gt;
+      #foreach($rd in $riskData.entrySet())
+        #if($rd.value.class.name.contains("Distribution"))
+          #foreach($v in $rd.value.values)
+            &lt;input type='hidden' name='$rd.key' value='$v'/&gt; 
+          #end
+        #elseif($rd.value.class.name.contains("Evidence"))
+          &lt;input type='hidden' name='$rd.key' value='$rd.value.positive'/&gt;
+          &lt;input type='hidden' name='$rd.key' value='$rd.value.negative'/&gt;  
+        #else
+          &lt;input type='hidden' name='$rd.key' value='$rd.value'/&gt;
+        #end
+      #end
+      &lt;input type='submit' value='Change input data and re-evaluate' class='button'/&gt;
+     &lt;/form&gt;
+  &lt;/td&gt;
+  &lt;td&gt;
+    &lt;form action='$xwiki.getDocument("RISCOSSPlatformRiskAnalysisManagerCode.SaveSession").getURL()' method='POST' id='saveSessionForm'&gt;
+      &lt;input type='hidden' name='sessionName' id='sessionName'/&gt;
+      &lt;input type='hidden' name='entity' value='$request.entity'/&gt;
+      &lt;input type='hidden' name='riskConfiguration' value='$request.riskConfiguration'/&gt;
+      &lt;input type='hidden' name='inputData' id='inputDataInput'/&gt;
+      &lt;input type='hidden' name='resultData' id='resultDataInput'/&gt;      
+      &lt;input type='submit' value='Save session' class='button'/&gt;
+    &lt;/form&gt;
+  &lt;/td&gt;
+&lt;/tr&gt;
+&lt;/table&gt;
+{{/html}}
+
+#else
+  $error
+#end
+{{/velocity}}</content>
+  <object>
+    <name>RISCOSSPlatformRiskAnalysisManagerCode.EvaluateInteractive</name>
+    <number>0</number>
+    <className>XWiki.JavaScriptExtension</className>
+    <guid>46eed199-a189-4f4b-bede-683bad091b68</guid>
+    <class>
+      <name>XWiki.JavaScriptExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <disabled>0</disabled>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage=Always on this page|onDemand=On demand|always=Always on this wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <property>
+      <cache>forbid</cache>
+    </property>
+    <property>
+      <code>var XWiki = (function(XWiki) {
+  /******************************************************
+   * THIS PART IS FOR THE SAVE SESSION BUTTON
+   ******************************************************/
+  
+  var showErrorMessage = function(element, message) {
+    if(!element.classList.contains('xErrorField')) {
+      element.addClassName('xErrorField');
+      element.insert({'after' : '&lt;div class="xErrorMsg"&gt;' + message + '&lt;/div&gt;'});
+    }
+  };
+  
+  var removeErrorMessage = function(element) {    
+    if(element.classList.contains('xErrorField')) {      
+      element.removeClassName('xErrorField');
+      var errorMessage = element.next('.xErrorMsg');
+      errorMessage &amp;&amp; errorMessage.remove();
+    }
+  };
+  
+  var DialogFromPage = Class.create(XWiki.widgets.ModalPopup, {
+    initialize : function($super, title, url) {
+      /* The div that will be used as the dialog content. It contains a loader icon at the beginning. */
+      this.contentDiv = new Element('div').update('&lt;img src=\"$xwiki.getSkinFile("icons/xwiki/ajax-loader-large.gif")\"/&gt;');
+      this.contentUrl = url;
+      
+      $super(this.contentDiv, {}, 
+             {title: title, 
+              position: 'middle', 
+              removeOnClose: true
+             });
+    },
+    
+    createDialog : function($super, event) {
+      $super(event);
+      
+      /* Save the dialog instance in a variable so that's available in Ajax.Updater closure */
+      var dialog = this;
+      
+      /* Asynchronously load the create scope page content and show it in the dialog when ready. */
+      new Ajax.Updater(this.contentDiv, this.contentUrl, {
+        onComplete : function() {
+          var sessionNameInput = $('saveSessionPopup:sessionNameInput');
+          
+          $('saveSessionPopup:cancel').observe('click', function(e) {
+            e.stop();
+            dialog.closeDialog();
+          });
+          
+          sessionNameInput.observe('keyup', function(e) {            
+            removeErrorMessage(sessionNameInput);
+          });
+          
+          
+          $('saveSessionPopup:form').observe('submit', function(e) {
+            e.stop();
+            
+            
+            if(sessionNameInput.value.strip().length == 0) {
+              showErrorMessage(sessionNameInput, '$services.localization.render("riscossPlatform.createForm.valueRequired")');
+
+              return;
+            }
+            
+            var targetRestURL = XWiki.Document.RestURLTemplate.replace("__wiki__", XWiki.Document.currentWiki).replace("__space__", "RISCOSSPlatformRiskAnalysisSessions").replace("__page__", sessionNameInput.value.strip());
+
+            new Ajax.Request(targetRestURL, {
+              method: 'GET',
+              onComplete: function(response) {
+                if(404 == response.status) {
+                  $('sessionName').setValue(sessionNameInput.getValue());
+                  $('saveSessionForm').submit();
+                }
+                else {
+                  showErrorMessage(sessionNameInput, '$services.localization.render("riscossPlatform.createForm.alreadyExistingItem")');
+                }
+              },
+              onError: function(response) {
+                showErrorMessage(sessionNameInput, '$services.localization.render("riscossPlatform.createForm.networkError")');
+              }
+            });
+          });
+        }});
+    }
+  });
+  
+  var SessionNamePopup = Class.create(XWiki.widgets.ModalPopup, {
+    initialize : function($super) {
+      this.sessionNameInput = new Element('input', {type: 'input'});
+      this.createButton = new Element('input', {type: 'image', src: '$xwiki.getSkinFile("icons/silk/add.png")'});
+      
+      var container = new Element('div', {id: 'sessionNamePopup'});
+      container.insert(this.sessionNameInput);
+      container.insert(this.createButton);
+      
+      $super(container, {}, {
+        title: 'Foo', position: 'middle'});
+    }
+  });
+  
+  /******************************************************
+   * THIS PART IS FOR DISPLAYING RESULTS
+   ******************************************************/
+  
+  var createTextElement = function(value) {
+    var element = new Element('div');
+    element.innerHTML = JSON.stringify(value);
+    
+    return element;
+  }
+  
+  var createEvidenceElement = function(evidence) {
+    var div = new Element('div');
+    
+    var gauge = new Element('img', {
+      src: '$xwiki.getDocument('RISCOSSPlatformCode.EvidenceGauge').getExternalURL()?positive=' + evidence.positive + '&amp;negative=' + evidence.negative});
+    
+    var textDiv = new Element('div');
+    textDiv.setStyle({float: 'right'});
+    textDiv.innerHTML = '&lt;ul&gt;&lt;li&gt;Positive: ' + evidence.positive + '&lt;/li&gt;&lt;li&gt;Negative: ' + evidence.negative + '&lt;/li&gt;&lt;/ul&gt;';
+    
+    div.insert({top: gauge});
+    div.insert({bottom: textDiv});
+    
+    return div;
+  }
+  
+  var createDistributionElement = function(distribution) {
+    var canvas = new Element('canvas', {width: 200, height: 15 * distribution.values.length});
+    var colors = ["#298a08", "#86b404", "#ffbf00", "#fa5858", "#ff0000"];
+    var context = canvas.getContext("2d")
+    var width = canvas.width;
+    var height = canvas.height;
+
+    context.beginPath();
+    context.rect(0, 0, canvas.width, canvas.height);
+    context.stroke();
+    
+    var barHeight = Math.floor(canvas.height / distribution.values.length);
+    var fontSize = Math.min(barHeight, 10) ;
+    context.font = "bold " + fontSize + "px sans-serif"
+    var maxTextWidth = context.measureText('999.99%').width;
+        
+    for(i = 0; i &lt; distribution.values.length; i++) {
+      context.beginPath();
+      context.rect(0, i * barHeight, Math.floor(canvas.width  * distribution.values[i]), barHeight);
+      context.fillStyle = colors[i];      
+      context.fill();
+      context.fillStyle = '#303030';
+      context.textBaseline = "top";
+      
+      context.fillText('' + Math.floor(10000 * distribution.values[i]) / 100 + "%", Math.min((canvas.width * distribution.values[i]) + 5, canvas.width - maxTextWidth - 5), (barHeight * i) + (barHeight - fontSize) / 2);
+    }
+    
+    return canvas;
+  }
+    
+  /* We expect data to be a map from a category to a map of results, where each
+   * result is a map of an id to a map with 3 elements (DESCRIPTION, TYPE, VALUE)
+   */
+  var displayData = function(element, data) {
+    var html = '&lt;table&gt;\n'
+    for(category in data) {
+      html = html + '&lt;tr&gt;&lt;th colspan="2"&gt;' + category + '&lt;/th&gt;&lt;/tr&gt;\n';
+      
+      for(item in data[category]) {
+        var description = data[category][item].DESCRIPTION || item;
+        var type = data[category][item].TYPE;
+        var value = data[category][item].VALUE;
+        html = html + '&lt;tr&gt;&lt;td&gt;' + description + '&lt;/td&gt;&lt;td&gt;&lt;div class="result" type="' + type + '" style="display: none"&gt;' + encodeURIComponent(JSON.stringify(value)) + '&lt;/div&gt;&lt;/td&gt;&lt;/tr&gt;';
+      }
+    }
+    html = html + '&lt;/table&gt;\n'
+    
+    element.update(html);
+    element.setStyle({display: ''});
+    
+    var resultElements = $$('.result');
+    for(var i = 0; i &lt; resultElements.length; i++) {
+      var resultElement = resultElements[i];
+      var type = resultElement.getAttribute("type");
+      var value = JSON.parse(decodeURIComponent(resultElement.innerHTML));
+      if(type == "EVIDENCE") {
+        Element.replace(resultElement, createEvidenceElement(value));
+      }
+      else if(type = "DISTRIBUTION") {
+        Element.replace(resultElement, createDistributionElement(value));
+      }
+      else {
+        Element.replace(resultElement, createTextElement(value));
+      }
+    }
+  }
+  
+  function init() {
+    var inputDataElement = $('inputData');        
+    var resultDataElement = $('resultData');        
+    var inputData = JSON.parse(decodeURIComponent(inputDataElement.innerHTML).replace(/\+/g, ' '));
+    var resultData = JSON.parse(decodeURIComponent(resultDataElement.innerHTML).replace(/\+/g, ' '));
+    displayData(resultDataElement, resultData);
+    $('inputDataInput').setValue(JSON.stringify(inputData));
+    $('resultDataInput').setValue(JSON.stringify(resultData));
+    
+    $('saveSessionForm').observe('submit', function(e) {
+      var saveSessionDialog = new DialogFromPage('Save session', '$xwiki.getDocument("RISCOSSPlatformRiskAnalysisManagerCode.SaveSessionPopupForm").getURL("view", "xpage=plain")');
+      saveSessionDialog.showDialog();
+      e.stop();
+    })
+  }
+  
+  //Wait for dom load
+  (XWiki.domIsLoaded &amp;&amp; init()) || document.observe('xwiki:dom:loaded', init);
+
+  //End XWiki augmentation
+  return XWiki;
+} (XWiki || {}))</code>
+    </property>
+    <property>
+      <name/>
+    </property>
+    <property>
+      <parse>1</parse>
+    </property>
+    <property>
+      <use>onDemand</use>
+    </property>
+  </object>
+</xwikidoc>

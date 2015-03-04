@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc>
+  <web>RISCOSSPlatformModelManagerCode</web>
+  <name>RiskModelEditSheet</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformModelManagerCode.RiskModelClass</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>0</creationDate>
+  <date>0</date>
+  <contentUpdateDate>0</contentUpdateDate>
+  <version>1.1</version>
+  <title>#if($doc.name == 'GoalModelSheet')GoalModel Sheet#{else}$services.display.title($doc, {'displayerHint': 'default'})#end</title>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <object>
+    <class>
+      <name>XWiki.SheetDescriptorClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <action>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <name>action</name>
+        <number>1</number>
+        <picker>0</picker>
+        <prettyName>Action</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </action>
+    </class>
+    <name>RISCOSSPlatformModelManagerCode.RiskModelEditSheet</name>
+    <number>0</number>
+    <className>XWiki.SheetDescriptorClass</className>
+    <guid>538ea7c2-804e-450f-a232-9d07138374a4</guid>
+    <property>
+      <action>edit</action>
+    </property>
+  </object>
+  <content>{{velocity}}
+## You can modify this page to customize the presentation of your object.
+## At first you should keep the default presentation and just save the document.
+
+#set($class = $doc.getObject('RISCOSSPlatformModelManagerCode.RiskModelClass').xWikiClass)
+#foreach($prop in $class.properties)
+  #if($prop.name != 'riskModelData')
+; $prop.prettyName
+: $doc.display($prop.getName())
+  #end
+#end
+
+; Risk model:
+: {{attachmentSelector buttontext="$services.localization.render('riscossPlatform.modelManager.uploadRiskModel')" classname="RISCOSSPlatformModelManagerCode.RiskModelClass" property="riskModelData" filter="xml,xdsl"/}}
+
+{{/velocity}}</content>
+</xwikidoc>

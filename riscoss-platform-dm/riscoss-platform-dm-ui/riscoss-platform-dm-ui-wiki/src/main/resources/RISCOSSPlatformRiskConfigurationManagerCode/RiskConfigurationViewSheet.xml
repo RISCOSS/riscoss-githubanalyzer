@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc>
+  <web>RISCOSSPlatformRiskConfigurationManagerCode</web>
+  <name>RiskConfigurationViewSheet</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformRiskConfigurationManagerCode.RiskConfigurationClass</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>0</creationDate>
+  <date>0</date>
+  <contentUpdateDate>0</contentUpdateDate>
+  <version>1.1</version>
+  <title>#if($doc.name == 'RiskConfigurationSheet')RiskConfiguration Sheet#{else}$services.display.title($doc, {'displayerHint': 'default'})#end</title>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <object>
+    <class>
+      <name>XWiki.SheetDescriptorClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <action>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <name>action</name>
+        <number>1</number>
+        <picker>0</picker>
+        <prettyName>Action</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </action>
+    </class>
+    <name>RISCOSSPlatformRiskConfigurationManagerCode.RiskConfigurationViewSheet</name>
+    <number>0</number>
+    <className>XWiki.SheetDescriptorClass</className>
+    <guid>85ebe20d-b6f1-4646-9021-7bf7e770806a</guid>
+    <property>
+      <action>view</action>
+    </property>
+  </object>
+  <content>{{velocity}}
+#set($layers = $services.query.xwql("select doc.fullName, doc.title from Document doc, doc.object(RISCOSSPlatformLayerManagerCode.LayerClass) as layer where doc.space='RISCOSSPlatformLayers'").execute())
+
+#set($object = $doc.getObject('RISCOSSPlatformRiskConfigurationManagerCode.RiskConfigurationClass'))
+#set($class = $object.xWikiClass)
+#foreach($prop in $class.properties)
+; $prop.prettyName  
+: $doc.display($prop.getName())  
+#end
+
+
+
+{{html wiki="true"}}
+
+#foreach($layer in $layers)
+
+{{box}}
+
+{{html wiki="true"}}
+  &lt;form action="$xwiki.getDocument("RISCOSSPlatformRiskConfigurationManagerCode.AddRiskModel").getURL()" method="GET"&gt;
+    &lt;input type="hidden" name="riskConfiguration" value="$doc.fullName"/&gt;
+    &lt;input type="hidden" name="layer" value="$layer[0]"/&gt;
+    &lt;h1&gt;Models for layer '$layer[1]' &lt;input type="image" src="$xwiki.getSkinFile("icons/silk/add.png")"/&gt;&lt;/h1&gt;
+  &lt;/form&gt;
+
+  #foreach($riskModel in $doc.getObjects("RISCOSSPlatformRiskConfigurationManagerCode.RiskModelClass", "layer", $layer[0])) 
+    #set($riskModelDocument = $riskModel.getProperty("riskModel").value) 
+| (((
+&lt;form action='$xwiki.getDocument("RISCOSSPlatformRiskConfigurationManagerCode.DeleteRiskModel").getURL()' method='POST'&gt; 
+  &lt;input type="hidden" name="riskConfiguration" value="$doc.fullName"/&gt;
+  &lt;input type="hidden" name="riskModel" value="$riskModelDocument"/&gt;
+  &lt;input type="hidden" name="layer" value="$layer[0]"/&gt;
+  &lt;input type="image" src="$xwiki.getSkinFile("icons/silk/delete.png")"/&gt;
+&lt;/form&gt;
+
+
+))) | [[$riskModelDocument]] 
+  #end
+
+{{/html}}
+
+{{/box}}
+
+
+#end
+
+----
+
+
+#set($xredirect = $xwiki.getDocument("RISCOSSPlatformRiskConfigurations.WebHome").getURL())
+&lt;span class="buttonwrapper"&gt;
+[[$services.localization.render("edit")&gt;&gt;$doc.getExternalURL("edit")]] | [[$services.localization.render("delete")&gt;&gt;$doc.getExternalURL("delete", "xredirect=${xredirect}")]]
+&lt;/span&gt;
+{{/html}}
+
+{{/velocity}}</content>
+</xwikidoc>

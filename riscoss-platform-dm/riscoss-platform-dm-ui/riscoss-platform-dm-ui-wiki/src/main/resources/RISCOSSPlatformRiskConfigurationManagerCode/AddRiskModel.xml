@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc>
+  <web>RISCOSSPlatformRiskConfigurationManagerCode</web>
+  <name>AddRiskModel</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformRiskConfigurationManagerCode.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>0</creationDate>
+  <date>0</date>
+  <contentUpdateDate>0</contentUpdateDate>
+  <version>1.1</version>
+  <title>Add risk model to $xwiki.getDocument($request.riskConfiguration).title in layer $xwiki.getDocument($request.layer).title</title>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <object>
+    <class>
+      <name>XWiki.JavaScriptExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <disabled>0</disabled>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage=Always on this page|onDemand=On demand|always=Always on this wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <name>RISCOSSPlatformRiskConfigurationManagerCode.AddRiskModel</name>
+    <number>0</number>
+    <className>XWiki.JavaScriptExtension</className>
+    <guid>b904e219-fde6-4646-98ed-0d750f636cd5</guid>
+    <property>
+      <cache>forbid</cache>
+    </property>
+    <property>
+      <code>var XWiki = (function(XWiki) {    
+  
+  function init() {
+    var liveTable = $('riskModels');
+    liveTable.on('click', function(e) {
+      if(e.srcElement.localName == 'a') {
+        e.stop();
+        
+        //Dirty hack to retrieve the risk model document name from the URI pointed by the link
+        var components = e.srcElement.href.split('/');
+        var space = components[components.length - 2];
+        var page = components[components.length - 1];
+        var riskModel = space + "." + page;
+        
+        $('riskModelInput').value = riskModel.replace(/\+/g, ' ');
+        
+        $('addRiskModelForm').submit();                                        
+      }                  
+    });
+    
+  }
+  
+  //Wait for dom load
+  (XWiki.domIsLoaded &amp;&amp; init()) || document.observe("xwiki:dom:loaded", init);
+   
+  //End XWiki augmentation
+  return XWiki;
+}(XWiki || {}))</code>
+    </property>
+    <property>
+      <name/>
+    </property>
+    <property>
+      <parse/>
+    </property>
+    <property>
+      <use>currentPage</use>
+    </property>
+  </object>
+  <content>{{velocity}}
+
+#if($request.method == "POST")
+  #set($riskConfiguration = $xwiki.getDocument($request.riskConfiguration))
+  
+  #set($existingRiskModels = $riskConfiguration.getObjects("RISCOSSPlatformRiskConfigurationManagerCode.RiskModelClass", "riskModel", $request.riskModel))
+  #set($found = false)
+  #foreach($existingRiskModel in $existingRiskModels)
+    #if($existingRiskModel.getProperty("layer").value == $request.layer)
+      #set($found = true)
+    #end
+  #end
+  
+  #if(!$found)
+    #set($nb = $riskConfiguration.createNewObject("RISCOSSPlatformRiskConfigurationManagerCode.RiskModelClass"))
+    #set($riskConfigurationModel = $riskConfiguration.getObject("RISCOSSPlatformRiskConfigurationManagerCode.RiskModelClass", $nb))
+    $riskConfigurationModel.set("layer", $request.layer)
+    $riskConfigurationModel.set("riskModel", $request.riskModel)
+    $riskConfiguration.save()
+  #end
+  
+  $response.sendRedirect($riskConfiguration.getURL())
+  
+#elseif($request.riskConfiguration &amp;&amp; $request.layer)
+  {{info}}
+    Please select a risk model by clicking on the corresponding link.
+  {{/info}}
+
+
+  #set($columns = ["doc.name", "description"])
+  #set($columnsProperties = {
+      "doc.name" : { "type" : "text" , "size" : 20, "link" : "view"},
+      "description" : { "type" : "text" , "html" : "true", "filterable" : "false", "sortable" : "false"}
+  })
+  #set($options = { 
+     "className":"RISCOSSPlatformModelManagerCode.RiskModelClass",
+     "translationPrefix" : "riscossPlatform.modelManager.riskModelsTable.",
+     "tagCloud" : false,
+     "rowCount": 10
+  })
+  #livetable("riskModels" $columns $columnsProperties $options)
+
+  {{html}}
+  &lt;form action="$xwiki.getDocument("RISCOSSPlatformRiskConfigurationManagerCode.AddRiskModel").getURL()" method="POST" id="addRiskModelForm"&gt;
+    &lt;input type="hidden" name="riskConfiguration" value="$request.riskConfiguration"/&gt;
+    &lt;input type="hidden" name="layer" value="$request.layer"/&gt;
+    &lt;input type="hidden" name="riskModel" value="" id="riskModelInput"/&gt;
+  &lt;/form&gt;
+  {{/html}}
+#else 
+  {{error}}Missing parameters{{/error}}
+#end
+
+{{/velocity}}</content>
+</xwikidoc>

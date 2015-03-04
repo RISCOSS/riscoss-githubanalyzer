@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc>
+  <web>RISCOSSPlatformModelManagerCode</web>
+  <name>RiskModelTemplate</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformModelManagerCode.GoalModelClass</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>0</creationDate>
+  <date>0</date>
+  <contentUpdateDate>0</contentUpdateDate>
+  <version>1.1</version>
+  <title>Risk Model Template</title>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <object>
+    <class>
+      <name>RISCOSSPlatformModelManagerCode.RiskModelClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <description>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <editor>---</editor>
+        <name>description</name>
+        <number>1</number>
+        <picker>0</picker>
+        <prettyName>Description</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </description>
+      <riskModelData>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <name>riskModelData</name>
+        <number>2</number>
+        <picker>0</picker>
+        <prettyName>Risk model data</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </riskModelData>
+    </class>
+    <name>RISCOSSPlatformModelManagerCode.RiskModelTemplate</name>
+    <number>0</number>
+    <className>RISCOSSPlatformModelManagerCode.RiskModelClass</className>
+    <guid>246e24d0-2ce2-411c-a1bc-7e26a0be6d18</guid>
+    <property>
+      <description/>
+    </property>
+    <property>
+      <riskModelData/>
+    </property>
+  </object>
+  <content/>
+</xwikidoc>

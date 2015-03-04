@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc>
+  <web>RISCOSSPlatformLayerManagerCode</web>
+  <name>SuggestEntities</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformLayerManagerCode.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>0</creationDate>
+  <date>0</date>
+  <contentUpdateDate>0</contentUpdateDate>
+  <version>1.1</version>
+  <title>SuggestEntities</title>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>{{velocity output="false"}}
+#if($request.entityName) 
+  #if($request.layer)
+    #set($hql = "SELECT doc.fullName, doc.title 
+                 FROM XWikiDocument doc, BaseObject obj, StringProperty prop
+                 WHERE doc.space = 'RISCOSSPlatformEntities' AND
+                       doc.fullName = obj.name AND
+                       upper(doc.title) LIKE upper(:entityName) AND
+                       obj.className = 'RISCOSSPlatformLayerManagerCode.EntityClass' AND
+                       prop.id.id = obj.id AND
+                       prop.name = 'layer' AND
+                       prop.value = :layer")
+    #set($query = $services.query.hql($hql))
+    $query.bindValue("layer", $request.layer)
+  #else 
+    #set($hql = "SELECT doc.fullName, doc.title 
+                 FROM XWikiDocument doc, BaseObject obj
+                 WHERE doc.space = 'RISCOSSPlatformEntities' AND
+                       doc.fullName = obj.name AND
+                       upper(doc.title) LIKE upper(:entityName) AND
+                       obj.className = 'RISCOSSPlatformLayerManagerCode.EntityClass'")
+    #set($query = $services.query.hql($hql))
+  #end
+    
+  $query.bindValue("entityName", "%$request.entityName%")
+  
+  #set($results = $query.execute())
+#end
+{{/velocity}}
+{{velocity}}
+$response.setContentType("text/xml")
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;results&gt;
+#foreach($result in $results)
+  &lt;rs id="$result[0]"&gt;$result[1]&lt;/rs&gt;
+#end
+&lt;/results&gt;
+{{velocity}}</content>
+</xwikidoc>

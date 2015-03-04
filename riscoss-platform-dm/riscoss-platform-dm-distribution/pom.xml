@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>riscoss-platform-dm</artifactId>
+    <groupId>eu.riscoss</groupId>
+    <version>0.24-SNAPSHOT</version>
+  </parent>
+  <artifactId>riscoss-platform-dm-distribution</artifactId>
+  <packaging>pom</packaging>
+
+  <name>RISCOSS Platform - Domain Manager - Distribution - Parent POM</name>
+
+  <modules>
+    <module>riscoss-platform-dm-ui-mainwiki-all</module>
+    <module>riscoss-platform-dm-ui-wiki-all</module>
+  </modules>
+</project>

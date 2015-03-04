@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc version="1.1">
+  <web>RISCOSSPlatformCode</web>
+  <name>EvidenceGauge</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <creationDate>0</creationDate>
+  <parent>RISCOSSPlatformCode.WebHome</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <date>0</date>
+  <contentUpdateDate>0</contentUpdateDate>
+  <version>1.1</version>
+  <title>EvidenceGauge</title>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>{{groovy}}
+
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.LinearGradientPaint;
+import java.awt.Paint;
+import java.awt.RadialGradientPaint;
+import java.awt.RenderingHints;
+import java.awt.geom.Arc2D;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+
+import eu.riscoss.reasoner.Evidence;
+
+public class EvidenceGauge extends BufferedImage {
+	
+	Color right_color;
+	Color left_color;
+	
+	public EvidenceGauge( Evidence e, int w, int h ) {
+		this( e, w, h, Color.green, Color.red );
+	}
+	
+	public EvidenceGauge( Evidence e, int w, int h, Color right_color, Color left_color ) {
+		super( w, h, BufferedImage.TYPE_INT_ARGB );
+		
+		this.right_color = right_color;
+		this.left_color = left_color;
+		
+		Graphics2D g = (Graphics2D)getGraphics();
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
+		g.setColor( Color.white );
+		g.fillRect( 0, 0, w, h );
+		paint( e, g, 5, 5, w -10, h -10 );
+	}
+	
+	private void paint( Evidence e, Graphics2D g, int x, int y, int w, int h ) {
+		
+		g.setColor( Color.black );
+		
+		Point2D origin = pt( x + (w /2), y + h );
+		
+		double xofs = ((w) /2) /4;
+		
+		Paint paint = new LinearGradientPaint( 
+				new Point2D.Double( x, y + h / 2 ),
+				new Point2D.Double( x + w, y + h / 2 ),
+				(float[]) [ 0.1f, 0.9f ],
+				(Color[]) [ this.left_color, this.right_color ] );
+		g.setPaint(paint);
+		g.fill( mkArc( origin, 
+				rotate( pt( x, y + h ), 
+						origin, (90 * (1 - e.getNegative())) ), 
+				rotate( pt( x + w, y + h ), 
+						origin, -(90 - (90 * e.getPositive())) ), Arc2D.PIE ) );
+		
+		g.setPaint( null );
+		
+		// Draw surrounding bars
+//		g.setColor( Color.black );
+//		g.draw( mkArc( origin, 
+//				rotate( pt( x + w, y + h ), origin, -(90 -((90 * (e.getDirection() + (e.getConflict() /2)))) ) ), 
+//				rotate( pt( x + w, y + h ), origin, -(90 -((90 * (e.getDirection() - (e.getConflict() /2)))) ) ), 
+//				Arc2D.PIE ) );
+		
+		g.setColor( Color.black );
+		for( int i = 0; i &lt; 4; i++ ) {
+			g.draw( mkArc( origin, 
+					pt( x + (xofs * i), y + h ), 
+					pt( x + w - (xofs * i), y + h ), Arc2D.CHORD ) );
+		}
+		
+		Point2D r = rotate( 
+						pt( x + ((w /2) + (e.getStrength() * (w /2))), y + h ), 
+						origin, 
+						-(90 -(90 * e.getDirection()) ) );
+		
+		Paint fuzziness = new RadialGradientPaint( 
+				r, 
+				(float)(((180 * e.getConflict()) / 100) * getHeight()) + 1f, 
+				(float[]) [ 0.0f, 0.5f ], 
+				(Color[]) [ Color.darkGray, new Color( 0, 0, 0, 0 ) ] );
+		
+		int sz = (int)(((180 * e.getConflict()) / 100) * getWidth());
+		g.setPaint( fuzziness );
+		g.setClip( mkArc( origin, 
+				pt( x, y + h ), 
+				pt( x + w, y + h ), Arc2D.CHORD ) );
+		g.fillOval( (int)r.getX() -(sz /2), (int)r.getY() -(sz /2), sz, sz );
+		
+		g.setColor( Color.white );
+		g.fillOval( (int)r.getX() -5, (int)r.getY() -5, 10, 10 );
+		g.setColor( Color.black );
+		g.drawOval( (int)r.getX() -5, (int)r.getY() -5, 10, 10 );
+		g.drawOval( (int)r.getX() -5, (int)r.getY() -5, 10, 10 );
+		g.drawLine( (int)r.getX(), (int)r.getY() -5, (int)r.getX(), (int)r.getY() +5 );
+		g.drawLine( (int)r.getX() -5, (int)r.getY(), (int)r.getX() +5, (int)r.getY() );
+	}
+	
+	Point2D pt( double x, double y ) {
+		return new Point2D.Double(x, y);
+	}
+	
+	public Point2D rotate(Point2D pt, Point2D center, double angleDeg)
+	{
+		double angleRad = (angleDeg/180)*Math.PI;
+		double cosAngle = Math.cos(angleRad );
+		double sinAngle = Math.sin(angleRad );
+		double dx = (pt.getX()-center.getX());
+		double dy = (pt.getY()-center.getY());
+		
+		return new Point2D.Double( 
+				center.getX() + (int) (dx*cosAngle-dy*sinAngle),
+				center.getY() + (int) (dx*sinAngle+dy*cosAngle) );
+	}
+	
+	double dist0( Point2D origin, double x, double y) {
+		return Math.sqrt(sqr(x - origin.getX()) + sqr(y - origin.getY()));
+	}
+	
+	// Return polar angle of any point relative to arc center.
+	double angle0( Point2D origin, double x, double y ) {
+		return Math.toDegrees(Math.atan2( origin.getY() - y, x - origin.getX() ));
+	}
+	
+	static float sqr(float x) { return x * x; }
+	static double sqr(double x) { return x * x; }
+	
+	static double angleDiff(double a, double b) {
+		double d = b - a;
+		while (d &gt;= 180f) { d -= 360f; }
+		while (d &lt; -180f) { d += 360f; }
+		return d;
+	}
+	
+	Arc2D mkArc( Point2D origin, Point2D left, Point2D right, int type ) {
+		
+		// Get radii of anchor and det point.
+		double ra = dist0( origin, left.getX(), left.getY());
+		double rd = dist0( origin, right.getX(), right.getY() );
+		
+		// If either is zero there's nothing else to draw.
+		if (ra == 0 || rd == 0) { return new Arc2D.Double(); }
+		
+		// Get the angles from center to points.
+		double aa = angle0( origin, left.getX(), left.getY() );
+		double ad = angle0( origin, right.getX(), right.getY() );
+		
+		// Draw the arc and other dots.
+		return new Arc2D.Double( 
+				origin.getX() - ra, origin.getY() - ra, // box upper left
+				2 * ra, 2 * ra,                  // box width and height
+				aa, angleDiff(aa, ad),           // angle start, extent 
+				type );
+	}  
+}
+
+int width = 100;
+int height = 50;
+
+if(request.positive != null &amp;&amp; request.negative != null) {
+    if(request.width != null) {
+        width = Integer.parseInt(request.width);
+        height = width / 2;
+    }
+
+    EvidenceGauge eg = new EvidenceGauge(new Evidence(Double.parseDouble(request.positive), Double.parseDouble(request.negative)), width, height, Color.red, Color.green);
+
+    response.setContentType("image/png");
+    javax.imageio.ImageIO.write(eg, "png", response.getOutputStream());
+    response.flush();
+}
+
+{{/groovy}}</content>
+</xwikidoc>

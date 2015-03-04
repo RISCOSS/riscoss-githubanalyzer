@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>riscoss-platform-dm-ui</artifactId>
+    <groupId>eu.riscoss</groupId>
+    <version>0.24-SNAPSHOT</version>
+  </parent>
+  <artifactId>riscoss-platform-dm-ui-wiki</artifactId>
+  <packaging>xar</packaging>
+
+  <name>RISCOSS Platform - Domain Manager - UI - Wiki</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.xwiki.enterprise</groupId>
+      <artifactId>xwiki-enterprise-ui-wiki</artifactId>
+      <version>${xwiki.version}</version>
+      <type>xar</type>
+    </dependency>
+    <dependency>
+      <groupId>eu.riscoss</groupId>
+      <artifactId>riscoss-platform-dm-ui-common</artifactId>
+      <version>${project.version}</version>
+      <type>xar</type>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-menu-ui</artifactId>
+      <version>${xwiki.version}</version>
+      <type>xar</type>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.xwiki.commons</groupId>
+        <artifactId>xwiki-commons-tool-xar-plugin</artifactId>        
+        <configuration>
+          <transformations>
+            <transformation>
+              <artifact>org.xwiki.platform:xwiki-platform-menu-ui</artifact>
+              <file>Menu/MenuMacro.xml</file>
+              <xpath>/xwikidoc/object/property/visibility</xpath>
+              <value>Current Wiki</value>
+            </transformation>
+          </transformations>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

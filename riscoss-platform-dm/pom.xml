@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>riscoss-platform</artifactId>
+    <groupId>eu.riscoss</groupId>
+    <version>0.24-SNAPSHOT</version>
+  </parent>
+  <artifactId>riscoss-platform-dm</artifactId>
+  <packaging>pom</packaging>
+
+  <name>RISCOSS Platform - Domain Manager - Parent POM</name>
+
+  <modules>
+    <module>riscoss-platform-dm-distribution</module>
+    <module>riscoss-platform-dm-ui</module>
+    <module>riscoss-platform-dm-war</module>
+    <module>xwiki-contrib-commandrunner</module>
+  </modules>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <!-- Verify that all org.xwiki.commons dependencies in Commons have a version specified either as:
+               - ${project.version}
+               - a value not starting with $ (we want to allow supporting ranges)
+               - we added ${xwiki.version} in order to avoid enforcer errors
+          -->
+          <execution>
+            <id>check-dependency-version</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <validateDependencyVersion implementation="org.xwiki.tool.enforcer.ValidateDependencyVersion">
+                  <versionCheck>
+                    <groupIdPrefix>org.xwiki.commons</groupIdPrefix>
+                    <allowedVersionRegex>\$\{project.version\}|[^$].*|\$\{xwiki.version\}</allowedVersionRegex>
+                  </versionCheck>
+                </validateDependencyVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
+  </build>
+</project>

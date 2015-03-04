@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+  <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+    <!-- Direct log messages to stdout -->
+    <Target>System.out</Target>
+    <encoder>
+      <pattern>%d [%t] %-5p %-30.30c{2} - %m %n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="eu.riscoss" level="info"/>
+
+  <!-- By default everything that is of severity WARN, ERROR or FATAL is logged to the console.
+       Since the console output is captured and redirected by the servlet container in most cases,
+       the logs will end up the container's logs, for example in catalina.out in Tomcat.
+  -->
+  <root level="warn">
+    <appender-ref ref="stdout"/>
+  </root>
+</configuration>

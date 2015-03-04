@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xwikidoc>
+  <web>RISCOSSPlatformCode</web>
+  <name>ShowInDialog</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformCode.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>0</creationDate>
+  <date>0</date>
+  <contentUpdateDate>0</contentUpdateDate>
+  <version>1.1</version>
+  <title>Show in dialog JSX</title>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <object>
+    <class>
+      <name>XWiki.JavaScriptExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <disabled>0</disabled>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage=Always on this page|onDemand=On demand|always=Always on this wiki</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <name>RISCOSSPlatformCode.ShowInDialog</name>
+    <number>0</number>
+    <className>XWiki.JavaScriptExtension</className>
+    <guid>bd5732e7-9450-4548-815e-c4c3e966bdd7</guid>
+    <property>
+      <cache>forbid</cache>
+    </property>
+    <property>
+      <code>var XWiki = (function(XWiki) {    
+  var openInModalPopup = function(title, position, href, callbackString) {
+    /* The div that will be used as the dialog content. It contains a loader icon at the beginning. */
+    var contentDiv = new Element('div', {'class' : 'imgcenter'}).update("&lt;img src=\"$xwiki.getSkinFile('icons/xwiki/ajax-loader-large.gif')\"/&gt;");    
+    
+    /* Create the dialog instance and show it. */
+    var dialog = new XWiki.widgets.ModalPopup(contentDiv, {}, {
+      verticalPosition : position,
+      title : title,
+      removeOnClose : true
+    });
+    
+    dialog.showDialog();
+    
+    var updateTarget = contentDiv.up();
+    
+    /* Asynchronously load the create scope page content and show it in the dialog when ready. */
+    new Ajax.Updater(updateTarget, href, {
+      onComplete : function() {
+        /* Change the content attribute to the new content, otherwise it will point to the original contentDiv containing the loader icon. */
+        dialog.content = updateTarget;
+        
+        /* Find the function by navigating the sub-objects. */
+        components = callbackString.split('.');
+        callback = window;
+        for(i = 0; i &lt; components.length; i++) {
+          callback = callback[components[i]];
+          if(!callback) {
+            break
+          }
+        }
+
+        if(callback) {
+          callback(dialog);
+        }
+      },
+      evalScripts: true
+    });
+  };
+  
+  var bindClickEvent = function(element) {
+    element.observe('click', function(event) {
+      event.stop();
+      openInModalPopup(element.title, 'middle', element.href, element.getAttribute('callback'));
+    });
+  }
+  
+  function init() {
+    var links = $$('a.openDialog');
+    for(i = 0; i &lt; links.length; i++) {
+      var link = links[i];
+      bindClickEvent(link);
+    }
+  }
+  
+  //Wait for dom load
+  (XWiki.domIsLoaded &amp;&amp; init()) || document.observe("xwiki:dom:loaded", init);
+   
+  //End XWiki augmentation
+  return XWiki;
+}(XWiki || {}))</code>
+    </property>
+    <property>
+      <name/>
+    </property>
+    <property>
+      <parse/>
+    </property>
+    <property>
+      <use>currentPage</use>
+    </property>
+  </object>
+  <content>This page contains a JSX that allows to show the target of a link as the content of a dialog.
+
+Just add the ##openDialog## class to the ##a## element and the link target will be open in the dialog.
+
+Additional attributes that can be specified:
+
+* ##title## for the dialog title
+* ##callback## the name of a function (not a function definition!) that will be called once the dialog is displayed and its content fully loaded. This function will be passed a reference to the dialog itself.
+
+== Example
+
+{{code language="html"}}
+  [[Show this page in a dialog!&gt;&gt;ShowInDialog||queryString="xpage=plain" class="openDialog" title="Show in dialog" callback="alert"]]
+{{/code}}
+
+[[Show this page in a dialog!&gt;&gt;ShowInDialog||queryString="xpage=plain" class="openDialog" title="Show in dialog" callback="alert"]]</content>
+</xwikidoc>
