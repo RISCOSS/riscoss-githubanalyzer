@@ -8,9 +8,15 @@ RISCOSS will deliver a decision-making management platform integrated in a busin
 This is the main repository for the RISCOSS Platform code. Detailed information about the project and how to contribute them detailed in  [this repository wiki](https://github.com/RISCOSS/riscoss-platform-core/wiki)
 
 #Project Partners
-|[[images/partners/upc_logo.jpg]]|[[images/partners/maastricht_logo.jpg]]|[[FBK_logo.jpg]]|
-||||
-||||
+| ![](https://github.com/riscoss/riscoss-platform-core/wiki/images/partners/upc_logo.jpg)| Universitat Politècnica de Catalunya (Spain)|
+| ![](https://github.com/riscoss/riscoss-platform-core/wiki/images/partners/maastricht_logo.jpg)| Universiteit Maastricht (Nederlands)|
+| ![](https://github.com/riscoss/riscoss-platform-core/wiki/images/partners/FBK_logo.jpg)| Fondazione Bruno Kessler (Italy) |
+| ![](https://github.com/riscoss/riscoss-platform-core/wiki/images/partners/xwiki_logo.jpg)| XWIKI SAS (France) |
+| ![](https://github.com/riscoss/riscoss-platform-core/wiki/images/partners/xwiki_logo.jpg)| Centro Nacional de Referencia de Aplicaciones de las TIC basadas en fuentes abiertas (Spain) |
+| ![](https://github.com/riscoss/riscoss-platform-core/wiki/images/partners/kpa_logo.jpg)| KPA (Israel) |
+| ![](https://github.com/riscoss/riscoss-platform-core/wiki/images/partners/ericsson_logo.jpg)| ERICSSON Telecomunicazioni (Italy) |
+| ![](https://github.com/riscoss/riscoss-platform-core/wiki/images/partners/kpa_logo.jpg)| OW2 (France) |
+
 
 # Repository structure
 
