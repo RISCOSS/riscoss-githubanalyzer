@@ -7,6 +7,8 @@ RISCOSS will deliver a decision-making management platform integrated in a busin
 
 This is the main repository for the RISCOSS Platform code. Detailed information about the project and how to contribute them detailed in  [this repository wiki](https://github.com/RISCOSS/riscoss-platform-core/wiki)
 
+Please refer to the [RISCOSS White Paper](http://www.riscoss.eu/bin/download/Discover/Whitepaper/RISCOSS-Whitepaper.pdf) for a more detailed description.
+
 #Project Partners
 ![](https://github.com/riscoss/riscoss-platform-core/wiki/images/logos/partners/upc_logo.jpg) [Universitat Politècnica de Catalunya](http://www.upc.edu/) (Spain) <br>
  ![](https://github.com/riscoss/riscoss-platform-core/wiki/images/logos/partners/ericsson_logo.jpg) [ERICSSON Telecomunicazioni](http://www.ericsson.com/it) (Italy) <br>
@@ -17,7 +19,6 @@ This is the main repository for the RISCOSS Platform code. Detailed information 
  ![](https://github.com/riscoss/riscoss-platform-core/wiki/images/logos/partners/ow2_logo.jpg) [OW2](http://www.ow2.org/) (France) <br>
  ![](https://github.com/riscoss/riscoss-platform-core/wiki/images/logos/partners/kpa_logo.jpg) [KPA](http://www.kpa-group.com/) (Israel) <br>
 
-Please refer to the [RISCOSS White Paper](http://www.riscoss.eu/bin/download/Discover/Whitepaper/RISCOSS-Whitepaper.pdf) for a more detailed description.
 
  ![](https://github.com/riscoss/riscoss-platform-core/wiki/images/logos/FP7-gen-RGB-small.jpg)
  ![](https://github.com/riscoss/riscoss-platform-core/wiki/images/logos/European_Commission_Logo.jpg)
