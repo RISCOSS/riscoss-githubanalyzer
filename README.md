@@ -17,17 +17,7 @@ This is the main repository for the RISCOSS Platform code. Detailed information 
  ![](https://github.com/riscoss/riscoss-platform-core/wiki/images/logos/partners/ow2_logo.jpg) [OW2](http://www.ow2.org/) (France) <br>
  ![](https://github.com/riscoss/riscoss-platform-core/wiki/images/logos/partners/kpa_logo.jpg) [KPA](http://www.kpa-group.com/) (Israel) <br>
 
-# Repository structure
-
-The project structure reflects the structure of the RISCOSS Platform architecture:
-
-* riscoss-platform-dm contains the code of the Domain Manager (DM)
-* riscoss-platform-rdr contains the code for the Risk Data Repository (RDR)
-* riscoss-platform-analyser is the engine which calculates risk based on data-points stored in the RDR.
-* riscoss-platform-jsmile is a wrapper around the proprietary jSmile project which is used by the riscoss-platform-analyser.
-
-Detailed information in  [How to contribute to the RISCOSS platform repository](https://github.com/RISCOSS/riscoss-platform-core/wiki/How to contribute) 
-
 Please refer to the [RISCOSS White Paper](http://www.riscoss.eu/bin/download/Discover/Whitepaper/RISCOSS-Whitepaper.pdf) for a more detailed description.
 
-
+ ![](https://github.com/riscoss/riscoss-platform-core/wiki/images/logos/FP7-gen-RGB-small.jpg)
+ ![](https://github.com/riscoss/riscoss-platform-core/wiki/images/logos/European_Commission_Logo.jpg)
