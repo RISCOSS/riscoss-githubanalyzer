@@ -7,7 +7,12 @@ RISCOSS will deliver a decision-making management platform integrated in a busin
 
 This is the main repository for the RISCOSS Platform code. Detailed information about the project and how to contribute them detailed in  [this repository wiki](https://github.com/RISCOSS/riscoss-platform-core/wiki)
 
-# Project structure
+#Project Partners
+|[[images/partners/upc_logo.jpg]]|[[images/partners/maastricht_logo.jpg]]|[[FBK_logo.jpg]]|
+||||
+||||
+
+# Repository structure
 
 The project structure reflects the structure of the RISCOSS Platform architecture:
 
