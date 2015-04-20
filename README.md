@@ -8,9 +8,6 @@ RISCOSS will deliver a decision-making management platform integrated in a busin
 This is the main repository for the RISCOSS Platform code. Detailed information about the project and how to contribute them detailed in  [this repository wiki](https://github.com/RISCOSS/riscoss-platform-core/wiki)
 
 #Project Partners
-| | |
-| | |
-
 ![](https://github.com/riscoss/riscoss-platform-core/wiki/images/partners/upc_logo.jpg) [Universitat Politècnica de Catalunya](http://www.upc.edu/) (Spain) <br>
 
 ![](https://github.com/riscoss/riscoss-platform-core/wiki/images/partners/maastricht_logo.jpg) [Universiteit Maastricht](http://www.maastrichtuniversity.nl/) (Nederlands) <br>
