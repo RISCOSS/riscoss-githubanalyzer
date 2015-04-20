@@ -17,7 +17,7 @@ This is the main repository for the RISCOSS Platform code. Detailed information 
 
 ![](https://github.com/riscoss/riscoss-platform-core/wiki/images/partners/xwiki_logo.jpg) [XWIKI SAS](http://www.xwiki.com/en/) (France)  <br>
 
-![](https://github.com/riscoss/riscoss-platform-core/wiki/images/partners/xwiki_logo.jpg) [Centro Nacional de Referencia de Aplicaciones de las TIC basadas en Fuentes Abiertas](http://www.cenatic.es/) (Spain) <br>
+![](https://github.com/riscoss/riscoss-platform-core/wiki/images/partners/cenatic_logo.jpg) [Centro Nacional de Referencia de Aplicaciones de las TIC basadas en Fuentes Abiertas](http://www.cenatic.es/) (Spain) <br>
 
  ![](https://github.com/riscoss/riscoss-platform-core/wiki/images/partners/kpa_logo.jpg) [KPA](http://www.kpa-group.com/) (Israel) <br>
 
