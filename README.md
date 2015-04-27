@@ -1,4 +1,5 @@
-[[images/logos/logo_riscoss_text.png]]
+![](https://github.com/riscoss/riscoss-platform-core/wiki/images/logos/logo_riscoss_text.png)
+
 # Introduction
 
 The [RISCOSS project](http://www.riscoss.eu) will offer novel risk identification, management and mitigation tools and methods for community-based and industry-supported OSS development. 
