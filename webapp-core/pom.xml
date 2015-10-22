@@ -9,7 +9,7 @@
   </parent>
   <groupId>eu.riscoss</groupId>
   <artifactId>riscoss-platform</artifactId>
-  <version>0.24-SNAPSHOT</version>
+  <version>0.3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>RISCOSS Platform - Parent POM</name>
@@ -21,7 +21,8 @@
   <modules>
     <module>riscoss-platform-rdr</module>
     <module>riscoss-platform-dm</module>
-    <module>riscoss-platform-rdc</module>
+    <module>../../riscoss-commons/riscoss-analyser</module>
+    <module>../../riscoss-commons/riscoss-data-collector</module>
   </modules>
 
   <dependencyManagement>

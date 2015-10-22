@@ -6,7 +6,7 @@
   <parent>
     <artifactId>riscoss-platform-dm-ui</artifactId>
     <groupId>eu.riscoss</groupId>
-    <version>0.24-SNAPSHOT</version>
+    <version>0.3-SNAPSHOT</version>
   </parent>
   <artifactId>riscoss-platform-dm-ui-mainwiki</artifactId>
   <packaging>xar</packaging>
@@ -25,7 +25,7 @@
       <artifactId>riscoss-platform-dm-ui-common</artifactId>
       <version>${project.version}</version>
       <type>xar</type>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-platform-wiki-ui-mainwiki</artifactId>

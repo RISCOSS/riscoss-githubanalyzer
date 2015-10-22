@@ -6,7 +6,7 @@
   <parent>
     <artifactId>riscoss-platform-rdr</artifactId>
     <groupId>eu.riscoss</groupId>
-    <version>0.24-SNAPSHOT</version>
+    <version>0.3-SNAPSHOT</version>
   </parent>
   <artifactId>riscoss-platform-rdr-war</artifactId>
   <packaging>war</packaging>
@@ -34,7 +34,7 @@
       <groupId>javassist</groupId>
       <artifactId>javassist</artifactId>
       <!-- This must match with the version used in XWiki -->
-      <version>3.9.0.GA</version>      
+      <version>3.9.0.GA</version>
     </dependency>
     <dependency>
       <groupId>org.hsqldb</groupId>

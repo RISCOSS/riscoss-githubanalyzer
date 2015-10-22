@@ -6,7 +6,7 @@
   <parent>
     <artifactId>riscoss-platform</artifactId>
     <groupId>eu.riscoss</groupId>
-    <version>0.24-SNAPSHOT</version>
+    <version>0.3-SNAPSHOT</version>
   </parent>
   <artifactId>riscoss-platform-rdr</artifactId>
   <packaging>pom</packaging>
@@ -14,6 +14,7 @@
   <name>RISCOSS Platform - Risk Data Repository - Parent POM</name>
 
   <modules>
+    <module>riscoss-platform-rdc-model</module>
     <module>riscoss-platform-rdr-core</module>
     <module>riscoss-platform-rdr-rest</module>
     <module>riscoss-platform-rdr-war</module>

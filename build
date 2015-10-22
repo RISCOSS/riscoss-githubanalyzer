@@ -1,0 +1,10 @@
+#!/bin/bash
+die() { echo $1; exit 1; }
+node -e 'console.log("hello world")' | grep 'hello world' >/dev/null || die "ERROR: Nodejs required"
+mvn -v | grep 'Apache Maven 3.' >/dev/null || die "ERROR: Maven 3.x required"
+ls ./riscoss-commons >/dev/null || die "ERROR: please run ./update first"
+
+(
+    cd ./webapp-core
+    MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=256m" mvn clean install --settings ./etc/settings.xml
+) || die "Maven failed";
