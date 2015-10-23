@@ -4,6 +4,9 @@ THIS_DIR=`pwd`
 TOMCAT_DIR="${THIS_DIR}/`ls | grep '^apache-tomcat-'`"
 TOMCAT_LOG="${TOMCAT_DIR}/logs/catalina.out"
 
+TAIL=`which gtail || which tail`
+$TAIL --version | grep 'GNU' >/dev/null || die "Could not find GNU Tail";
+
 ls ${TOMCAT_DIR}/webapps/riscoss && rm ${TOMCAT_DIR}/webapps/riscoss;
 ls ${TOMCAT_DIR}/webapps/riscoss-rdr && rm ${TOMCAT_DIR}/webapps/riscoss-rdr;
 echo $THIS_DIR
@@ -40,6 +43,6 @@ JAVA_PID=$!
 ) &
 PID=$!
 
-tail -F $TOMCAT_LOG --pid=$PID;
+$TAIL -F $TOMCAT_LOG --pid=$PID;
 kill -0 $JAVA_PID && echo 'Tomcat started in the background' && exit 0;
 echo 'Tomcat failed to start' && exit 1;

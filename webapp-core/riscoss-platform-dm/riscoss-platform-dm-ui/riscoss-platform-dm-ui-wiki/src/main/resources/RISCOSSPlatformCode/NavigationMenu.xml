@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
 <xwikidoc>
   <web>RISCOSSPlatformCode</web>
   <name>NavigationMenu</name>
@@ -11,123 +31,73 @@
   <author>xwiki:XWiki.Admin</author>
   <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <creationDate>0</creationDate>
-  <date>0</date>
-  <contentUpdateDate>0</contentUpdateDate>
+  <creationDate>1430839818000</creationDate>
+  <date>1444837070000</date>
+  <contentUpdateDate>1444750105000</contentUpdateDate>
   <version>1.1</version>
   <title/>
+  <template/>
   <defaultTemplate/>
   <validationScript/>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
-  <object>
-    <class>
-      <name>XWiki.UIExtensionClass</name>
-      <customClass/>
-      <customMapping/>
-      <defaultViewSheet/>
-      <defaultEditSheet/>
-      <defaultWeb/>
-      <nameField/>
-      <validationScript/>
-      <content>
-        <disabled>0</disabled>
-        <name>content</name>
-        <number>3</number>
-        <prettyName>Extension Content</prettyName>
-        <rows>10</rows>
-        <size>40</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-      </content>
-      <extensionPointId>
-        <disabled>0</disabled>
-        <name>extensionPointId</name>
-        <number>1</number>
-        <prettyName>Extension Point ID</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </extensionPointId>
-      <name>
-        <disabled>0</disabled>
-        <name>name</name>
-        <number>2</number>
-        <prettyName>Extension ID</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </name>
-      <parameters>
-        <disabled>0</disabled>
-        <name>parameters</name>
-        <number>4</number>
-        <prettyName>Extension Parameters</prettyName>
-        <rows>10</rows>
-        <size>40</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-      </parameters>
-      <scope>
-        <cache>0</cache>
-        <disabled>0</disabled>
-        <displayType>select</displayType>
-        <multiSelect>0</multiSelect>
-        <name>scope</name>
-        <number>5</number>
-        <prettyName>Extension Scope</prettyName>
-        <relationalStorage>0</relationalStorage>
-        <separator> </separator>
-        <separators> ,|</separators>
-        <size>1</size>
-        <unmodifiable>0</unmodifiable>
-        <values>wiki=Current Wiki|user=Current User|global=Global</values>
-        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-      </scope>
-    </class>
-    <name>RISCOSSPlatformCode.NavigationMenu</name>
-    <number>0</number>
-    <className>XWiki.UIExtensionClass</className>
-    <guid>3f681290-10f4-430f-a594-7d1dce3693c4</guid>
-    <property>
-      <content>{{menu type="horizontal fixedWidth"}}{{include reference="RISCOSSPlatformCode.NavigationMenu" /}}{{/menu}}</content>
-    </property>
-    <property>
-      <extensionPointId>org.xwiki.platform.template.header.after</extensionPointId>
-    </property>
-    <property>
-      <name>RISCOSSPlatformCode.NavigationMenu</name>
-    </property>
-    <property>
-      <parameters/>
-    </property>
-    <property>
-      <scope>wiki</scope>
-    </property>
-  </object>
   <content>{{include document="RISCOSSPlatformCode.Macros"/}}{{velocity}}
+## -*- Mode:Velocity
 $xwiki.jsx.use("RISCOSSPlatformCode.Create", {"minify" : false}) ##
+$xwiki.ssx.use("RISCOSSPlatformCode.NavigationMenu") ##
 ## Needed for the XWiki.RISCOSSPlatform.initializeCreateDialog callback
 $xwiki.jsx.use("RISCOSSPlatformCode.ShowInDialog") ##
 #set($mainWikiId = $services.wiki.mainWikiId) ##
 #set($currentWikiId = $services.wiki.currentWikiId) ##
 ##
+## Get RISCOSS platform configuration information
+#set($confDoc = $xwiki.getDocument("RISCOSSPlatformCode.RISCOSSConfiguration"))
+#set($superConf = $confDoc.getObject("RISCOSSPlatformCode.RISCOSSConfiguration"))
+#set($feedbackURL = $superConf.getProperty("feedbackURL").getValue())
+#set($expertFeedbackURL = $superConf.getProperty("expertFeedbackURL").getValue())
+#set($privatePageURL = $xwiki.getURL('RISCOSSPlatformCode.PrivatePage'))
+##
+#if($isGuest)
+##* **[[$services.localization.render("login")&gt;&gt;$doc.getExternalURL("login")]]**
+## JS/CSS of the Github login functionality
+#set($oauthPublicKey = $superConf.getProperty("oauthPublicKey").getValue())
+#if ("$!oauthPublicKey" != '')
+   #set($discard = $xwiki.jsx.use("RISCOSSPlatformCode.GithubLogin"))
+   #set($discard = $xwiki.ssx.use("RISCOSSPlatformCode.GithubLogin"))
+   [[Connect with Github&gt;&gt;||id="connectGithub"]] | [[$services.localization.render("login")&gt;&gt;$doc.getExternalURL("login")||id="loginlink"]] | [[Register&gt;&gt;RISCOSSPlatformCode.Register||id="registerlink"]]#if("$!feedbackURL" != '') | [[Feedback&gt;&gt;$feedbackURL||class="guestmenuitem"]]#end | [[About Riscoss&gt;&gt;http://www.riscoss.eu/bin/view/About/GitHubAnalyzer||class="guestmenuitem"]]
+#end
+#else## isGuest
 #if($currentWikiId == 'xwiki' || ($mainWikiId != $currentWikiId))
   #set($wikiName = $services.wiki.getById($services.wiki.getCurrentWikiId()).prettyName)
-* $services.localization.render("riscossPlatform.domain") **$!wikiName**
   #if($hasAdmin) 
+* $services.localization.render("riscossPlatform.domain") **$!wikiName**
 ** [[$services.localization.render("riscossPlatform.adminUsers")&gt;&gt;RISCOSSPlatformCode.AdminUsers]]
 ** $services.localization.render("riscossPlatform.adminRoles")
 ** ----
-  #end
 ** [[$services.localization.render("logout")&gt;&gt;$xwiki.getDocument("XWiki.XWikiLogout").getExternalURL("logout")]]   
+#else
+* **[[$services.localization.render("logout")&gt;&gt;$xwiki.getDocument("XWiki.XWikiLogout").getExternalURL("logout")]]
+#if("$!feedbackURL" != '')
+* ** {{html}}&lt;a href="$feedbackURL" class="riscoss-feedback"&gt;Feedback&lt;/a&gt;{{/html}}
+#end
+* **[[$services.localization.render("riscossPlatform.githubprojects.projectpage.allprojects")&gt;&gt;Main.WebHome]]
+* **[[$services.localization.render("riscossPlatform.githubprojects.privatepage.myprojects")&gt;&gt;RISCOSSPlatformCode.PrivatePage]]
+* **[[About Riscoss&gt;&gt;http://www.riscoss.eu/bin/view/About/GitHubAnalyzer]]
+* **{{html}}&lt;span class="riscoss-user"&gt;$xwiki.getUserName($context.user)&lt;/span&gt;{{/html}}
+#if("$!feedbackURL" != "" &amp;&amp; 1!=1)
+* ** {{html}}&lt;a href="$feedbackURL" class="riscoss-feedback"&gt;User feedback&lt;/a&gt;{{/html}}
+#end
+#if("$!expertFeedbackURL" != "")
+{{html}}&lt;a href="$expertFeedbackURL" class="riscoss-feedback"&gt;Expert feedback&lt;/a&gt;{{/html}}
+#end
+#end
 #else
 * **$services.localization.render("riscossPlatform.domainManager")**
 #end
 ##
-#if(!$isGuest)
+#if($hasAdmin)
   #if($currentWikiId == 'xwiki' || ($mainWikiId != $currentWikiId))
     #set($layers = $services.query.xwql("SELECT doc.fullName, doc.title FROM Document doc, doc.object(RISCOSSPlatformLayerManagerCode.LayerClass) as layer WHERE doc.space = 'RISCOSSPlatformLayers'").execute())
 * $services.localization.render("riscossPlatform.layerManager")
@@ -200,8 +170,277 @@ $xwiki.jsx.use("RISCOSSPlatformCode.ShowInDialog") ##
 ** [[$services.localization.render("riscossPlatform.modelManager.goalModelIndex")&gt;&gt;RISCOSSPlatformGoalModels.WebHome]]
   #end  
 #end
+#end
 {{/velocity}}
 
 (((
 </content>
+  <attachment>
+    <filename>feedback.png</filename>
+    <filesize>3164</filesize>
+    <author>xwiki:XWiki.Admin</author>
+    <date>1364415417000</date>
+    <version>1.1</version>
+    <comment/>
+    <content>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
+4D8AAAAASUVORK5CYII=
+</content>
+  </attachment>
+  <object>
+    <class>
+      <name>XWiki.StyleSheetExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <disabled>0</disabled>
+        <name>cache</name>
+        <number>1</number>
+        <prettyName>Caching policy</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+        <cache>0</cache>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <values>long|short|default|forbid</values>
+      </cache>
+      <code>
+        <disabled>0</disabled>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+        <rows>20</rows>
+        <size>50</size>
+      </code>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>3</number>
+        <prettyName>Name</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+      </parse>
+      <use>
+        <disabled>0</disabled>
+        <name>use</name>
+        <number>5</number>
+        <prettyName>Use this extension</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+        <cache>0</cache>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <values>currentPage=Always on this page|onDemand=On demand|always=Always on this wiki</values>
+      </use>
+    </class>
+    <name>RISCOSSPlatformCode.NavigationMenu</name>
+    <number>1</number>
+    <className>XWiki.StyleSheetExtension</className>
+    <guid>a1ac8272-7fb6-4ea8-b8ab-5b9b2a3b5f49</guid>
+    <property>
+      <cache>long</cache>
+    </property>
+    <property>
+      <code>.riscoss-feedback {
+    background-image: url("$doc.getAttachmentURL('feedback.png')");
+    background-position: right center;
+    background-repeat: no-repeat;
+    padding-right: 20px;
+}
+.riscoss-user {
+    background-image: url("$xwiki.getSkinFile('icons/silk/user.png')");
+    background-position: left center;
+    background-repeat: no-repeat;
+    padding-left: 18px;
+}
+.menu.menu-horizontal ul li:last-child {
+  float: right;
+  margin-right: 12px;
+}
+.menu-horizontal * {
+    font-size: 14px !important;
+    font-weight: 500;
+    color:#FFFFFF;
+}
+div.menu-horizontal li {
+    padding: 0.2em 0.3em;
+}
+.menu-horizontal&gt;ul&gt;li::before {
+    content: "| ";
+    margin-right: 4px;
+}
+.menu-horizontal&gt;ul&gt;li:first-child::before {
+    content: "";
+    margin-right: 0;
+}</code>
+    </property>
+    <property>
+      <name/>
+    </property>
+    <property>
+      <parse>1</parse>
+    </property>
+    <property>
+      <use>always</use>
+    </property>
+  </object>
+  <object>
+    <class>
+      <name>XWiki.UIExtensionClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <content>
+        <disabled>0</disabled>
+        <name>content</name>
+        <number>1</number>
+        <prettyName>Extension Content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+        <rows>10</rows>
+        <size>40</size>
+      </content>
+      <extensionPointId>
+        <disabled>0</disabled>
+        <name>extensionPointId</name>
+        <number>2</number>
+        <prettyName>Extension Point ID</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+      </extensionPointId>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>3</number>
+        <prettyName>Extension ID</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+      </name>
+      <parameters>
+        <disabled>0</disabled>
+        <name>parameters</name>
+        <number>4</number>
+        <prettyName>Extension Parameters</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+        <rows>10</rows>
+        <size>40</size>
+      </parameters>
+      <scope>
+        <disabled>0</disabled>
+        <name>scope</name>
+        <number>5</number>
+        <prettyName>Extension Scope</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+        <cache>0</cache>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <values>wiki=Current Wiki|user=Current User|global=Global</values>
+      </scope>
+    </class>
+    <name>RISCOSSPlatformCode.NavigationMenu</name>
+    <number>2</number>
+    <className>XWiki.UIExtensionClass</className>
+    <guid>f4445051-74a9-4513-b9e7-513737603472</guid>
+    <property>
+      <content>{{menu type="horizontal fixedWidth"}}{{include reference="RISCOSSPlatformCode.NavigationMenu" /}}{{/menu}}</content>
+    </property>
+    <property>
+      <extensionPointId>org.xwiki.platform.template.header.after</extensionPointId>
+    </property>
+    <property>
+      <name>RISCOSSPlatformCode.NavigationMenu</name>
+    </property>
+    <property>
+      <parameters/>
+    </property>
+    <property>
+      <scope>wiki</scope>
+    </property>
+  </object>
 </xwikidoc>

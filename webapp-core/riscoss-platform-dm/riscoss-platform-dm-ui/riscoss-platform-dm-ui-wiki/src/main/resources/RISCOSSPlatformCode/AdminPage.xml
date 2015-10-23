@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc>
+  <web>RISCOSSPlatformCode</web>
+  <name>AdminPage</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>xwiki:XWiki.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>1430839815000</creationDate>
+  <date>1444664382000</date>
+  <contentUpdateDate>1444664382000</contentUpdateDate>
+  <version>1.1</version>
+  <title/>
+  <template/>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>= Admin Page =
+{{include reference="RISCOSSPlatformCode.EvaluateAllProjects"/}}
+= Available Results =
+{{velocity}}
+## -*- Mode:Velocity
+#set($discard = $xwiki.jsx.use("RISCOSSPlatformCode.AdminPage"))
+#set($columns = ['project', 'description', 'author', 'score', 'ranking'])
+#set($columnsProperties = {
+    'project' : { 'type' : 'none', 'html' : 'true', 'sortable' : 'true', 'filterable' : 'true'},
+    'description' : {'type' : 'text', 'filterable' : 'false', 'sortable' : 'false'},
+    'author' : {'type' : 'none', 'html':true, 'filterable' : 'false', 'sortable' : 'false'},
+    'score' : {'type' : 'text', 'filterable' : 'false', 'sortable' : 'false'},
+    'ranking' : {'type' : 'none', 'html' : true, 'filterable' : 'false', 'sortable' : 'true'}
+})
+#set($options = {
+   'resultPage' : 'RISCOSSPlatformLayerManagerCode.EntitiesLiveTableResults',
+   'rowCount' : 10,
+   'translationPrefix' : 'riscossPlatform.layerManager.entitiesTable.',
+   'creator': $xcontext.getUser(),
+   'topFilters' : '&lt;input class="projectNameFilter" id="xwiki-livetable-entities-filter-1" name="entity" title="Filter for the project name column" type="text"&gt;'
+})
+
+#livetable('entities', $columns, $columnsProperties, $options)
+{{/velocity}}</content>
+</xwikidoc>

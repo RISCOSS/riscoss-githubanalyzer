@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc>
+  <web>RISCOSSPlatformCode</web>
+  <name>DisplayCollectedData</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>xwiki:XWiki.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>1430839815000</creationDate>
+  <date>1440771485000</date>
+  <contentUpdateDate>1357696926000</contentUpdateDate>
+  <version>1.1</version>
+  <title/>
+  <template/>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>{{velocity}}
+## -*- Mode:Velocity
+#if ($doc.getFullName() == "RISCOSSPlatformCode.DisplayCollectedData")
+  {{info}}This document contains a Javascript Extension for displaying data from the RDR{{/info}}
+#else
+  #set($confDoc = $xwiki.getDocument("RISCOSSPlatformCode.RISCOSSConfiguration"))
+  #set($superConf = $confDoc.getObject("RISCOSSPlatformCode.RISCOSSConfiguration"))
+  #set($rdrPath = $superConf.getProperty("rdr").getValue())
+  $xwiki.jsx.use("RISCOSSPlatformCode.DisplayCollectedData")
+  (% style="display:none" class="DisplayDataCollector" data-rdrpath="$escapetool.url($rdrPath)" %)((()))
+#end
+{{/velocity}}
+</content>
+  <object>
+    <class>
+      <name>XWiki.JavaScriptExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+      </name>
+      <code>
+        <disabled>0</disabled>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+        <rows>20</rows>
+        <size>50</size>
+      </code>
+      <use>
+        <disabled>0</disabled>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+        <cache>0</cache>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <values>currentPage=Always on this page|onDemand=On demand|always=Always on this wiki</values>
+      </use>
+      <parse>
+        <disabled>0</disabled>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+      </parse>
+      <cache>
+        <disabled>0</disabled>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+        <cache>0</cache>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <values>long|short|default|forbid</values>
+      </cache>
+    </class>
+    <name>RISCOSSPlatformCode.DisplayCollectedData</name>
+    <number>1</number>
+    <className>XWiki.JavaScriptExtension</className>
+    <guid>a728802e-fdb1-4049-b367-c7b4d29cfbc4</guid>
+    <property>
+      <name/>
+    </property>
+    <property>
+      <code>require(['jquery'], function ($) {
+  // Copied from DataCollectorManager, TODO: fix
+  var DATA_POINTS_LABELS = {
+     "github:repo:contributors": "Contributors",
+     "github:repo:size" : "Size",
+     "github:repo:watchers" : "Watchers",
+     "github:repo:open_issues_count" : "Number of open issues",
+     "github:repo:has_wiki" : "Has wiki",
+     "github:repo:stargazers_count" : "Number of stargazers",
+     "github:repo:subscribers_count" : "Number of subscribers",
+     "github:repo:created_at" : "Created at",
+     "github:repo:license" : "License",
+     "github:repo:updated_at" : "Updated at",
+     "github:repo:forks_count" : "Number of forks",
+     "github:repo:closed_issues" : "Number of closed issues",
+     "github:repo:ci_link" : "Ci link"
+  }
+
+  var uid = function () { return 'uid-' + Math.random().toString(32).substring(2); };
+  var appendElem = function ($container, type, id) {
+    id = id || uid();
+    $container.append("&lt;"+type+" id="+id+"&gt;&lt;/"+type+"&gt;");
+    return $('#'+id);
+  };
+
+  var showInput = function ($div, input) {
+    $div.html('');
+    $div.attr('style', '');
+    var $table = appendElem($div, 'table');
+    var $tbody = appendElem($table, 'tbody');
+
+    var $headerTr = appendElem($tbody, 'tr');
+    var $th = appendElem($headerTr, 'th');
+    $th.text("Data Point");
+    $th = appendElem($headerTr, 'th');
+    $th.text("Collected Value");
+
+    input.sort(function (a, b) { return (a.date &gt; b.date) ? 1 : -1; });
+    var seen = [];
+    for (var i = 0; i &lt; input.length; i++) {
+      var entry = input[i];
+      if (seen.indexOf(entry.id) !== -1) { continue; }
+      seen.push(entry.id);
+
+      var $tr = appendElem($tbody, 'tr');
+      var $td = appendElem($tr, 'td');
+      $td.text(DATA_POINTS_LABELS[entry.id]);
+
+      $td = appendElem($tr, 'td');
+      if (["NUMBER","INTEGER","REAL"].indexOf(entry.type) &gt; -1) {
+          $td.append(entry.value);
+      } else {
+          throw new Error();
+      }
+    }
+  };
+/* TODO: this triggers a cross domain error.
+  var url = decodeURIComponent($('.DisplayDataCollector').attr("data-rdrpath"));
+  url = url.replace(/^ \| $/g, '');
+  url = url.replace('localhost', window.location.hostname);
+  url = url + '/' + $('#collected-data').attr("data-id") + '?limit=-1';
+*/
+  var url = window.location.href.replace(/riscoss\/.*$/,'') + 'riscoss-rdr/' + $('#collected-data').attr("data-id") + '?limit=-1'
+  $.ajax(url, {
+      success: function (ret) {
+          showInput($('#collected-data'), ret.results);
+      }
+  });
+});
+</code>
+    </property>
+    <property>
+      <use>onDemand</use>
+    </property>
+    <property>
+      <parse>0</parse>
+    </property>
+    <property>
+      <cache>forbid</cache>
+    </property>
+  </object>
+</xwikidoc>

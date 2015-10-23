@@ -1,4 +1,4 @@
 /.project
 /riscoss-commons
 **/target
-./result
+result

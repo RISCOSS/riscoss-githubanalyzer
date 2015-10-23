@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
 <xwikidoc>
   <web>RISCOSSPlatformCode</web>
   <name>ShowInDialog</name>
@@ -11,17 +31,34 @@
   <author>xwiki:XWiki.Admin</author>
   <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <creationDate>0</creationDate>
+  <creationDate>1430839818000</creationDate>
   <date>0</date>
   <contentUpdateDate>0</contentUpdateDate>
   <version>1.1</version>
   <title>Show in dialog JSX</title>
+  <template/>
   <defaultTemplate/>
   <validationScript/>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
+  <content>This page contains a JSX that allows to show the target of a link as the content of a dialog.
+
+Just add the ##openDialog## class to the ##a## element and the link target will be open in the dialog.
+
+Additional attributes that can be specified:
+
+* ##title## for the dialog title
+* ##callback## the name of a function (not a function definition!) that will be called once the dialog is displayed and its content fully loaded. This function will be passed a reference to the dialog itself.
+
+== Example
+
+{{code language="html"}}
+  [[Show this page in a dialog!&gt;&gt;ShowInDialog||queryString="xpage=plain" class="openDialog" title="Show in dialog" callback="alert"]]
+{{/code}}
+
+[[Show this page in a dialog!&gt;&gt;ShowInDialog||queryString="xpage=plain" class="openDialog" title="Show in dialog" callback="alert"]]</content>
   <object>
     <class>
       <name>XWiki.JavaScriptExtension</name>
@@ -32,74 +69,74 @@
       <defaultWeb/>
       <nameField/>
       <validationScript/>
-      <cache>
-        <cache>0</cache>
-        <disabled>0</disabled>
-        <displayType>select</displayType>
-        <multiSelect>0</multiSelect>
-        <name>cache</name>
-        <number>5</number>
-        <prettyName>Caching policy</prettyName>
-        <relationalStorage>0</relationalStorage>
-        <separator> </separator>
-        <separators> ,|</separators>
-        <size>1</size>
-        <unmodifiable>0</unmodifiable>
-        <values>long|short|default|forbid</values>
-        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-      </cache>
-      <code>
-        <disabled>0</disabled>
-        <name>code</name>
-        <number>2</number>
-        <prettyName>Code</prettyName>
-        <rows>20</rows>
-        <size>50</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-      </code>
       <name>
         <disabled>0</disabled>
         <name>name</name>
         <number>1</number>
         <prettyName>Name</prettyName>
-        <size>30</size>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
       </name>
+      <code>
+        <disabled>0</disabled>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+        <rows>20</rows>
+        <size>50</size>
+      </code>
+      <use>
+        <disabled>0</disabled>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+        <cache>0</cache>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <values>currentPage=Always on this page|onDemand=On demand|always=Always on this wiki</values>
+      </use>
       <parse>
         <disabled>0</disabled>
-        <displayFormType>select</displayFormType>
-        <displayType>yesno</displayType>
         <name>parse</name>
         <number>4</number>
         <prettyName>Parse content</prettyName>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
       </parse>
-      <use>
-        <cache>0</cache>
+      <cache>
         <disabled>0</disabled>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+        <cache>0</cache>
         <displayType>select</displayType>
         <multiSelect>0</multiSelect>
-        <name>use</name>
-        <number>3</number>
-        <prettyName>Use this extension</prettyName>
         <relationalStorage>0</relationalStorage>
         <separator> </separator>
         <separators> ,|</separators>
         <size>1</size>
-        <unmodifiable>0</unmodifiable>
-        <values>currentPage=Always on this page|onDemand=On demand|always=Always on this wiki</values>
-        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-      </use>
+        <values>long|short|default|forbid</values>
+      </cache>
     </class>
     <name>RISCOSSPlatformCode.ShowInDialog</name>
-    <number>0</number>
+    <number>1</number>
     <className>XWiki.JavaScriptExtension</className>
-    <guid>bd5732e7-9450-4548-815e-c4c3e966bdd7</guid>
+    <guid>c0af3f4b-bf87-490e-bb80-14f8062fae8f</guid>
     <property>
-      <cache>forbid</cache>
+      <name/>
     </property>
     <property>
       <code>var XWiki = (function(XWiki) {    
@@ -165,29 +202,13 @@
 }(XWiki || {}))</code>
     </property>
     <property>
-      <name/>
-    </property>
-    <property>
-      <parse/>
-    </property>
-    <property>
       <use>currentPage</use>
     </property>
+    <property>
+      <parse>0</parse>
+    </property>
+    <property>
+      <cache>forbid</cache>
+    </property>
   </object>
-  <content>This page contains a JSX that allows to show the target of a link as the content of a dialog.
-
-Just add the ##openDialog## class to the ##a## element and the link target will be open in the dialog.
-
-Additional attributes that can be specified:
-
-* ##title## for the dialog title
-* ##callback## the name of a function (not a function definition!) that will be called once the dialog is displayed and its content fully loaded. This function will be passed a reference to the dialog itself.
-
-== Example
-
-{{code language="html"}}
-  [[Show this page in a dialog!&gt;&gt;ShowInDialog||queryString="xpage=plain" class="openDialog" title="Show in dialog" callback="alert"]]
-{{/code}}
-
-[[Show this page in a dialog!&gt;&gt;ShowInDialog||queryString="xpage=plain" class="openDialog" title="Show in dialog" callback="alert"]]</content>
 </xwikidoc>

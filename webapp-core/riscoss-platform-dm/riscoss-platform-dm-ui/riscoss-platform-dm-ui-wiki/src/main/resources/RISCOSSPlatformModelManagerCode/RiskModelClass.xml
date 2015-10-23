@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
 <xwikidoc>
   <web>RISCOSSPlatformModelManagerCode</web>
   <name>RiskModelClass</name>
@@ -11,17 +31,25 @@
   <author>xwiki:XWiki.Admin</author>
   <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <creationDate>0</creationDate>
+  <creationDate>1430839814000</creationDate>
   <date>0</date>
   <contentUpdateDate>0</contentUpdateDate>
   <version>1.1</version>
   <title>RiskModel Class</title>
+  <template/>
   <defaultTemplate/>
   <validationScript/>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.0</syntaxId>
   <hidden>false</hidden>
+  <content>{{velocity}}
+## Replace the default space with the space where you want your documents to be created.
+## Replace the default parent with the one of your choice and save the document.
+##
+#set($defaultSpace = $doc.space)
+#set($defaultParent = $doc.fullName)
+{{/velocity}}</content>
   <class>
     <name>RISCOSSPlatformModelManagerCode.RiskModelClass</name>
     <customClass/>
@@ -31,33 +59,46 @@
     <defaultWeb/>
     <nameField/>
     <validationScript/>
-    <description>
-      <customDisplay/>
+    <analyser>
       <disabled>0</disabled>
-      <editor>---</editor>
-      <name>description</name>
+      <name>analyser</name>
       <number>1</number>
+      <prettyName>Evaluation engine</prettyName>
+      <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      <size>30</size>
+      <customDisplay/>
       <picker>0</picker>
+      <validationMessage/>
+      <validationRegExp/>
+    </analyser>
+    <description>
+      <disabled>0</disabled>
+      <name>description</name>
+      <number>2</number>
       <prettyName>Description</prettyName>
+      <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
       <rows>5</rows>
       <size>40</size>
-      <unmodifiable>0</unmodifiable>
+      <customDisplay/>
+      <editor>---</editor>
+      <picker>0</picker>
       <validationMessage/>
       <validationRegExp/>
-      <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
     </description>
     <riskModelData>
-      <customDisplay/>
       <disabled>0</disabled>
       <name>riskModelData</name>
-      <number>2</number>
-      <picker>0</picker>
+      <number>3</number>
       <prettyName>Risk model data</prettyName>
-      <size>30</size>
       <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      <size>30</size>
+      <customDisplay/>
+      <picker>0</picker>
       <validationMessage/>
       <validationRegExp/>
-      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
     </riskModelData>
   </class>
   <object>
@@ -71,23 +112,23 @@
       <nameField/>
       <validationScript/>
       <sheet>
-        <customDisplay/>
         <disabled>0</disabled>
         <name>sheet</name>
         <number>1</number>
-        <picker>0</picker>
         <prettyName>Sheet</prettyName>
-        <size>30</size>
         <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+        <customDisplay/>
+        <picker>0</picker>
         <validationMessage/>
         <validationRegExp/>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </sheet>
     </class>
     <name>RISCOSSPlatformModelManagerCode.RiskModelClass</name>
-    <number>0</number>
+    <number>1</number>
     <className>XWiki.ClassSheetBinding</className>
-    <guid>d72dc0ae-2eae-4eb5-9ceb-e6a9a5b17c48</guid>
+    <guid>c8a22f41-e4ae-4402-9757-91665725bf14</guid>
     <property>
       <sheet>RISCOSSPlatformModelManagerCode.RiskModelViewSheet</sheet>
     </property>
@@ -103,23 +144,23 @@
       <nameField/>
       <validationScript/>
       <sheet>
-        <customDisplay/>
         <disabled>0</disabled>
         <name>sheet</name>
         <number>1</number>
-        <picker>0</picker>
         <prettyName>Sheet</prettyName>
-        <size>30</size>
         <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+        <customDisplay/>
+        <picker>0</picker>
         <validationMessage/>
         <validationRegExp/>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </sheet>
     </class>
     <name>RISCOSSPlatformModelManagerCode.RiskModelClass</name>
-    <number>1</number>
+    <number>2</number>
     <className>XWiki.ClassSheetBinding</className>
-    <guid>e03efb70-2dee-48c9-bb1d-6b492b0212f1</guid>
+    <guid>f471f8f1-2412-407c-8cf1-37c827a89f40</guid>
     <property>
       <sheet>RISCOSSPlatformModelManagerCode.RiskModelEditSheet</sheet>
     </property>
@@ -135,32 +176,25 @@
       <nameField/>
       <validationScript/>
       <sheet>
-        <customDisplay/>
         <disabled>0</disabled>
         <name>sheet</name>
         <number>1</number>
-        <picker>0</picker>
         <prettyName>Sheet</prettyName>
-        <size>30</size>
         <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+        <customDisplay/>
+        <picker>0</picker>
         <validationMessage/>
         <validationRegExp/>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </sheet>
     </class>
     <name>RISCOSSPlatformModelManagerCode.RiskModelClass</name>
-    <number>0</number>
+    <number>3</number>
     <className>XWiki.DocumentSheetBinding</className>
-    <guid>9eae7819-6ee4-417d-a27a-fb8e736876b4</guid>
+    <guid>f86f12cd-93cb-46c3-b46e-43c76a00fd4b</guid>
     <property>
       <sheet>XWiki.ClassSheet</sheet>
     </property>
   </object>
-  <content>{{velocity}}
-## Replace the default space with the space where you want your documents to be created.
-## Replace the default parent with the one of your choice and save the document.
-##
-#set($defaultSpace = $doc.space)
-#set($defaultParent = $doc.fullName)
-{{/velocity}}</content>
 </xwikidoc>

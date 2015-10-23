@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc>
+  <web>RISCOSSPlatformRiskConfigurations</web>
+  <name>AdvancedRiskConfiguration</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformRiskConfigurations.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>1430839818000</creationDate>
+  <date>1357696926000</date>
+  <contentUpdateDate>1357696926000</contentUpdateDate>
+  <version>1.1</version>
+  <title>Advanced Risk Configuration</title>
+  <template/>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content/>
+  <object>
+    <class>
+      <name>RISCOSSPlatformRiskConfigurationManagerCode.RiskConfigurationClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <autoEvaluate>
+        <disabled>0</disabled>
+        <name>autoEvaluate</name>
+        <number>1</number>
+        <prettyName>Automatically run risk evaluation for all compatible entities</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+        <displayFormType>select</displayFormType>
+        <displayType>checkbox</displayType>
+      </autoEvaluate>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
+        <prettyName>Description</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+        <rows>5</rows>
+        <size>40</size>
+        <customDisplay/>
+        <editor>Text</editor>
+        <picker>0</picker>
+        <validationMessage/>
+        <validationRegExp/>
+      </description>
+      <goalModel>
+        <disabled>0</disabled>
+        <name>goalModel</name>
+        <number>3</number>
+        <prettyName>Goal model</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.DBListClass</classType>
+        <cache>0</cache>
+        <displayType>select</displayType>
+        <idField/>
+        <multiSelect>0</multiSelect>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators/>
+        <size>1</size>
+        <sort>none</sort>
+        <sql>SELECT doc.fullName FROM XWikiDocument doc, BaseObject obj WHERE doc.fullName=obj.name AND doc.space='RISCOSSPlatformGoalModels' AND obj.className='RISCOSSPlatformModelManagerCode.GoalModelClass'</sql>
+        <classname/>
+        <customDisplay>{{velocity}}
+#set($propertyClass = $object.getxWikiClass().get($name))
+#if ($type == 'edit')
+  #set($selectName = "${prefix}${name}")
+  {{html clean="false" wiki="false"}}
+    &lt;select name="$selectName"&gt;
+    #if($!value == "")
+      &lt;option value='' selected='selected'&gt;None&lt;/option&gt;
+    #else
+      &lt;option value=''&gt;None&lt;/option&gt;
+    #end
+    #foreach($key in $propertyClass.getListValues())
+      #set($checked = '')
+      #if($value == $key)
+        #set($checked = "selected='selected'")
+      #end
+      &lt;option value="$key" $checked&gt;$key&lt;/option&gt;
+    #end
+    &lt;/select&gt;
+  {{/html}}
+#else
+  $doc.displayView($propertyClass, $prefix, $object)
+#end
+{{/velocity}}</customDisplay>
+        <picker>0</picker>
+        <validationMessage/>
+        <validationRegExp/>
+        <valueField/>
+      </goalModel>
+      <riskCategories>
+        <disabled>0</disabled>
+        <name>riskCategories</name>
+        <number>4</number>
+        <prettyName>Risk categories</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.DBListClass</classType>
+        <cache>0</cache>
+        <displayType>checkbox</displayType>
+        <idField/>
+        <multiSelect>1</multiSelect>
+        <relationalStorage>1</relationalStorage>
+        <separator> </separator>
+        <separators/>
+        <size>1</size>
+        <sort>none</sort>
+        <sql>SELECT doc.fullName FROM XWikiDocument doc, BaseObject obj WHERE doc.fullName=obj.name AND doc.space='RISCOSSPlatformRiskCategories' AND obj.className='RISCOSSPlatformRiskConfigurationManagerCode.RiskCategoryClass'</sql>
+        <classname/>
+        <customDisplay/>
+        <picker>0</picker>
+        <validationMessage/>
+        <validationRegExp/>
+        <valueField/>
+      </riskCategories>
+    </class>
+    <name>RISCOSSPlatformRiskConfigurations.AdvancedRiskConfiguration</name>
+    <number>1</number>
+    <className>RISCOSSPlatformRiskConfigurationManagerCode.RiskConfigurationClass</className>
+    <guid>f03f9bc6-af6c-4b5b-9827-4b4ce71403cf</guid>
+    <property>
+      <autoEvaluate>0</autoEvaluate>
+    </property>
+    <property>
+      <description>This risk configuration is for evaluating components in the context of a Use Case</description>
+    </property>
+    <property>
+      <goalModel/>
+    </property>
+    <property>
+      <riskCategories/>
+    </property>
+  </object>
+  <object>
+    <class>
+      <name>RISCOSSPlatformRiskConfigurationManagerCode.RiskModelClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <layer>
+        <disabled>0</disabled>
+        <name>layer</name>
+        <number>1</number>
+        <prettyName>layer</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.DBListClass</classType>
+        <cache>0</cache>
+        <displayType>select</displayType>
+        <idField/>
+        <multiSelect>0</multiSelect>
+        <relationalStorage>1</relationalStorage>
+        <separator> </separator>
+        <separators/>
+        <size>1</size>
+        <sort>none</sort>
+        <sql/>
+        <classname>RISCOSSPlatformLayerManagerCode.LayerClass</classname>
+        <customDisplay/>
+        <picker>0</picker>
+        <validationMessage/>
+        <validationRegExp/>
+        <valueField/>
+      </layer>
+      <riskModel>
+        <disabled>0</disabled>
+        <name>riskModel</name>
+        <number>2</number>
+        <prettyName>riskModel</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.DBListClass</classType>
+        <cache>0</cache>
+        <displayType>select</displayType>
+        <idField/>
+        <multiSelect>0</multiSelect>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators/>
+        <size>1</size>
+        <sort>none</sort>
+        <sql/>
+        <classname>RISCOSSPlatformModelManagerCode.RiskModelClass</classname>
+        <customDisplay/>
+        <picker>0</picker>
+        <validationMessage/>
+        <validationRegExp/>
+        <valueField/>
+      </riskModel>
+    </class>
+    <name>RISCOSSPlatformRiskConfigurations.AdvancedRiskConfiguration</name>
+    <number>2</number>
+    <className>RISCOSSPlatformRiskConfigurationManagerCode.RiskModelClass</className>
+    <guid>3999685a-2bf4-4053-91ac-5578b5ac6242</guid>
+    <property>
+      <layer>RISCOSSPlatformLayers.OSSComponent</layer>
+    </property>
+    <property>
+      <riskModel>RISCOSSPlatformRiskModels.AdvancedRiskModel</riskModel>
+    </property>
+  </object>
+</xwikidoc>

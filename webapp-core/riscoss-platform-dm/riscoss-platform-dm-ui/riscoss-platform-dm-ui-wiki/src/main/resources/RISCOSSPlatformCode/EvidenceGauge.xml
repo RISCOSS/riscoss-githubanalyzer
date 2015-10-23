@@ -1,42 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xwikidoc version="1.1">
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc>
   <web>RISCOSSPlatformCode</web>
   <name>EvidenceGauge</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
-  <creator>xwiki:XWiki.Admin</creator>
-  <creationDate>0</creationDate>
   <parent>RISCOSSPlatformCode.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
   <author>xwiki:XWiki.Admin</author>
+  <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>1430839816000</creationDate>
   <date>0</date>
   <contentUpdateDate>0</contentUpdateDate>
   <version>1.1</version>
   <title>EvidenceGauge</title>
+  <template/>
+  <defaultTemplate/>
+  <validationScript/>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
   <content>{{groovy}}
+/* -*- Mode:Java */
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
 import java.awt.Paint;
-import java.awt.RadialGradientPaint;
 import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Arc2D;
+import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
-import eu.riscoss.reasoner.Evidence;
-
 public class EvidenceGauge extends BufferedImage {
-	
+
 	Color right_color;
 	Color left_color;
+	
+	Point2D origin;
 	
 	public EvidenceGauge( Evidence e, int w, int h ) {
 		this( e, w, h, Color.green, Color.red );
@@ -59,30 +85,29 @@ public class EvidenceGauge extends BufferedImage {
 		
 		g.setColor( Color.black );
 		
-		Point2D origin = pt( x + (w /2), y + h );
+		origin = pt( x + (w /2), y + h );
 		
 		double xofs = ((w) /2) /4;
+//		int sz = (int)(((180 * e.getConflict()) / 100) * getWidth());
 		
 		Paint paint = new LinearGradientPaint( 
 				new Point2D.Double( x, y + h / 2 ),
 				new Point2D.Double( x + w, y + h / 2 ),
-				(float[]) [ 0.1f, 0.9f ],
-				(Color[]) [ this.left_color, this.right_color ] );
+				[ 0.1, 0.9 ] as float[],
+				[ this.left_color, this.right_color ] as Color[] );
 		g.setPaint(paint);
 		g.fill( mkArc( origin, 
 				rotate( pt( x, y + h ), 
 						origin, (90 * (1 - e.getNegative())) ), 
 				rotate( pt( x + w, y + h ), 
 						origin, -(90 - (90 * e.getPositive())) ), Arc2D.PIE ) );
+//		g.fill( mkArc( origin, 
+//				rotate( pt( x, y + h ), 
+//						origin, (90 * (1 - e.getNegative())) ), 
+//				rotate( pt( x + w, y + h ), 
+//						origin, -(90 - (90 * e.getPositive())) ), Arc2D.PIE ) );
 		
 		g.setPaint( null );
-		
-		// Draw surrounding bars
-//		g.setColor( Color.black );
-//		g.draw( mkArc( origin, 
-//				rotate( pt( x + w, y + h ), origin, -(90 -((90 * (e.getDirection() + (e.getConflict() /2)))) ) ), 
-//				rotate( pt( x + w, y + h ), origin, -(90 -((90 * (e.getDirection() - (e.getConflict() /2)))) ) ), 
-//				Arc2D.PIE ) );
 		
 		g.setColor( Color.black );
 		for( int i = 0; i &lt; 4; i++ ) {
@@ -91,39 +116,74 @@ public class EvidenceGauge extends BufferedImage {
 					pt( x + w - (xofs * i), y + h ), Arc2D.CHORD ) );
 		}
 		
-		Point2D r = rotate( 
-						pt( x + ((w /2) + (e.getStrength() * (w /2))), y + h ), 
-						origin, 
-						-(90 -(90 * e.getDirection()) ) );
+		// Restore this to enable the dark shoadow
+//		Point2D r = rotate( 
+//						pt( x + ((w /2) + (e.getStrength() * (w /2))), y + h ), 
+//						origin, 
+//						-(90 -(90 * e.getDirection()) ) );
+//		
+//		Paint fuzziness = new RadialGradientPaint( 
+//				r, 
+//				(float)(((180 * e.getConflict()) / 100) * getHeight()) + 1f, 
+//				[ 0.0f, 0.5f ], 
+//				new Color[ Color.darkGray, new Color( 0, 0, 0, 0 ) ] );
+//		
+//		g.setPaint( fuzziness );
+//		g.setClip( mkArc( origin, 
+//				pt( x, y + h ), 
+//				pt( x + w, y + h ), Arc2D.CHORD ) );
+//		g.fillOval( (int)r.getX() -(sz /2), (int)r.getY() -(sz /2), sz, sz );
 		
-		Paint fuzziness = new RadialGradientPaint( 
-				r, 
-				(float)(((180 * e.getConflict()) / 100) * getHeight()) + 1f, 
-				(float[]) [ 0.0f, 0.5f ], 
-				(Color[]) [ Color.darkGray, new Color( 0, 0, 0, 0 ) ] );
 		
-		int sz = (int)(((180 * e.getConflict()) / 100) * getWidth());
-		g.setPaint( fuzziness );
-		g.setClip( mkArc( origin, 
-				pt( x, y + h ), 
-				pt( x + w, y + h ), Arc2D.CHORD ) );
-		g.fillOval( (int)r.getX() -(sz /2), (int)r.getY() -(sz /2), sz, sz );
+//		g.setColor( Color.white );
+//		g.fillOval( (int)r.getX() -5, (int)r.getY() -5, 10, 10 );
+//		g.setColor( Color.black );
+//		g.drawOval( (int)r.getX() -5, (int)r.getY() -5, 10, 10 );
+//		g.drawOval( (int)r.getX() -5, (int)r.getY() -5, 10, 10 );
+//		g.drawLine( (int)r.getX(), (int)r.getY() -5, (int)r.getX(), (int)r.getY() +5 );
+//		g.drawLine( (int)r.getX() -5, (int)r.getY(), (int)r.getX() +5, (int)r.getY() );
 		
+		GeneralPath path = new GeneralPath();
+		
+		int top = -((h /2) + y);
+		
+		path.moveTo( 0, top);
+		path.lineTo( 5, top +5 );
+		path.lineTo( 2, top +5 );
+		path.lineTo( 2, 0 );
+		path.lineTo( -2, 0 );
+		path.lineTo( -2, top +5 );
+		path.lineTo( -5, top +5 );
+		path.closePath();
+		
+//		path.moveTo( 0, -(h - y) );
+//		path.lineTo( +5, 0 );
+//		path.lineTo( 0, y +5 );
+//		path.lineTo( -5, 0 );
+//		path.lineTo( 0, -(h - y) );
+		AffineTransform at = new AffineTransform();
+//		at.rotate( 1 );
+		at.rotate(
+				Math.toRadians( 90 * e.getDirection() ) );
+//						-(90 -(90 * e.getDirection()) ) ) );
+		path.transform( at );
+		at.setToIdentity();
+		at.translate( x + (w /2), y + h );
+		path.transform( at );
+//		path.transform( AffineTransform.getRotateInstance( 
+//				Math.toRadians(
+//						-(90 -(90 * e.getDirection()) ) ) ) );
 		g.setColor( Color.white );
-		g.fillOval( (int)r.getX() -5, (int)r.getY() -5, 10, 10 );
+		g.fill( path );
 		g.setColor( Color.black );
-		g.drawOval( (int)r.getX() -5, (int)r.getY() -5, 10, 10 );
-		g.drawOval( (int)r.getX() -5, (int)r.getY() -5, 10, 10 );
-		g.drawLine( (int)r.getX(), (int)r.getY() -5, (int)r.getX(), (int)r.getY() +5 );
-		g.drawLine( (int)r.getX() -5, (int)r.getY(), (int)r.getX() +5, (int)r.getY() );
+		g.draw( path );
 	}
-	
-	Point2D pt( double x, double y ) {
+
+	static Point2D pt( double x, double y ) {
 		return new Point2D.Double(x, y);
 	}
 	
-	public Point2D rotate(Point2D pt, Point2D center, double angleDeg)
-	{
+	static public Point2D rotate(Point2D pt, Point2D center, double angleDeg) {
 		double angleRad = (angleDeg/180)*Math.PI;
 		double cosAngle = Math.cos(angleRad );
 		double sinAngle = Math.sin(angleRad );
@@ -135,16 +195,17 @@ public class EvidenceGauge extends BufferedImage {
 				center.getY() + (int) (dx*sinAngle+dy*cosAngle) );
 	}
 	
-	double dist0( Point2D origin, double x, double y) {
+	static double dist0( Point2D origin, double x, double y) {
 		return Math.sqrt(sqr(x - origin.getX()) + sqr(y - origin.getY()));
 	}
 	
 	// Return polar angle of any point relative to arc center.
-	double angle0( Point2D origin, double x, double y ) {
+	static double angle0( Point2D origin, double x, double y ) {
 		return Math.toDegrees(Math.atan2( origin.getY() - y, x - origin.getX() ));
 	}
 	
 	static float sqr(float x) { return x * x; }
+	
 	static double sqr(double x) { return x * x; }
 	
 	static double angleDiff(double a, double b) {
@@ -154,7 +215,7 @@ public class EvidenceGauge extends BufferedImage {
 		return d;
 	}
 	
-	Arc2D mkArc( Point2D origin, Point2D left, Point2D right, int type ) {
+	static Arc2D mkArc( Point2D origin, Point2D left, Point2D right, int type ) {
 		
 		// Get radii of anchor and det point.
 		double ra = dist0( origin, left.getX(), left.getY());
@@ -173,7 +234,109 @@ public class EvidenceGauge extends BufferedImage {
 				2 * ra, 2 * ra,                  // box width and height
 				aa, angleDiff(aa, ad),           // angle start, extent 
 				type );
-	}  
+	}
+
+    // Copied from riscoss-analyser to prevent creating an unnecessary dependency.
+    static class Evidence {
+	
+	    double p, m;
+	
+	    public Evidence( double plus, double minus ) {
+		    p = round( plus );
+		    m = round( minus );
+	    }
+	
+	    public Evidence( Distribution d ) {
+		    int count = d.getValues().size();
+		    double value = 0;
+		    for( Double val : d.getValues() ) {
+			    p += val.doubleValue() * value;
+			    value += (1.0 / count);
+		    }
+		    value = 1;
+		    for( Double val : d.getValues() ) {
+			    m += val.doubleValue() * value;
+			    value -= (1.0 / count);
+		    }
+	    }
+	
+	    private double round( double d ) {
+		    return ((double)((int)(d * 10000))) / 10000;
+	    }
+	
+	    public double getPositive() {
+		    return p;
+	    }
+	
+	    public double getNegative() {
+		    return m;
+	    }
+	
+	    public String toString() {
+		    return "[+" + p + "," + "-" + m + "]";
+	    }
+	
+	    public void set( double p, double n ) {
+		    this.p = p;
+		    this.m = n;
+	    }
+
+	    public boolean nonZero() {
+		    return (m != 0) | (p != 0);
+	    }
+
+	    public double getDirection() {
+		    return (p - m);
+	    }
+
+	    public double getConflict() {
+		    return Math.max(p, m) - Math.abs(p - m);
+	    }
+
+	    public double getStrength() {
+		    return Math.abs( p + m - p * m );
+    //		return (p + m) /2;
+	    }
+	
+	    public double getSignal() {
+		    return (1 + getDirection()) /2;
+	    }
+    }
+
+
+    static class Distribution {
+	    List&lt;Double&gt; values = new ArrayList&lt;Double&gt;();
+	
+	    public void setValues( List&lt;Double&gt; v ) {
+		    values.clear();
+		    for( Double d : v )
+			    values.add( d );
+	    }
+	
+	    public List&lt;Double&gt; getValues() {
+		    return values;
+	    }
+	
+	    public String toString() {
+		
+		    String printDist = "[ ";
+		    int size = values.size();
+		    if(size == 0)
+			    return "[ ]";
+		    if(size == 1)
+			    return "[ " + values.get(0) + " ]";
+		    Double[] dblArr = new Double[size];
+		    values.toArray(dblArr);
+		    for (int i = 0; i &lt; size; i++) {
+			    printDist += dblArr[i];
+			    if(i &lt; (size - 1)) {
+				    printDist += ", ";
+			    }
+		    }
+		    printDist += " ]";
+		    return printDist;
+	    }
+    }
 }
 
 int width = 100;
@@ -185,12 +348,13 @@ if(request.positive != null &amp;&amp; request.negative != null) {
         height = width / 2;
     }
 
-    EvidenceGauge eg = new EvidenceGauge(new Evidence(Double.parseDouble(request.positive), Double.parseDouble(request.negative)), width, height, Color.red, Color.green);
+    EvidenceGauge eg = new EvidenceGauge(new EvidenceGauge.Evidence(Double.parseDouble(request.positive), Double.parseDouble(request.negative)), width, height, Color.red, Color.green);
 
     response.setContentType("image/png");
     javax.imageio.ImageIO.write(eg, "png", response.getOutputStream());
     response.flush();
 }
 
-{{/groovy}}</content>
+{{/groovy}}
+</content>
 </xwikidoc>

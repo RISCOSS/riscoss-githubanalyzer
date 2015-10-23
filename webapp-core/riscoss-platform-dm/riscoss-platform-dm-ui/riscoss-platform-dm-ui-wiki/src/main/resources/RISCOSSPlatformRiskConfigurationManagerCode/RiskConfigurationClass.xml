@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
 <xwikidoc>
   <web>RISCOSSPlatformRiskConfigurationManagerCode</web>
   <name>RiskConfigurationClass</name>
@@ -11,17 +31,25 @@
   <author>xwiki:XWiki.Admin</author>
   <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <creationDate>0</creationDate>
+  <creationDate>1430839814000</creationDate>
   <date>0</date>
   <contentUpdateDate>0</contentUpdateDate>
   <version>1.1</version>
   <title>RiskConfiguration Class</title>
+  <template/>
   <defaultTemplate/>
   <validationScript/>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.0</syntaxId>
   <hidden>false</hidden>
+  <content>{{velocity}}
+## Replace the default space with the space where you want your documents to be created.
+## Replace the default parent with the one of your choice and save the document.
+##
+#set($defaultSpace = $doc.space)
+#set($defaultParent = $doc.fullName)
+{{/velocity}}</content>
   <class>
     <name>RISCOSSPlatformRiskConfigurationManagerCode.RiskConfigurationClass</name>
     <customClass/>
@@ -31,23 +59,48 @@
     <defaultWeb/>
     <nameField/>
     <validationScript/>
-    <description>
-      <customDisplay/>
+    <autoEvaluate>
       <disabled>0</disabled>
-      <editor>Text</editor>
-      <name>description</name>
+      <name>autoEvaluate</name>
       <number>1</number>
-      <picker>0</picker>
+      <prettyName>Automatically run risk evaluation for all compatible entities</prettyName>
+      <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      <displayFormType>select</displayFormType>
+      <displayType>checkbox</displayType>
+    </autoEvaluate>
+    <description>
+      <disabled>0</disabled>
+      <name>description</name>
+      <number>2</number>
       <prettyName>Description</prettyName>
+      <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
       <rows>5</rows>
       <size>40</size>
-      <unmodifiable>0</unmodifiable>
+      <customDisplay/>
+      <editor>Text</editor>
+      <picker>0</picker>
       <validationMessage/>
       <validationRegExp/>
-      <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
     </description>
     <goalModel>
+      <disabled>0</disabled>
+      <name>goalModel</name>
+      <number>3</number>
+      <prettyName>Goal model</prettyName>
+      <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.DBListClass</classType>
       <cache>0</cache>
+      <displayType>select</displayType>
+      <idField/>
+      <multiSelect>0</multiSelect>
+      <relationalStorage>0</relationalStorage>
+      <separator> </separator>
+      <separators/>
+      <size>1</size>
+      <sort>none</sort>
+      <sql>SELECT doc.fullName FROM XWikiDocument doc, BaseObject obj WHERE doc.fullName=obj.name AND doc.space='RISCOSSPlatformGoalModels' AND obj.className='RISCOSSPlatformModelManagerCode.GoalModelClass'</sql>
       <classname/>
       <customDisplay>{{velocity}}
 #set($propertyClass = $object.getxWikiClass().get($name))
@@ -73,49 +126,34 @@
   $doc.displayView($propertyClass, $prefix, $object)
 #end
 {{/velocity}}</customDisplay>
-      <disabled>0</disabled>
-      <displayType>select</displayType>
-      <idField/>
-      <multiSelect>0</multiSelect>
-      <name>goalModel</name>
-      <number>3</number>
       <picker>0</picker>
-      <prettyName>Goal model</prettyName>
-      <relationalStorage>0</relationalStorage>
-      <separator> </separator>
-      <separators/>
-      <size>1</size>
-      <sort>none</sort>
-      <sql>SELECT doc.fullName FROM XWikiDocument doc, BaseObject obj WHERE doc.fullName=obj.name AND doc.space='RISCOSSPlatformGoalModels' AND obj.className='RISCOSSPlatformModelManagerCode.GoalModelClass'</sql>
-      <unmodifiable>0</unmodifiable>
       <validationMessage/>
       <validationRegExp/>
       <valueField/>
-      <classType>com.xpn.xwiki.objects.classes.DBListClass</classType>
     </goalModel>
     <riskCategories>
-      <cache>0</cache>
-      <classname/>
-      <customDisplay/>
       <disabled>0</disabled>
+      <name>riskCategories</name>
+      <number>4</number>
+      <prettyName>Risk categories</prettyName>
+      <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.DBListClass</classType>
+      <cache>0</cache>
       <displayType>checkbox</displayType>
       <idField/>
       <multiSelect>1</multiSelect>
-      <name>riskCategories</name>
-      <number>2</number>
-      <picker>0</picker>
-      <prettyName>Risk categories</prettyName>
       <relationalStorage>1</relationalStorage>
       <separator> </separator>
       <separators/>
       <size>1</size>
       <sort>none</sort>
       <sql>SELECT doc.fullName FROM XWikiDocument doc, BaseObject obj WHERE doc.fullName=obj.name AND doc.space='RISCOSSPlatformRiskCategories' AND obj.className='RISCOSSPlatformRiskConfigurationManagerCode.RiskCategoryClass'</sql>
-      <unmodifiable>0</unmodifiable>
+      <classname/>
+      <customDisplay/>
+      <picker>0</picker>
       <validationMessage/>
       <validationRegExp/>
       <valueField/>
-      <classType>com.xpn.xwiki.objects.classes.DBListClass</classType>
     </riskCategories>
   </class>
   <object>
@@ -129,23 +167,23 @@
       <nameField/>
       <validationScript/>
       <sheet>
-        <customDisplay/>
         <disabled>0</disabled>
         <name>sheet</name>
         <number>1</number>
-        <picker>0</picker>
         <prettyName>Sheet</prettyName>
-        <size>30</size>
         <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+        <customDisplay/>
+        <picker>0</picker>
         <validationMessage/>
         <validationRegExp/>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </sheet>
     </class>
     <name>RISCOSSPlatformRiskConfigurationManagerCode.RiskConfigurationClass</name>
-    <number>0</number>
+    <number>1</number>
     <className>XWiki.ClassSheetBinding</className>
-    <guid>e2c1198b-c519-470b-a3f0-7e5e6b07787c</guid>
+    <guid>05323720-a0e1-4b7e-97a6-961275dd1ac8</guid>
     <property>
       <sheet>RISCOSSPlatformRiskConfigurationManagerCode.RiskConfigurationViewSheet</sheet>
     </property>
@@ -161,23 +199,23 @@
       <nameField/>
       <validationScript/>
       <sheet>
-        <customDisplay/>
         <disabled>0</disabled>
         <name>sheet</name>
         <number>1</number>
-        <picker>0</picker>
         <prettyName>Sheet</prettyName>
-        <size>30</size>
         <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+        <customDisplay/>
+        <picker>0</picker>
         <validationMessage/>
         <validationRegExp/>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </sheet>
     </class>
     <name>RISCOSSPlatformRiskConfigurationManagerCode.RiskConfigurationClass</name>
-    <number>1</number>
+    <number>2</number>
     <className>XWiki.ClassSheetBinding</className>
-    <guid>e34c3079-4d49-4ff2-bd63-e05050172b71</guid>
+    <guid>1a03080d-9762-435f-af61-95d764b82c1d</guid>
     <property>
       <sheet>RISCOSSPlatformRiskConfigurationManagerCode.RiskConfigurationEditSheet</sheet>
     </property>
@@ -193,32 +231,25 @@
       <nameField/>
       <validationScript/>
       <sheet>
-        <customDisplay/>
         <disabled>0</disabled>
         <name>sheet</name>
         <number>1</number>
-        <picker>0</picker>
         <prettyName>Sheet</prettyName>
-        <size>30</size>
         <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+        <customDisplay/>
+        <picker>0</picker>
         <validationMessage/>
         <validationRegExp/>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </sheet>
     </class>
     <name>RISCOSSPlatformRiskConfigurationManagerCode.RiskConfigurationClass</name>
-    <number>0</number>
+    <number>3</number>
     <className>XWiki.DocumentSheetBinding</className>
-    <guid>235d3690-385b-4a5b-a189-d98a4f4baf20</guid>
+    <guid>1e18c87d-522c-4a28-bd5b-bc8905d5a45f</guid>
     <property>
       <sheet>XWiki.ClassSheet</sheet>
     </property>
   </object>
-  <content>{{velocity}}
-## Replace the default space with the space where you want your documents to be created.
-## Replace the default parent with the one of your choice and save the document.
-##
-#set($defaultSpace = $doc.space)
-#set($defaultParent = $doc.fullName)
-{{/velocity}}</content>
 </xwikidoc>

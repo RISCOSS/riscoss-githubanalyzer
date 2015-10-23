@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
 <xwikidoc>
   <web>RISCOSSPlatformLayers</web>
   <name>OSSComponentTemplate</name>
@@ -11,17 +31,19 @@
   <author>xwiki:XWiki.Admin</author>
   <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <creationDate>0</creationDate>
+  <creationDate>1430839817000</creationDate>
   <date>0</date>
   <contentUpdateDate>0</contentUpdateDate>
   <version>1.1</version>
   <title/>
+  <template/>
   <defaultTemplate/>
   <validationScript/>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
+  <content/>
   <object>
     <class>
       <name>RISCOSSPlatformLayerManagerCode.EntityClass</name>
@@ -33,44 +55,23 @@
       <nameField/>
       <validationScript/>
       <layer>
-        <customDisplay/>
         <disabled>0</disabled>
         <name>layer</name>
         <number>1</number>
-        <picker>0</picker>
         <prettyName>Layer</prettyName>
-        <size>30</size>
         <unmodifiable>0</unmodifiable>
-        <validationMessage/>
-        <validationRegExp/>
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </layer>
-      <rdids>
-        <cache>0</cache>
+        <size>30</size>
         <customDisplay/>
-        <disabled>0</disabled>
-        <displayType>input</displayType>
-        <multiSelect>0</multiSelect>
-        <name>rdids</name>
-        <number>2</number>
         <picker>0</picker>
-        <prettyName>Risk Data IDs</prettyName>
-        <relationalStorage>0</relationalStorage>
-        <separator> </separator>
-        <separators> ,|</separators>
-        <size>1</size>
-        <sort>none</sort>
-        <unmodifiable>0</unmodifiable>
         <validationMessage/>
         <validationRegExp/>
-        <values/>
-        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-      </rdids>
+      </layer>
     </class>
     <name>RISCOSSPlatformLayers.OSSComponentTemplate</name>
-    <number>0</number>
+    <number>1</number>
     <className>RISCOSSPlatformLayerManagerCode.EntityClass</className>
-    <guid>196cac1e-6f57-4447-a9bb-cef19b281367</guid>
+    <guid>07095c1e-7cc9-404a-b368-379b532dae25</guid>
     <property>
       <layer>RISCOSSPlatformLayers.OSSComponent</layer>
     </property>
@@ -86,53 +87,70 @@
       <nameField/>
       <validationScript/>
       <description>
-        <customDisplay/>
         <disabled>0</disabled>
-        <editor>---</editor>
         <name>description</name>
-        <number>2</number>
-        <picker>0</picker>
+        <number>1</number>
         <prettyName>Description</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
         <rows>5</rows>
         <size>40</size>
-        <unmodifiable>0</unmodifiable>
+        <customDisplay/>
+        <editor>---</editor>
+        <picker>0</picker>
         <validationMessage/>
         <validationRegExp/>
-        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
       </description>
-      <name>
+      <isFork>
+        <disabled>0</disabled>
+        <name>isFork</name>
+        <number>2</number>
+        <prettyName>Fork</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+        <displayFormType>select</displayFormType>
+        <displayType/>
         <customDisplay/>
+        <defaultValue/>
+        <validationMessage/>
+        <validationRegExp/>
+      </isFork>
+      <name>
         <disabled>0</disabled>
         <name>name</name>
-        <number>1</number>
-        <picker>0</picker>
+        <number>3</number>
         <prettyName>Name</prettyName>
-        <size>30</size>
         <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+        <customDisplay/>
+        <picker>0</picker>
         <validationMessage/>
         <validationRegExp/>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </name>
       <website>
-        <customDisplay/>
         <disabled>0</disabled>
         <name>website</name>
-        <number>3</number>
-        <picker>0</picker>
+        <number>4</number>
         <prettyName>Web site</prettyName>
-        <size>30</size>
         <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+        <customDisplay/>
+        <picker>0</picker>
         <validationMessage/>
         <validationRegExp/>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </website>
     </class>
     <name>RISCOSSPlatformLayers.OSSComponentTemplate</name>
-    <number>0</number>
+    <number>2</number>
     <className>RISCOSSPlatformLayers.OSSComponent</className>
-    <guid>bd0e9703-d0eb-4df6-953d-5f9050633ba9</guid>
+    <guid>3f8235b4-68f5-4605-a071-15ea8ff08386</guid>
     <property>
       <description/>
+    </property>
+    <property>
+      <isFork/>
     </property>
     <property>
       <name/>
@@ -141,5 +159,4 @@
       <website/>
     </property>
   </object>
-  <content/>
 </xwikidoc>

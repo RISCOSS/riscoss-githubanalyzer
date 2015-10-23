@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc>
+  <web>RISCOSSPlatformRiskDataCollectors</web>
+  <name>GitHub</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformRiskDataCollectors.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>1430839819000</creationDate>
+  <date>1444835140000</date>
+  <contentUpdateDate>1444835104000</contentUpdateDate>
+  <version>1.1</version>
+  <title>GitHub Risk Data Collector</title>
+  <template/>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content/>
+  <attachment>
+    <filename>github.js</filename>
+    <filesize>5901</filesize>
+    <author>xwiki:XWiki.Admin</author>
+    <date>1364415417000</date>
+    <version>1.1</version>
+    <comment/>
+    <content>LyoKICogTGljZW5zZWQgdW5kZXIgdGhlIEFwYWNoZSBMaWNlbnNlLCBWZXJzaW9uIDIuMCAodGhlICJMaWNl
+bnNlIik7CiAqIHlvdSBtYXkgbm90IHVzZSB0aGlzIGZpbGUgZXhjZXB0IGluIGNvbXBsaWFuY2Ugd2l0aCB0
+aGUgTGljZW5zZS4KICogWW91IG1heSBvYnRhaW4gYSBjb3B5IG9mIHRoZSBMaWNlbnNlIGF0CiAqCiAqICAg
+IGh0dHA6Ly93d3cuYXBhY2hlLm9yZy9saWNlbnNlcy9MSUNFTlNFLTIuMAogKgogKiBVbmxlc3MgcmVxdWly
+ZWQgYnkgYXBwbGljYWJsZSBsYXcgb3IgYWdyZWVkIHRvIGluIHdyaXRpbmcsIHNvZnR3YXJlCiAqIGRpc3Ry
+aWJ1dGVkIHVuZGVyIHRoZSBMaWNlbnNlIGlzIGRpc3RyaWJ1dGVkIG9uIGFuICJBUyBJUyIgQkFTSVMsCiAq
+IFdJVEhPVVQgV0FSUkFOVElFUyBPUiBDT05ESVRJT05TIE9GIEFOWSBLSU5ELCBlaXRoZXIgZXhwcmVzcyBv
+ciBpbXBsaWVkLgogKiBTZWUgdGhlIExpY2Vuc2UgZm9yIHRoZSBzcGVjaWZpYyBsYW5ndWFnZSBnb3Zlcm5p
+bmcgcGVybWlzc2lvbnMgYW5kCiAqIGxpbWl0YXRpb25zIHVuZGVyIHRoZSBMaWNlbnNlLgogKi8KdmFyIEh0
+dHBzID0gcmVxdWlyZSgnaHR0cHMnKTsKCnZhciBGTE9BVCA9IGZ1bmN0aW9uICh4KSB7CiAgICB2YXIgeHgg
+PSBOdW1iZXIoeCk7CiAgICBpZiAoaXNOYU4oeHgpKSB7IHRocm93IG5ldyBFcnJvcigiWyIgKyB4ICsgIl0g
+bm90IGEgbnVtYmVyIik7IH0KICAgIHJldHVybiB4eDsKfTsKdmFyIElOVCA9IGZ1bmN0aW9uICh4KSB7CiAg
+ICB2YXIgeHggPSBGTE9BVCh4KTsKICAgIGlmICh4eCAhPT0gTWF0aC5mbG9vcih4eCkpIHsgdGhyb3cgbmV3
+IEVycm9yKCJbIiArIHggKyAiXSBub3QgYW4gaW50ZWdlciIpOyB9CiAgICByZXR1cm4geHg7Cn07CnZhciBC
+T09MID0gZnVuY3Rpb24gKHgpIHsKICAgIHJldHVybiAoQm9vbGVhbih4KSA9PT0gdHJ1ZSkgPyAxIDogMDsK
+fTsKdmFyIERBVEUgPSBmdW5jdGlvbiAoeCkgewogICAgcmV0dXJuIE1hdGguZmxvb3IoKG5ldyBEYXRlKHgp
+KS5nZXRUaW1lKCkgLyAxMDAwKTsKfTsKCnZhciBFTEVNRU5UUyA9IHsKICAgICdvcGVuX2lzc3Vlc19jb3Vu
+dCc6ICAgICAgIElOVCwKICAgICdzdGFyZ2F6ZXJzX2NvdW50JzogICAgICAgIElOVCwKICAgICdmb3Jrc19j
+b3VudCc6ICAgICAgICAgICAgIElOVCwKICAgICdzdWJzY3JpYmVyc19jb3VudCc6ICAgICAgIElOVCwKICAg
+ICdjcmVhdGVkX2F0JzogICAgICAgICAgICAgIERBVEUsCiAgICAnc2l6ZSc6ICAgICAgICAgICAgICAgICAg
+ICBJTlQsCiAgICAnaGFzX3dpa2knOiAgICAgICAgICAgICAgICBCT09MLAogICAgJ3VwZGF0ZWRfYXQnOiAg
+ICAgICAgICAgICAgREFURSwKICAgICdmb3JrJzogICAgICAgICAgICAgICAgICAgIElOVCwKfTsKCnZhciBB
+VVRIID0gdW5kZWZpbmVkOwppZiAocHJvY2Vzcy5hcmd2LmluZGV4T2YoJy11JykgIT09IC0xKSB7CiAgICBB
+VVRIID0gcHJvY2Vzcy5hcmd2W3Byb2Nlc3MuYXJndi5pbmRleE9mKCctdScpICsgMV07Cn0KCnZhciBtYWtl
+UmVxID0gZnVuY3Rpb24gKHBhdGgsIGNhbGxiYWNrKSB7CiAgICB2YXIgb3V0ID0gW107CiAgICBjb25zb2xl
+LmxvZyhwYXRoKTsKICAgIEh0dHBzLnJlcXVlc3QoewogICAgICAgIHBhdGg6IHBhdGgsCiAgICAgICAgaG9z
+dDoiYXBpLmdpdGh1Yi5jb20iLAogICAgICAgIGhlYWRlcnM6IHsKICAgICAgICAgICAgIlVzZXItQWdlbnQi
+OiAiUklTQ09TUyBnaXRodWIgZGF0YSBjb2xsZWN0b3IgaHR0cDovL3Jpc2Nvc3MuZXUvIiwKICAgICAgICAg
+ICAgIkFjY2VwdCI6ICJhcHBsaWNhdGlvbi92bmQuZ2l0aHViLmRyYXgtcHJldmlldytqc29uIgogICAgICAg
+IH0sCiAgICAgICAgYXV0aDogQVVUSAogICAgfSwgZnVuY3Rpb24gKHJlc3ApIHsKICAgICAgICBpZiAocmVz
+cC5zdGF0dXNDb2RlICE9PSAyMDApIHsKICAgICAgICAgICAgdGhyb3cgbmV3IEVycm9yKCJFcnJvciBjYWxs
+aW5nIGdpdGh1YjogIiArIHJlc3Auc3RhdHVzQ29kZSArICcgJyArIHJlc3Auc3RhdHVzTWVzc2FnZSk7CiAg
+ICAgICAgfQogICAgICAgIHJlc3Aub24oJ2RhdGEnLCBmdW5jdGlvbiAoY2h1bmspIHsgb3V0LnB1c2goY2h1
+bmsudG9TdHJpbmcoJ3V0ZjgnKSk7IH0pOwogICAgICAgIHJlc3Aub24oJ2VuZCcsIGZ1bmN0aW9uICgpIHsK
+ICAgICAgICAgICAgY2FsbGJhY2sob3V0LmpvaW4oJycpKTsKICAgICAgICB9KTsKICAgIH0pLmVuZCgpOwp9
+OwoKdmFyIGRlY29kZSA9IGZ1bmN0aW9uIChjb250ZW50KSB7CiAgICByZXR1cm4gZGVjb2RlVVJJQ29tcG9u
+ZW50KGNvbnRlbnQucmVwbGFjZSgiXyIsICIvIikpOwp9OwoKdmFyIGdldENvbnRyaWJ1dG9ycyA9IGZ1bmN0
+aW9uIChjb25mLCBkYXRhLCBjYiwgY3R4KSB7CiAgICBjdHggPSBjdHggfHwgeyBwYWdlOiAxLCBjb250cmli
+czogWyBdLCB0b3RhbENvbnRyaWJzOiAwIH07CiAgICB2YXIgdXJsID0gJy9yZXBvcy8nICsgZGVjb2RlKGNv
+bmYudGFyZ2V0RW50aXR5KSArICcvY29udHJpYnV0b3JzP3BhZ2U9JyArIGN0eC5wYWdlOwogICAgbWFrZVJl
+cSh1cmwsIGZ1bmN0aW9uIChkYXRhU3RyKSB7CiAgICAgICAgdmFyIHBhcnNlZCA9IEpTT04ucGFyc2UoZGF0
+YVN0cik7CiAgICAgICAgZm9yICh2YXIgaSA9IDA7IGkgPCBwYXJzZWQubGVuZ3RoOyBpKyspIHsKICAgICAg
+ICAgICAgY3R4LmNvbnRyaWJzLnB1c2goTnVtYmVyKHBhcnNlZFtpXS5jb250cmlidXRpb25zKSk7CiAgICAg
+ICAgICAgIGN0eC50b3RhbENvbnRyaWJzICs9IHBhcnNlZFtpXS5jb250cmlidXRpb25zOwogICAgICAgIH0K
+ICAgICAgICBpZiAocGFyc2VkLmxlbmd0aCAhPT0gMCkgewogICAgICAgICAgICBjdHgucGFnZSsrOwogICAg
+ICAgICAgICBnZXRDb250cmlidXRvcnMoY29uZiwgZGF0YSwgY2IsIGN0eCk7CiAgICAgICAgICAgIHJldHVy
+bjsKICAgICAgICB9CiAgICAgICAgY3R4LmNvbnRyaWJzLnNvcnQoZnVuY3Rpb24gKHgsIHkpIHsgcmV0dXJu
+ICh5IC0geCkgfSk7CgogICAgICAgIHZhciBhZGRFbGVtID0gZnVuY3Rpb24gKG5hbWUsIHR5cGUsIHZhbCkg
+ewogICAgICAgICAgICBFTEVNRU5UU1tuYW1lXSA9IHR5cGU7CiAgICAgICAgICAgIGRhdGFbbmFtZV0gPSB2
+YWw7CiAgICAgICAgfTsKICAgICAgICBhZGRFbGVtKCdjb250cmlidXRpb25zJywgSU5ULCBjdHgudG90YWxD
+b250cmlicyk7CiAgICAgICAgYWRkRWxlbSgnY29udHJpYnV0b3JzJywgSU5ULCBjdHguY29udHJpYnMubGVu
+Z3RoKTsKCiAgICAgICAgdmFyIGNhbGMgPSBmdW5jdGlvbiAobnVtLCB0eHQpIHsKICAgICAgICAgICAgdmFy
+IGFjY3VtID0gMDsKICAgICAgICAgICAgZm9yICh2YXIgaSA9IDA7IGkgPCBjdHguY29udHJpYnMubGVuZ3Ro
+OyBpKyspIHsKICAgICAgICAgICAgICAgIGFjY3VtICs9IGN0eC5jb250cmlic1tpXTsKICAgICAgICAgICAg
+ICAgIGlmIChhY2N1bSAvIGN0eC50b3RhbENvbnRyaWJzID4gbnVtKSB7CiAgICAgICAgICAgICAgICAgICAg
+YWRkRWxlbSgncGVyY2VudF9jb250cmlidXRvcnNfZGlkXycgKyB0eHQgKyAnX3BlcmNlbnRfY29tbWl0cycs
+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBGTE9BVCwKICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IGkgLyBjdHguY29udHJpYnMubGVuZ3RoKTsKICAgICAgICAgICAgICAgICAgICBicmVhazsKICAgICAgICAg
+ICAgICAgIH0KICAgICAgICAgICAgfQogICAgICAgIH07CiAgICAgICAgY2FsYygwLjk5LCAnbmluZXR5X25p
+bmUnKTsKICAgICAgICBjYWxjKDAuOTUsICduaW5ldHlfZml2ZScpOwogICAgICAgIGNhbGMoMC45LCAnbmlu
+ZXR5Jyk7CiAgICAgICAgY2FsYygwLjgsICdlaWdodHknKTsKICAgICAgICBjYWxjKDAuNSwgJ2ZpZnR5Jyk7
+CgogICAgICAgIGNiKCk7CiAgICB9KTsKfTsKCnZhciBnZXRBY3Rpdml0eSA9IGZ1bmN0aW9uIChjb25mLCBk
+YXRhLCBjYikgewogICAgbWFrZVJlcSgnL3JlcG9zLycgKyBkZWNvZGUoY29uZi50YXJnZXRFbnRpdHkpICsg
+Jy9ldmVudHMnLCBmdW5jdGlvbiAoZGF0YVN0cikgewogICAgICAgIHZhciBwYXJzZWQgPSBKU09OLnBhcnNl
+KGRhdGFTdHIpOwogICAgICAgIHZhciBsYXN0RXZlbnRzID0ge307CiAgICAgICAgZm9yICh2YXIgaSA9IDA7
+IGkgPCBwYXJzZWQubGVuZ3RoOyBpKyspIHsKICAgICAgICAgICAgaWYgKCEocGFyc2VkW2ldLnR5cGUgaW4g
+bGFzdEV2ZW50cykpIHsKICAgICAgICAgICAgICAgIGxhc3RFdmVudHNbcGFyc2VkW2ldLnR5cGVdID0gcGFy
+c2VkW2ldLmNyZWF0ZWRfYXQ7CiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgdmFyIE1BUFBJTkdT
+ID0gewogICAgICAgICAgICAnSXNzdWVzRXZlbnQnOiAnZGF0ZV9sYXN0X2lzc3VlJywKICAgICAgICAgICAg
+J1dhdGNoRXZlbnQnOiAnZGF0ZV9sYXN0X3dhdGNoZXInLAogICAgICAgICAgICAnRm9ya0V2ZW50JzogJ2Rh
+dGVfbGFzdF9mb3JrJywKICAgICAgICAgICAgJ0lzc3VlQ29tbWVudEV2ZW50JzogJ2RhdGVfbGFzdF9pc3N1
+ZV9jb21tZW50JywKICAgICAgICAgICAgJ1B1c2hFdmVudCc6ICdkYXRlX2xhc3RfcHVzaCcsCiAgICAgICAg
+ICAgICdQdWxsUmVxdWVzdEV2ZW50JzogJ2RhdGVfbGFzdF9wdWxsX3JlcScKICAgICAgICB9OwogICAgICAg
+IGZvciAodmFyIGVsZW0gaW4gTUFQUElOR1MpIHsKICAgICAgICAgICAgaWYgKCEoZWxlbSBpbiBsYXN0RXZl
+bnRzKSkgeyBjb250aW51ZTsgfQogICAgICAgICAgICBkYXRhW01BUFBJTkdTW2VsZW1dXSA9IG5ldyBEYXRl
+KGxhc3RFdmVudHNbZWxlbV0pLmdldFRpbWUoKTsKICAgICAgICAgICAgRUxFTUVOVFNbTUFQUElOR1NbZWxl
+bV1dID0gSU5UOwogICAgICAgIH0KICAgICAgICBjYigpOwogICAgfSk7Cn07Cgp2YXIgcnVuID0gZnVuY3Rp
+b24gKGNvbmYpIHsKICAgIG1ha2VSZXEoJy9yZXBvcy8nICsgZGVjb2RlKGNvbmYudGFyZ2V0RW50aXR5KSwg
+ZnVuY3Rpb24gKGRhdGFTdHIpIHsKICAgICAgICB2YXIgZGF0YVggPSBKU09OLnBhcnNlKGRhdGFTdHIpOwog
+ICAgICAgIGdldEFjdGl2aXR5KGNvbmYsIGRhdGFYLCBmdW5jdGlvbiAoKSB7CiAgICAgICAgICAgIGdldENv
+bnRyaWJ1dG9ycyhjb25mLCBkYXRhWCwgZnVuY3Rpb24gKCkgewogICAgICAgICAgICAgICAgdmFyIGRhdGEg
+PSBbXTsKICAgICAgICAgICAgICAgIGZvciAodmFyIGVsZW0gaW4gRUxFTUVOVFMpIHsKICAgICAgICAgICAg
+ICAgICAgICBkYXRhLnB1c2goewogICAgICAgICAgICAgICAgICAgICAgICB0eXBlOiAiTlVNQkVSIiwKICAg
+ICAgICAgICAgICAgICAgICAgICAgdGFyZ2V0OiBjb25mLnRhcmdldEVudGl0eSwKICAgICAgICAgICAgICAg
+ICAgICAgICAgaWQ6J2dpdGh1YjpyZXBvOicgKyBlbGVtLAogICAgICAgICAgICAgICAgICAgICAgICB2YWx1
+ZTogRUxFTUVOVFNbZWxlbV0oZGF0YVhbZWxlbV0pCiAgICAgICAgICAgICAgICAgICAgfSk7CiAgICAgICAg
+ICAgICAgICB9CiAgICAgICAgICAgICAgICBjb25zb2xlLmxvZygnLS0tLS1CRUdJTiBSSVNLIERBVEEtLS0t
+LScpOwogICAgICAgICAgICAgICAgY29uc29sZS5sb2coSlNPTi5zdHJpbmdpZnkoZGF0YSwgbnVsbCwgJyAg
+JykpOwogICAgICAgICAgICAgICAgY29uc29sZS5sb2coJy0tLS0tRU5EIFJJU0sgREFUQS0tLS0tJyk7CiAg
+ICAgICAgICAgIH0pOwogICAgICAgIH0pOwogICAgfSk7Cn07Cgp2YXIgbWFpbiA9IGZ1bmN0aW9uICgpIHsK
+ICAgIHByb2Nlc3Muc3RkaW4ucmVzdW1lKCk7CiAgICBwcm9jZXNzLnN0ZGluLnNldEVuY29kaW5nKCd1dGY4
+Jyk7CiAgICB2YXIgZGF0YSA9ICIiOwogICAgcHJvY2Vzcy5zdGRpbi5vbignZGF0YScsIGZ1bmN0aW9uKGNo
+dW5rKSB7IGRhdGEgKz0gY2h1bms7IH0pOwogICAgcHJvY2Vzcy5zdGRpbi5vbignZW5kJywgZnVuY3Rpb24o
+KSB7IHJ1bihKU09OLnBhcnNlKGRhdGEpKTsgfSk7Cn07Cm1haW4oKTsK
+</content>
+  </attachment>
+  <object>
+    <class>
+      <name>RISCOSSPlatformDataCollectorCode.DataCollectorClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <command>
+        <disabled>0</disabled>
+        <name>command</name>
+        <number>1</number>
+        <prettyName>Command</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+        <rows>5</rows>
+        <size>40</size>
+        <customDisplay/>
+        <editor>---</editor>
+        <picker>0</picker>
+        <validationMessage/>
+        <validationRegExp/>
+      </command>
+      <layer>
+        <disabled>0</disabled>
+        <name>layer</name>
+        <number>2</number>
+        <prettyName>layer</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.DBListClass</classType>
+        <cache>0</cache>
+        <displayType>select</displayType>
+        <idField/>
+        <multiSelect>0</multiSelect>
+        <relationalStorage>1</relationalStorage>
+        <separator> </separator>
+        <separators/>
+        <size>1</size>
+        <sort>none</sort>
+        <sql/>
+        <classname>RISCOSSPlatformLayerManagerCode.LayerClass</classname>
+        <customDisplay/>
+        <picker>0</picker>
+        <validationMessage/>
+        <validationRegExp/>
+        <valueField/>
+      </layer>
+    </class>
+    <name>RISCOSSPlatformRiskDataCollectors.GitHub</name>
+    <number>1</number>
+    <className>RISCOSSPlatformDataCollectorCode.DataCollectorClass</className>
+    <guid>bb3219d3-a22c-4626-908b-c2e9bd22486b</guid>
+    <property>
+      <command>node ./github.js -u cjdelisle:151306ab6720835fc7ea5c777cbb758e740352d6</command>
+    </property>
+    <property>
+      <layer>RISCOSSPlatformLayers.OSSComponent</layer>
+    </property>
+  </object>
+</xwikidoc>

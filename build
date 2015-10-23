@@ -3,8 +3,51 @@ die() { echo $1; exit 1; }
 node -e 'console.log("hello world")' | grep 'hello world' >/dev/null || die "ERROR: Nodejs required"
 mvn -v | grep 'Apache Maven 3.' >/dev/null || die "ERROR: Maven 3.x required"
 ls ./riscoss-commons >/dev/null || die "ERROR: please run ./update first"
+tar --version | grep '^tar ' >/dev/null || die "ERROR: please install TAR first"
 
+VERSION='0.3-SNAPSHOT'
+
+mkdir result || die "Please delete result directory before building again"
 (
     cd ./webapp-core
     MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=256m" mvn clean install --settings ./etc/settings.xml
 ) || die "Maven failed";
+
+cp -r ./webapp-core/riscoss-platform-dm/riscoss-platform-dm-war/target/riscoss-platform-dm-war-$VERSION ./result
+cp -r ./webapp-core/riscoss-platform-rdr/riscoss-platform-rdr-war/target/riscoss-platform-rdr-war-$VERSION ./result
+(
+    cd resources/WEB-INF
+    tar -cf - . | ( cd ../../result/riscoss-platform-dm-war-$VERSION/WEB-INF/ && tar -xf - )
+) || die "Tar WEB-INF failed";
+
+( cd result && tar -xf ../resources/apache-tomcat* ) || die "Tar tomcat failed";
+cp ./resources/start.sh ./result || die "copy start.sh failed"
+
+cp ./riscoss-commons/riscoss-data-collector/riscoss-rdc-app/target/riscoss-rdc-app-*-jar-with-dependencies.jar ./result/riscoss-data-collector-$VERSION.jar || die "Copy rdc jar failed";
+
+## Wait while start gets the server up
+( cd ./result && ./start.sh )
+
+## Import the main wiki
+curl -v -H 'Content-type: application/octet-stream' \
+    --user superadmin:system \
+    -X POST \
+    --data-binary @./webapp-core/riscoss-platform-dm/riscoss-platform-dm-distribution/riscoss-platform-dm-ui-mainwiki-all/target/riscoss-platform-dm-ui-mainwiki-all.xar \
+    'http://localhost:8080/riscoss/rest/wikis/xwiki?backup=true&history=RESET'
+
+## Create the subwiki
+curl -v \
+    --user superadmin:system \
+    -X POST \
+    --data 'content=%7B%7Bgroovy%7D%7DString%20x%3D%22gha%22%3Bprintln(services.wiki.createWiki(x%2Cx%2C%22xwiki%3AXWiki.Admin%22%2Ctrue))%3Bprintln(services.wiki.user.setUserScope(x%2C%22local_and_global%22))%7B%7B%2Fgroovy%7D%7D' \
+    'http://localhost:8080/riscoss/bin/view/Main/preview//?xpage=plain&action_preview=1'
+
+curl -v -H 'Content-type: application/octet-stream' \
+    --user superadmin:system \
+    -X POST \
+    --data-binary @./webapp-core/riscoss-platform-dm/riscoss-platform-dm-distribution/riscoss-platform-dm-ui-wiki-all/target/riscoss-platform-dm-ui-wiki-all.xar \
+    'http://localhost:8080/riscoss/rest/wikis/gha?backup=true&history=RESET'
+
+echo
+echo 'done';
+echo

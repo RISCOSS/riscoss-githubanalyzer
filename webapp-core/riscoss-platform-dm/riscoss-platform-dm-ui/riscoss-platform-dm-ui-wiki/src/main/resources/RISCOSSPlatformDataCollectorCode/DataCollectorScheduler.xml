@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
 <xwikidoc>
   <web>RISCOSSPlatformDataCollectorCode</web>
   <name>DataCollectorScheduler</name>
@@ -11,17 +31,19 @@
   <author>xwiki:XWiki.Admin</author>
   <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <creationDate>0</creationDate>
-  <date>0</date>
+  <creationDate>1430839813000</creationDate>
+  <date>1444396415000</date>
   <contentUpdateDate>0</contentUpdateDate>
   <version>1.1</version>
   <title/>
+  <template/>
   <defaultTemplate/>
   <validationScript/>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
+  <content>{{info}}This document contains code which schedules DataCollectors{{/info}}</content>
   <class>
     <name>RISCOSSPlatformDataCollectorCode.DataCollectorScheduler</name>
     <customClass/>
@@ -32,51 +54,51 @@
     <nameField/>
     <validationScript/>
     <collectorName>
-      <customDisplay/>
       <disabled>0</disabled>
       <name>collectorName</name>
-      <number>2</number>
-      <picker>0</picker>
+      <number>1</number>
       <prettyName>collectorName</prettyName>
-      <size>30</size>
       <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      <size>30</size>
+      <customDisplay/>
+      <picker>0</picker>
       <validationMessage/>
       <validationRegExp/>
-      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
     </collectorName>
-    <periodicity>
-      <cache>0</cache>
-      <customDisplay/>
+    <frequency>
       <disabled>0</disabled>
+      <name>frequency</name>
+      <number>2</number>
+      <prettyName>frequency</prettyName>
+      <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      <cache>0</cache>
       <displayType>select</displayType>
       <multiSelect>0</multiSelect>
-      <name>periodicity</name>
-      <number>1</number>
-      <picker>0</picker>
-      <prettyName>periodicity</prettyName>
       <relationalStorage>0</relationalStorage>
       <separator> </separator>
       <separators> ,|</separators>
       <size>1</size>
+      <values>monthly|weekly|daily|hourly|minutely</values>
+      <customDisplay/>
+      <picker>0</picker>
       <sort>none</sort>
-      <unmodifiable>0</unmodifiable>
       <validationMessage/>
       <validationRegExp/>
-      <values>monthly|weekly|daily|hourly|minutely</values>
-      <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-    </periodicity>
+    </frequency>
     <timeLastRun>
-      <customDisplay/>
       <disabled>0</disabled>
       <name>timeLastRun</name>
       <number>3</number>
-      <numberType>long</numberType>
       <prettyName>timeLastRun</prettyName>
-      <size>30</size>
       <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.NumberClass</classType>
+      <size>30</size>
+      <numberType>long</numberType>
+      <customDisplay/>
       <validationMessage/>
       <validationRegExp/>
-      <classType>com.xpn.xwiki.objects.classes.NumberClass</classType>
     </timeLastRun>
   </class>
   <object>
@@ -92,92 +114,95 @@
       <contextDatabase>
         <disabled>0</disabled>
         <name>contextDatabase</name>
-        <number>9</number>
+        <number>1</number>
         <prettyName>Job execution context database</prettyName>
-        <size>30</size>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
       </contextDatabase>
       <contextLang>
         <disabled>0</disabled>
         <name>contextLang</name>
-        <number>8</number>
+        <number>2</number>
         <prettyName>Job execution context lang</prettyName>
-        <size>30</size>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
       </contextLang>
       <contextUser>
         <disabled>0</disabled>
         <name>contextUser</name>
-        <number>7</number>
+        <number>3</number>
         <prettyName>Job execution context user</prettyName>
-        <size>30</size>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
       </contextUser>
       <cron>
         <disabled>0</disabled>
         <name>cron</name>
-        <number>5</number>
+        <number>4</number>
         <prettyName>Cron Expression</prettyName>
-        <size>30</size>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
       </cron>
       <jobClass>
         <disabled>0</disabled>
         <name>jobClass</name>
-        <number>3</number>
+        <number>5</number>
         <prettyName>Job Class</prettyName>
-        <size>60</size>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>60</size>
       </jobClass>
       <jobDescription>
         <disabled>0</disabled>
         <name>jobDescription</name>
-        <number>2</number>
+        <number>6</number>
         <prettyName>Job Description</prettyName>
-        <rows>10</rows>
-        <size>45</size>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+        <rows>10</rows>
+        <size>45</size>
       </jobDescription>
       <jobName>
         <disabled>0</disabled>
         <name>jobName</name>
-        <number>1</number>
+        <number>7</number>
         <prettyName>Job Name</prettyName>
-        <size>60</size>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>60</size>
       </jobName>
       <script>
         <disabled>0</disabled>
-        <editor>PureText</editor>
         <name>script</name>
-        <number>6</number>
+        <number>8</number>
         <prettyName>Job Script</prettyName>
-        <rows>10</rows>
-        <size>60</size>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+        <rows>10</rows>
+        <size>60</size>
+        <editor>PureText</editor>
       </script>
       <status>
         <disabled>0</disabled>
         <name>status</name>
-        <number>4</number>
+        <number>9</number>
         <prettyName>Status</prettyName>
-        <size>30</size>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
       </status>
     </class>
     <name>RISCOSSPlatformDataCollectorCode.DataCollectorScheduler</name>
-    <number>0</number>
+    <number>1</number>
     <className>XWiki.SchedulerJobClass</className>
-    <guid>ee75dc1f-fb07-455d-b8f2-0d29b152ff8e</guid>
+    <guid>4311a915-c047-4942-bd77-1327be7ac925</guid>
+    <property>
+      <contextDatabase>wiki1</contextDatabase>
+    </property>
     <property>
       <contextLang>en</contextLang>
     </property>
@@ -185,7 +210,7 @@
       <contextUser>xwiki:XWiki.Admin</contextUser>
     </property>
     <property>
-      <cron>0 * * * * ?</cron>
+      <cron>0 0/5 * * * ?</cron>
     </property>
     <property>
       <jobClass>com.xpn.xwiki.plugin.scheduler.GroovyJob</jobClass>
@@ -197,13 +222,16 @@
       <jobName>Data Collector Schedule</jobName>
     </property>
     <property>
-      <script>try{
-    xwiki.parseGroovyFromPage("RISCOSSPlatformDataCollectorCode.DataCollectorGroovy").main(xcontext, services, xwiki);
-} catch (Exception e) { e.printStackTrace(); }</script>
+      <script>/* -*- Mode:Java */
+import com.xpn.xwiki.api.Context;
+try {
+    def dcg = xwiki.parseGroovyFromPage("RISCOSSPlatformDataCollectorCode.DataCollectorGroovy");
+    dcg.main(new Context(xcontext), services, xwiki);
+} catch (Exception e) { e.printStackTrace(); }
+</script>
     </property>
     <property>
       <status>Normal</status>
     </property>
   </object>
-  <content>{{info}}This document contains code which schedules DataCollectors{{/info}}</content>
 </xwikidoc>

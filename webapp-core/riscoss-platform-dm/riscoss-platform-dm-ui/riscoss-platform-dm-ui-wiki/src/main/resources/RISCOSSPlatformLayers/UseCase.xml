@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc>
+  <web>RISCOSSPlatformLayers</web>
+  <name>UseCase</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformLayers.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>1430839817000</creationDate>
+  <date>1357696926000</date>
+  <contentUpdateDate>1357696926000</contentUpdateDate>
+  <version>1.1</version>
+  <title>Use Case</title>
+  <template/>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>true</hidden>
+  <content>This is the template used for newly created scopes.
+
+It basically contains a [[RISCOSSPlatformLayerManagerCode.LayerClass]] with a parent set to none.</content>
+  <object>
+    <class>
+      <name>RISCOSSPlatformLayerManagerCode.LayerClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <child>
+        <disabled>0</disabled>
+        <name>child</name>
+        <number>1</number>
+        <prettyName>child</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.DBListClass</classType>
+        <cache>0</cache>
+        <displayType>select</displayType>
+        <idField/>
+        <multiSelect>0</multiSelect>
+        <relationalStorage>1</relationalStorage>
+        <separator> </separator>
+        <separators/>
+        <size>1</size>
+        <sort>none</sort>
+        <sql>SELECT doc.fullName FROM XWikiDocument doc, BaseObject obj WHERE doc.fullName = obj.name AND obj.className = 'RISCOSSPlatformLayerManagerCode.LayerClass' AND doc.space = 'RISCOSSPlatformLayers' AND doc.fullName &lt;&gt; '$doc.fullName'</sql>
+        <classname/>
+        <customDisplay>{{velocity}}
+#set($propertyClass = $object.getxWikiClass().get($name))
+#if ($type == 'edit')
+  #set($selectName = "${prefix}${name}")
+  {{html clean="false" wiki="false"}}
+    &lt;select name="$selectName"&gt;
+    #if($!value == "")
+      &lt;option value='' selected='selected'&gt;None&lt;/option&gt;
+    #else
+      &lt;option value=''&gt;None&lt;/option&gt;
+    #end
+    #foreach($key in $propertyClass.getListValues())
+      #set($checked = '')
+      #if($value == $key)
+        #set($checked = "selected='selected'")
+      #end
+      &lt;option value="$key" $checked&gt;$key&lt;/option&gt;
+    #end
+    &lt;/select&gt;
+  {{/html}}
+#else
+  $doc.displayView($propertyClass, $prefix, $object)
+#end
+{{/velocity}}</customDisplay>
+        <picker>0</picker>
+        <validationMessage/>
+        <validationRegExp/>
+        <valueField/>
+      </child>
+      <editHeading>
+        <disabled>0</disabled>
+        <name>editHeading</name>
+        <number>2</number>
+        <prettyName>Content to place in this entity's edit UI</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>255</size>
+      </editHeading>
+      <surveyURL>
+        <disabled>0</disabled>
+        <name>surveyURL</name>
+        <number>3</number>
+        <prettyName>Data collection survey URL (if applicable)</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>255</size>
+      </surveyURL>
+    </class>
+    <name>RISCOSSPlatformLayers.UseCase</name>
+    <number>1</number>
+    <className>RISCOSSPlatformLayerManagerCode.LayerClass</className>
+    <guid>ffc823fa-d73b-4b89-91ec-597a3ab90e31</guid>
+    <property>
+      <child/>
+    </property>
+    <property>
+      <editHeading/>
+    </property>
+    <property>
+      <surveyURL>http://limesurvey.merit.unu.edu/index.php/837222/lang-en</surveyURL>
+    </property>
+  </object>
+</xwikidoc>

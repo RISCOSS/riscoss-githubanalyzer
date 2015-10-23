@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
 <xwikidoc>
   <web>RISCOSSPlatformDataCollectorCode</web>
   <name>DataCollectorGroovy</name>
@@ -11,9 +31,9 @@
   <author>xwiki:XWiki.Admin</author>
   <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <creationDate>0</creationDate>
-  <date>0</date>
-  <contentUpdateDate>0</contentUpdateDate>
+  <creationDate>1430839815000</creationDate>
+  <date>1442962337000</date>
+  <contentUpdateDate>1442962337000</contentUpdateDate>
   <version>1.1</version>
   <title/>
   <template/>
@@ -26,9 +46,11 @@
   <content>/* -*- Mode:Java
  * Groovy code for data collectors.
  */
+import java.io.File;
 import org.json.JSONObject;
 import org.json.JSONArray;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import org.json.JSONObject;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -38,6 +60,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.xwiki.environment.Environment;
+import org.apache.commons.codec.net.URLCodec;
 
 public class Ctx {
 
@@ -78,7 +102,7 @@ private Object getValue(Object obj, String name) {
 private String getRDRInfo(Ctx ctx) {
     if (ctx.maybeRDRInfo == null) {
         def confDoc = ctx.xwiki.getDocument("RISCOSSPlatformCode.RISCOSSConfiguration");
-        def conf = confDoc.getObject("RISCOSSPlatformCode.RISCOSSConfigurationClass");
+        def conf = confDoc.getObject("RISCOSSPlatformCode.RISCOSSConfiguration");
         ctx.maybeRDRInfo = conf.getProperty("rdr").getValue();
     }
     return ctx.maybeRDRInfo;
@@ -92,8 +116,7 @@ public class CmdReturn {
     int retcode;
 }
 
-
-private CmdReturn runCmd(Ctx ctx, String cmd, String stdin)
+private CmdReturn runCmd(Ctx ctx, String cmd, String stdin, Object wrkdir)
 {
     System.out.println("debug: " + cmd + " &lt; " + stdin);
 
@@ -102,8 +125,10 @@ private CmdReturn runCmd(Ctx ctx, String cmd, String stdin)
     final Process[] process = new Process[1];
 
     new Thread(new Runnable() {public void run() {
-        
-        process[0] = Runtime.getRuntime().exec(cmd);
+
+        process[0] =
+            new ProcessBuilder(Arrays.asList(cmd.split(" "))).directory(wrkdir).start();
+
         new Thread(new Runnable() {public void run() {
             out.stdout = IOUtils.toString(process[0].getInputStream(), "UTF-8");
             ai.decrementAndGet();
@@ -140,6 +165,45 @@ private CmdReturn runCmd(Ctx ctx, String cmd, String stdin)
     return out;
 }
 
+// Copied from EvaluateGroovy, keep in sync, TODO: fix
+public File getAttachFile(Object services, Object xcontext, Object attachment)
+{
+    Object env = services.component.getInstance(Environment.class);
+    File tempDir = env.getTemporaryDirectory();
+    String encodedDocName = (new URLCodec()).encode(attachment.getDocument().getFullName());
+    File dir = new File(tempDir, "riscoss-" + encodedDocName);
+    String encodedFileName = (new URLCodec()).encode(attachment.getFilename());
+    File file = new File(dir, encodedFileName);
+    if (!dir.isDirectory()) {
+        if (!dir.mkdir()) { throw new RuntimeException("failed to make directory"); }
+    }
+    if (file.exists() &amp;&amp; file.length() != attachment.getFilesize()) {
+        file.delete();
+    }
+    if (!file.exists()) {
+        def input = attachment.getAttachment().getContentInputStream(xcontext.getContext());
+        Object output = new FileOutputStream(file);
+        IOUtils.copy(input, output);
+        IOUtils.closeQuietly(input);
+        IOUtils.closeQuietly(output);
+    }
+    if (!file.exists()) { throw new RuntimeException("[" + file + "] nonexistant"); }
+    if (file.length() != attachment.getFilesize()) {
+        throw new RuntimeException("[" + file + "] wrong length: expected: [" +
+            attachment.getFilesize() + "] got: [" + file.length() + "]");
+    }
+    return file;
+}
+// Copied from EvaluateGroovy, keep in sync, TODO: fix
+public File getAttachDir(Object services, Object xcontext, Object collectorDoc)
+{
+    File file = new File(System.getProperty("user.dir"));
+    for (def att : collectorDoc.getAttachmentList()) {
+        file = getAttachFile(services, xcontext, att).getParentFile()
+    }
+    return file;
+}
+
 private int uploadToRDR(String output, String rdrPath) throws Exception
 {
     HttpClient client = HttpClientBuilder.create().build();
@@ -161,20 +225,68 @@ private int uploadToRDR(String output, String rdrPath) throws Exception
     return 0;
 }
 
+private List&lt;String&gt; getRiskConfigurations(Ctx ctx, Object entityDoc)
+{
+    String sql =
+        "from doc.object(RISCOSSPlatformRiskConfigurationManagerCode.RiskConfigurationClass) " +
+        "as conf, doc.object(RISCOSSPlatformRiskConfigurationManagerCode.RiskModelClass) " +
+        "as model " +
+        "where doc.space = 'RISCOSSPlatformRiskConfigurations' and " +
+        "conf.autoEvaluate = 1 and model.layer = :layer";
+
+    def entity = entityDoc.getObject("RISCOSSPlatformLayerManagerCode.EntityClass");
+    String layer = getValue(entity, "layer");
+    return ctx.services.query.xwql(sql).bindValue("layer", layer).execute();
+}
+
+private boolean runEvals(Ctx ctx, Object entityDoc)
+{
+    boolean ok = true;
+    List&lt;String&gt; configs = getRiskConfigurations(ctx, entityDoc);
+    if (configs.size() == 0) { return ok; }
+    def EVAL_GROOVY_PG = "RISCOSSPlatformRiskAnalysisManagerCode.EvaluateGroovy";
+    def analyserAPI = ctx.xwiki.parseGroovyFromPage(EVAL_GROOVY_PG);
+
+    for (String config : configs) {
+        def sessionDoc = analyserAPI.getSessionDoc(ctx.xwiki, entityDoc.getFullName(), config, true);
+        def inputs = analyserAPI.getInputs(ctx.services, ctx.xwiki, sessionDoc);
+System.out.println("xxx [" + inputs.getString("stdout") + "]");
+        def riskData = analyserAPI.getRiskData(ctx.services,
+                                               inputs,
+                                               analyserAPI.getRDRPath(ctx.xwiki),
+                                               entityDoc.getFullName());
+
+        def interpretedData = analyserAPI.interpret(ctx.xcontext, sessionDoc, riskData);
+        def out = analyserAPI.evaluate(ctx.services, ctx.xwiki, sessionDoc, interpretedData);
+        def output = out.optJSONObject("output");
+        def result = null;
+        if (output != null) { result = output.optJSONObject("result"); }
+        if (result == null) { ok = false; }
+        analyserAPI.storeResults(
+            sessionDoc, result, inputs, out, interpretedData, System.currentTimeMillis());
+        println(out.getJSONObject("output").getJSONObject("result"));
+    }
+    return ok;
+}
+
 private void runJob(Ctx ctx, Object entityDoc, Object collectorConf, Object scheduleConf) {
     def collectorDoc = ctx.xwiki.getDocument(getValue(scheduleConf, "collectorName"));
     def collectorObj = collectorDoc.getObject("RISCOSSPlatformDataCollectorCode.DataCollectorClass");
-    def entity = entityDoc.getObject("RISCOSSPlatformLayerManagerCode.EntityClass");
     String command = getValue(collectorObj, "command");
     String rdrPath = getRDRInfo(ctx);
     def out = new JSONObject();
-    out.put("riscoss_targetName", getValue(entity, "rdids"));
+    out.put("targetEntity", entityDoc.getName());
+    out.put("timeLastRun", getValue(scheduleConf, "timeLastRun"));
     if (collectorConf != null) {
         for (String propName : collectorConf.getxWikiClass().getEnabledPropertyNames()) {
-            out.put(propName, getValue(collectorConf, propName));
+            String val = getValue(collectorConf, propName);
+            if (val != null &amp;&amp; !"".equals(val)) {
+                out.put(propName, val);
+            }
         }
     }
-    CmdReturn res = runCmd(ctx, command, out.toString());
+    CmdReturn res = runCmd(
+        ctx, command, out.toString(), getAttachDir(ctx.services, ctx.xcontext, collectorDoc));
     System.out.println("debug: stdout: " + res.stdout);
     System.out.println("debug: stderr: " + res.stderr);
     System.out.println("debug: retcode: " + res.retcode);
@@ -185,14 +297,20 @@ private void runJob(Ctx ctx, Object entityDoc, Object collectorConf, Object sche
             "-----BEGIN RISK DATA-----".length());
         stdout = stdout.substring(0, stdout.indexOf("-----END RISK DATA-----"));
     }
-    if (uploadToRDR(stdout, rdrPath) == 0) {
+    if (!uploadToRDR(stdout, rdrPath) == 0) {
+        return;
+    /*} else if (!runEvals(ctx, entityDoc)) {  TODO: Make this work correctly.
+        return; */
+    } else {
         rescheduleJob(ctx, entityDoc, scheduleConf);
     }
 }
 
 private void rescheduleJob(Ctx ctx, Object doc, Object scheduleConf) {
-    scheduleConf.set("timeLastRun", System.currentTimeMillis());
-    doc.saveWithProgrammingRights("Ran DataCollector", true);
+    if(scheduleConf){
+       scheduleConf.set("timeLastRun", System.currentTimeMillis());
+       doc.saveWithProgrammingRights("Ran DataCollector", true);
+    }
 }
 
 private void runSchedule(Ctx ctx, Object doc, Object scheduleConf) {
@@ -200,10 +318,10 @@ private void runSchedule(Ctx ctx, Object doc, Object scheduleConf) {
     if (timeLastRun == null) { timeLastRun = 0; }
     String name = getValue(scheduleConf, "collectorName");
     String fullName = doc.getFullName() + "/" + name;
-    Long milliseconds = ctx.millisecondsByPeriod.get(getValue(scheduleConf, "periodicity"));
+    Long milliseconds = ctx.millisecondsByPeriod.get(getValue(scheduleConf, "frequency"));
     if (milliseconds == null) {
-        System.out.println("warning: [" + fullName + "] invalid periodicity [" +
-            getValue(scheduleConf, "periodicity") + "]");
+        System.out.println("warning: [" + fullName + "] invalid frequency [" +
+            getValue(scheduleConf, "frequency") + "]");
         return;
     }
     if (System.currentTimeMillis() - timeLastRun &gt; milliseconds) {
@@ -221,6 +339,34 @@ private void runSchedule(Ctx ctx, Object doc, Object scheduleConf) {
     } else {
         System.out.println("debug: [" + fullName + "] skipping because it is not time yet.");
     }
+}
+
+/**
+*   Run the data collector on demand (without the scheduler)
+*/
+public void runDataCollectorOnDemand(Object xcontext, Object services, Object xwiki, entityDocRef){
+   Ctx ctx = mkCtx(xwiki, services, xcontext);
+   def entityDoc = ctx.xwiki.getDocument(entityDocRef);
+   def collectorDoc = ctx.xwiki.getDocument("RISCOSSPlatformRiskDataCollectors.GitHub");
+   def collectorObj = collectorDoc.getObject("RISCOSSPlatformDataCollectorCode.DataCollectorClass");
+   def scheduleConf = null;
+   String command = getValue(collectorObj, "command");
+   String rdrPath = getRDRInfo(ctx);
+   def out = new JSONObject();
+   out.put("targetEntity", entityDoc.getName());
+   CmdReturn res = runCmd(
+        ctx, command, out.toString(), getAttachDir(ctx.services, ctx.xcontext, collectorDoc));
+    System.out.println("debug: stdout: " + res.stdout);
+    System.out.println("debug: stderr: " + res.stderr);
+    System.out.println("debug: retcode: " + res.retcode);
+    if (res.retcode != 0) { return; }
+    String stdout = res.stdout;
+    if (stdout.indexOf("-----BEGIN RISK DATA-----") != -1) {
+        stdout = stdout.substring(stdout.indexOf("-----BEGIN RISK DATA-----") +
+            "-----BEGIN RISK DATA-----".length());
+        stdout = stdout.substring(0, stdout.indexOf("-----END RISK DATA-----"));
+    }
+    uploadToRDR(stdout, rdrPath);
 }
 
 private void runEntity(Ctx ctx, String docName) {

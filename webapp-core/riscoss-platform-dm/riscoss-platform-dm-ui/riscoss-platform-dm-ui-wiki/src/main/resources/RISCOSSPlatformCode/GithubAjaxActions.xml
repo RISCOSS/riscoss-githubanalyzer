@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc>
+  <web>RISCOSSPlatformCode</web>
+  <name>GithubAjaxActions</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformCode.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>1435580009000</creationDate>
+  <date>1444815698000</date>
+  <contentUpdateDate>1444815698000</contentUpdateDate>
+  <version>1.1</version>
+  <title/>
+  <template/>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>{{velocity}}
+## This page receives ajax request related to the management of github projects
+
+## Globals
+#set($API = $xwiki.parseGroovyFromPage("RISCOSSPlatformCode.CreateFromGithubGroovy"))
+## Get RISCOSS platform configuration information
+#set($confDoc = $xwiki.getDocument("RISCOSSPlatformCode.RISCOSSConfiguration"))
+#set($superConf = $confDoc.getObject("RISCOSSPlatformCode.RISCOSSConfiguration"))
+#set($clientID = $superConf.getProperty("githubAppClientID").getValue())
+#set($clientSecret = $superConf.getProperty("githubAppClientSecret").getValue())
+##
+
+#set($action = $request.action)
+#if ("$!action" != '')
+## Enable/Disable analysis
+   #if ($action == 'enableDisableAnalysis')
+      #set($githubRepo = $request.githubRepo)
+      #set($entity = "") 
+      #set($status = $request.status)
+      #if ($status == "enable")
+         #set($entityCreationStatus = false)
+         #if ($API.isOkGithubURL($githubRepo))
+            #set($userName = $xwiki.getDocument($xcontext.user).name)
+            #set($entityDocFullName = $API.docNameForGithubURL($githubRepo, $userName))
+            ## Manage projects that contains dots in the name
+            #set($entitySpace = "RISCOSSPlatformEntities${userName}.")
+            #set($entityDocFullName = $escapetool.url($entityDocFullName).replace("%5C",""))
+            #set($entityDocName = $entityDocFullName.substring($entitySpace.length()))
+            #set($entityDocName = $entityDocName.replace(".","\."))
+            #set($entityDocFullName = $entitySpace + $entityDocName)
+            ##
+            #set($entityDoc = $xwiki.getDocument($entityDocFullName))
+            #if ($entityDoc.isNew())
+               #set($title = $escapetool.url($API.titleForGithubURL($githubRepo)))
+               #set($parent = "${entityDoc.getSpace()}.WebHome")
+               #set($discard = $entityDoc.setTitle($title))
+               #set($discard = $entityDoc.setParent($parent))
+               #set($entityObj = $entityDoc.newObject("RISCOSSPlatformLayerManagerCode.EntityClass"))
+               #set($discard = $entityObj.set("layer","RISCOSSPlatformLayers.OSSComponent"))
+               #set($osscObj = $entityDoc.newObject("RISCOSSPlatformLayers.OSSComponent"))
+               #set($discard = $osscObj.set("name",$title))
+               #set($discard = $osscObj.set("website",$githubRepo))
+               #if("$!request.isFork" != '')
+                  #set($discard = $osscObj.set("isFork",$request.isFork))
+               #end
+               #if("$!request.description" != '')
+                  #set($discard = $osscObj.set("description",$request.description))
+               #end
+               #set($discard = $entityDoc.save())
+               #set($entityCreationStatus = true)
+               #set($entity = $escapetool.url($entityDocFullName).replace("%5C",""))
+            #end
+         #end
+         {"entityCreationStatus": $entityCreationStatus, "entity": "$entity"}
+      #elseif ($status == "disable")
+         #if ($API.isOkGithubURL($githubRepo))
+            ## Manage projects that contains dots in the name
+            #set($userName = $xwiki.getDocument($xcontext.user).name)
+            #set($entityDocFullName = $API.docNameForGithubURL($githubRepo, $userName))
+            #set($entitySpace = "RISCOSSPlatformEntities${userName}.")
+            #set($entityDocFullName = $escapetool.url($entityDocFullName).replace("%5C",""))
+            #set($entityDocName = $entityDocFullName.substring($entitySpace.length()))
+            #set($entityDocName = $entityDocName.replace(".","\."))
+            #set($entityDocFullName = $entitySpace + $entityDocName)
+            ##
+            #if($xwiki.exists($entityDocFullName))
+               #set($entityDoc = $xwiki.getDocument($entityDocFullName))
+               #set($discard = $entityDoc.delete())
+            #end
+            #set($query = "from doc.object(RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationClass) as session where session.entity='${entityDocFullName}' and session.riskConfiguration='RISCOSSPlatformRiskConfigurations.BasicRiskConfiguration' and doc.space='RISCOSSPlatformRiskAnalysisSessions${userName}'")
+            #set($riskAnlysisSessions = $services.query.xwql($query).execute())
+            ## Delete sessions
+            #foreach($session in $riskAnlysisSessions)
+               #set($discard = $xwiki.getDocument($session).delete())
+            #end
+            {"analysisStatusDisabling": true}
+         #end 
+      #end
+   #elseif($action == "runDataCollector")
+      #if("$!request.entity" != '')
+         #set($userName = $xwiki.getDocument($xcontext.user).name)
+         #if($hasAdmin &amp;&amp; "$!request.reevaluateAllPrj" != '')
+            #set($entityDocFullName = "")
+            #if($xwiki.exists($request.entity))
+               #set($entityDoc = $xwiki.getDocumentAsAuthor($request.entity))
+               #set($entitySpace = "${entityDoc.space}.")
+               #set($entityDocFullName = $escapetool.url($request.entity).replace("%5C",""))
+               #set($entityDocName = $entityDocFullName.substring($entitySpace.length()))
+               #set($entityDocName = $entityDocName.replace(".","\."))
+               #set($entityDocFullName = $entitySpace + $entityDocName)
+            #end  
+         #else
+            ## Manage projects that contains dots in the name
+            #set($entitySpace = "RISCOSSPlatformEntities${userName}.")
+            #set($entityDocFullName = $escapetool.url($request.entity).replace("%5C",""))
+            #set($entityDocName = $entityDocFullName.substring($entitySpace.length()))
+            #set($entityDocName = $entityDocName.replace(".","\."))
+            #set($entityDocFullName = $entitySpace + $entityDocName)
+         #end
+         #if($entityDocFullName != "" &amp;&amp; $xwiki.exists($entityDocFullName))
+            #set($dataCollector = $xwiki.parseGroovyFromPage("RISCOSSPlatformDataCollectorCode.DataCollectorGroovy"))
+            #set($discard = $dataCollector.runDataCollectorOnDemand($xcontext, $services, $xwiki, $entityDocFullName))
+            $entityDocFullName
+         #end
+      #end
+   #elseif($action == "displayProjectResultsCharts")
+      #if("$request.data" != '')
+         #set($analysisResults = $jsontool.parse($request.data))
+         #set($riskLabels = ["Obsolescence Risk","Bug Risk","Analysability Risk","Maintenance Risk"])
+         #set($cols = "|=")
+         #set($values = "|")
+         #foreach($rlabel in $riskLabels)
+            #set($cols = "${cols}|=${rlabel}")
+            #set($result = $analysisResults[$rlabel])
+            #set($values = "${values}|${result.value.positive}")
+         #end
+         {{chart type="bar3D" source="inline" params="range:B2-E2;series:columns;colors:81bfff,c8c8c8,f9dbf9,ece9a2" title="Risk analysis results" width="500" height="300"}}
+         $cols
+         $values
+         {{/chart}}         
+      #end
+    #elseif($action == "checkProjectExists")
+       #set($projectExists = 1) ## The project already exists int the projects list of the connected user
+       #if("$!request.githubRepo" != '')
+          #set($githubRepo = $request.githubRepo)
+          #set($userName = $xwiki.getDocument($context.user).name)
+          #set($githubProjectURLs = [])
+          #if($userName.startsWith("github_"))
+             #set($githubUser = $userName.replace("github_", ""))
+             #set($sourceURL = "https://api.github.com/users/${githubUser}/repos?client_id=${clientID}&amp;client_secret=${clientSecret}")
+             #set($jsonResp = $xwiki.getURLContent($sourceURL))
+             ## Connected user github projects
+             #set($gitHubProjects = $jsontool.parse($jsonResp))
+             ## Get projects created by the user but not in his github projects list
+             #foreach($p in $gitHubProjects)
+                #set($discard = $githubProjectURLs.add($p.clone_url))
+             #end
+          #end
+          #set($xwql = "from " +
+          "doc.object(RISCOSSPlatformLayerManagerCode.EntityClass) AS entity, doc.object(RISCOSSPlatformLayers.OSSComponent) AS layer WHERE" + 
+          " doc.space like 'RISCOSSPlatformEntities%' and doc.space&lt;&gt;'RISCOSSPlatformEntities' and layer.website='$githubRepo' and entity.layer='RISCOSSPlatformLayers.OSSComponent'")
+          #set($results = $services.query.xwql($xwql).setLimit(5).execute())
+          #if($results.size() == 0 &amp;&amp; !$githubProjectURLs.contains($githubRepo))
+             #set($projectExists = -1)
+          #else
+             #if($results.size() &gt; 0)
+                #set($entityDocRef = $results[0][0])
+                #if($xwiki.exists($entityDocRef) &amp;&amp; $xwiki.getDocument($entityDocRef).getAuthor() != $xcontext.user)
+                   #set($projectExists = 2) ## The project was already analysed by another user 
+                #end
+                #set($projectPageURL = $xwiki.getURL("RISCOSSPlatformCode.ProjectPage", "view", "project=${escapetool.url($entityDocRef)}"))
+             #end
+          #end
+       #end
+       {"projectExists": $projectExists, "projectPageURL": "$!projectPageURL"}
+    #elseif($action == "getAllGithubProjects")
+       #set($xwql = "SELECT DISTINCT doc.fullName, doc.title FROM Document doc, " +
+       "doc.object(RISCOSSPlatformLayerManagerCode.EntityClass) AS entity " + 
+       " , Document doc2, doc2.object(RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationClass) AS session" +
+       " WHERE " +
+       " session.entity=doc.fullName and session.riskConfiguration='RISCOSSPlatformRiskConfigurations.BasicRiskConfiguration'" +  
+       " AND doc.space like 'RISCOSSPlatformEntities%' AND doc.space &lt;&gt;'RISCOSSPlatformEntities' ORDER BY doc.title")
+       #set($results = $services.query.xwql($xwql).execute())
+       #set($projects = [])
+       #foreach($r in $results)
+           #set($item = {"projectDocRef": $escapetool.url($r[0]), "title": $escapetool.url($r[1])})
+           #set($discard = $projects.add($item))
+       #end
+       $jsontool.serialize($projects)
+    #end
+#end
+{{/velocity}}</content>
+</xwikidoc>

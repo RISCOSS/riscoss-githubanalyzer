@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc>
+  <web>RISCOSSPlatformCode</web>
+  <name>KPIMetrics</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformCod.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>1443099488000</creationDate>
+  <date>1444132127000</date>
+  <contentUpdateDate>1444132127000</contentUpdateDate>
+  <version>1.1</version>
+  <title/>
+  <template/>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>{{velocity}}
+#set ($RISCOSS_GH_ACCOUNTS = [
+    'ohernan',
+    'cjdelisle',
+    'albertosiena',
+    'Mirkk',
+    'lidix91',
+    'fmancinelli',
+    'mouhb',
+    'cedricth',
+    'clawgrip',
+    'jormaral',
+    'manolodd',
+    'mcannosi',
+    'Mirkk',
+    'rbenjacob',
+    'slauriere',
+    'XavierFranch'
+])
+## TODO(cjd) is clawgrip a member?
+##
+#set ($RISCOSS_REGS = [
+    'XWiki.cjdelisle',
+    'XWiki.slauriere',
+    'XWiki.XavierFranch',
+    'XWiki.xf',
+    'XWiki.AngeloSusi',
+    'XWiki.angelo',
+    'XWiki.as1',
+    'XWiki.asiena',
+    'XWiki.cjd',
+    'XWiki.lidix91',
+    'XWiki.ob',
+    'XWiki.LudovicDubost',
+    'XWiki.ldubost',
+    'XWiki.llopez',
+    'XWiki.lambdadelta',
+    'XWiki.KirstenHaaland',
+    'XWiki.jormaral',
+    'XWiki.mm',
+    'XWiki.ngalanis',
+    'XWiki.ronb',
+    'XWiki.ohernan',
+    'XWiki.mouhb',
+    'XWiki.Testct',
+    'XWiki.Cedric',
+    'XWiki.manolodd',
+    'XWiki.superadmin',
+    'XWiki.Admin'
+])
+##
+#set ($allGroup = $xwiki.getDocument("XWiki.XWikiAllGroup"))
+#set ($allMembers = $allGroup.getObjects("XWiki.XWikiGroups"))
+#set ($allMemberNames = [])
+#set ($adopters = [])
+#foreach ($member in $allMembers)
+  #set($discard = $allMemberNames.add($member.member))
+  #if ($RISCOSS_REGS.indexOf($member.member) &gt;= 0)
+  #elseif ($RISCOSS_GH_ACCOUNTS.indexOf($member.member.replace("XWiki.", "")) &gt;= 0)
+  #else
+    #set ($discard = $adopters.add($member.member))
+  #end
+#end
+#set ($adopters= $sorttool.sort($adopters))
+#set($projects = [])
+#foreach($dn in $services.query.xwql("where doc.space = 'RISCOSSPlatformEntities'").execute())
+  #set($d = $xwiki.getDocument($dn))
+  #if ($allMemberNames.indexOf($d.getCreator()) &lt; 0)
+  #elseif ($RISCOSS_REGS.indexOf($d.getCreator()) &lt; 0)
+    #set($discard = $projects.add($d))
+  #end
+#end
+##
+##
+##
+##
+##
+##
+
+= Consortium Associated Registrations =
+These do not count in any metrics.
+#foreach ($u in $RISCOSS_REGS)
+    |[[$u]]
+#end
+
+= Consortium Associated Github Accounts =
+These do not count in any metrics.
+#foreach ($u in $RISCOSS_GH_ACCOUNTS)
+    |[[https://github.com/$u]]
+#end
+
+= Registered users ($adopters.size()) =
+#foreach ($member in $adopters)
+    |[[$xwiki.getLocalUserName($member, false)&gt;&gt;$member]]
+#end
+
+= Registered projects ($projects.size()) =
+|=Project Name|=Creator|=When Registered
+#foreach($d in $projects)
+    |[[$d]]|[[$d.getCreator()]]|$d.getCreationDate()
+#end
+
+= Publicizing projects =
+Needs to be collected manually by looking at project pages
+
+= Analysis per day =
+The following table shows list of projects analysed in the past month, divide total by 30.
+|=Project Name|=Creator|=Last Analysis Date
+## Calander.MONTH = 2
+#set ($oneMonthAgo = $datetool.getCalendar())
+#set ($discard = $oneMonthAgo.add(2, -1))
+#foreach ($d in $projects)
+  #set ($evalDate = $datetool.getCalendar())
+  $evalDate.setTime($d.getDate())##
+  #if ($oneMonthAgo.compareTo($evalDate) &lt; 0)
+    |[[$d]]|[[$d.getCreator()]]|$d.getDate()
+  #end
+#end
+
+
+= Mailing list participants =
+Needs to be collected manually
+
+= Number of downloads =
+This needs to be brainstormed how it can be done
+
+= Community members =
+Collect from here: https://github.com/orgs/RISCOSS/people manually remove people known to be in consortium.
+* https://github.com/JJ
+* https://github.com/davidediruscio
+* https://github.com/KoalaandDodo (?)
+* https://github.com/jrwilliams
+* https://github.com/ashimshahi (?)
+* https://github.com/alebagnato
+* https://github.com/acs
+* https://github.com/nmatra
+
+= Number of contributors =
+0
+* https://github.com/RISCOSS/riscoss-data-collector/graphs/contributors
+* https://github.com/RISCOSS/riscoss-risk-modeling/graphs/contributors
+* https://github.com/RISCOSS/riscoss-analyser/graphs/contributors
+* https://github.com/RISCOSS/riscoss-wiki-ui/graphs/contributors
+* https://github.com/RISCOSS/riscoss-wiki-config/graphs/contributors
+* https://github.com/RISCOSS/riscoss-platform-core/graphs/contributors
+* https://github.com/RISCOSS/riscoss-platform-build/graphs/contributors
+* https://github.com/RISCOSS/limesurvey-collector/graphs/contributors
+
+= Number of requests received =
+0
+* https://github.com/RISCOSS/riscoss-data-collector/issues?q=is%3Aissue
+* https://github.com/RISCOSS/riscoss-risk-modeling/issues?q=is%3Aissue
+* https://github.com/RISCOSS/riscoss-analyser/issues?q=is%3Aissue
+* https://github.com/RISCOSS/riscoss-wiki-ui/issues?q=is%3Aissue
+* https://github.com/RISCOSS/riscoss-wiki-config/issues?q=is%3Aissue
+* https://github.com/RISCOSS/riscoss-platform-core/issues?q=is%3Aissue
+* https://github.com/RISCOSS/riscoss-platform-build/issues?q=is%3Aissue
+* https://github.com/RISCOSS/limesurvey-collector/issues?q=is%3Aissue
+
+= Number of requests resolved =
+0
+
+
+{{/velocity}}</content>
+</xwikidoc>

@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
 <xwikidoc>
   <web>RISCOSSPlatformModelManagerCode</web>
   <name>RiskModelTemplate</name>
@@ -11,17 +31,19 @@
   <author>xwiki:XWiki.Admin</author>
   <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <creationDate>0</creationDate>
+  <creationDate>1430839821000</creationDate>
   <date>0</date>
   <contentUpdateDate>0</contentUpdateDate>
   <version>1.1</version>
   <title>Risk Model Template</title>
+  <template/>
   <defaultTemplate/>
   <validationScript/>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
+  <content/>
   <object>
     <class>
       <name>RISCOSSPlatformModelManagerCode.RiskModelClass</name>
@@ -32,39 +54,55 @@
       <defaultWeb/>
       <nameField/>
       <validationScript/>
-      <description>
-        <customDisplay/>
+      <analyser>
         <disabled>0</disabled>
-        <editor>---</editor>
-        <name>description</name>
+        <name>analyser</name>
         <number>1</number>
+        <prettyName>Evaluation engine</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+        <customDisplay/>
         <picker>0</picker>
+        <validationMessage/>
+        <validationRegExp/>
+      </analyser>
+      <description>
+        <disabled>0</disabled>
+        <name>description</name>
+        <number>2</number>
         <prettyName>Description</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
         <rows>5</rows>
         <size>40</size>
-        <unmodifiable>0</unmodifiable>
+        <customDisplay/>
+        <editor>---</editor>
+        <picker>0</picker>
         <validationMessage/>
         <validationRegExp/>
-        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
       </description>
       <riskModelData>
-        <customDisplay/>
         <disabled>0</disabled>
         <name>riskModelData</name>
-        <number>2</number>
-        <picker>0</picker>
+        <number>3</number>
         <prettyName>Risk model data</prettyName>
-        <size>30</size>
         <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+        <customDisplay/>
+        <picker>0</picker>
         <validationMessage/>
         <validationRegExp/>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </riskModelData>
     </class>
     <name>RISCOSSPlatformModelManagerCode.RiskModelTemplate</name>
-    <number>0</number>
+    <number>1</number>
     <className>RISCOSSPlatformModelManagerCode.RiskModelClass</className>
-    <guid>246e24d0-2ce2-411c-a1bc-7e26a0be6d18</guid>
+    <guid>c9096c2d-ad13-4c3f-ba67-46ba231c1e10</guid>
+    <property>
+      <analyser/>
+    </property>
     <property>
       <description/>
     </property>
@@ -72,5 +110,4 @@
       <riskModelData/>
     </property>
   </object>
-  <content/>
 </xwikidoc>

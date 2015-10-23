@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc>
+  <web>RISCOSSPlatformCode</web>
+  <name>githubProjectMacros</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformCod.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>1436526896000</creationDate>
+  <date>1444406215000</date>
+  <contentUpdateDate>1444406215000</contentUpdateDate>
+  <version>1.1</version>
+  <title/>
+  <template/>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>{{velocity output=false}}
+## This page contains the macros used the manage github projects
+
+## Calculate analysis score
+#macro(getProjectScore $analysisSessionDoc)
+   #set($asDoc = $analysisSessionDoc)
+   #set($riskEvaluation = $asDoc.getObject('RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationClass'))
+   #if ("$!riskEvaluation.getProperty('score').value" != '')
+      #set($projectScore = $riskEvaluation.getProperty('score').getValue())
+      #set($projectScore = $mathtool.toInteger($mathtool.mul($projectScore, 1000)))
+   #else
+      #set($projectScore = 0)
+   #end
+#end
+
+#macro(getProjectRanking $analysisSessionDoc)
+   #set($asDoc = $analysisSessionDoc)
+   #set($riskEvaluation = $asDoc.getObject('RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationClass'))
+   #if ("$!riskEvaluation.getProperty('score').value" != '')
+      #set($_projectScore = $riskEvaluation.getProperty('score').getValue())
+   #else
+      #set($_projectScore = 0)
+   #end
+   #set($query = "from doc.object(RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationClass) as session where session.riskConfiguration='RISCOSSPlatformRiskConfigurations.BasicRiskConfiguration' and doc.space like 'RISCOSSPlatformRiskAnalysisSessions%' and session.score &gt; :projectScore")
+   #set($riskAnlysisSessions = $services.query.xwql($query).bindValue("projectScore",$mathtool.toDouble($_projectScore)).execute())
+   #set($allRiskAnlysisSessions = $services.query.xwql($query).bindValue("projectScore",-1.0).execute())
+   ##
+   #set($projectRanking = $mathtool.mul($riskAnlysisSessions.size(), 100))
+   #set($projectRanking = $mathtool.div($projectRanking, $allRiskAnlysisSessions.size()))
+   #set($numbers = [1,2,3,4,5,6,7,8,9,10,11,23,13,14,15,20,30,40,50,60,70,80,90,100])
+   #foreach($num in $numbers)
+       #if ($projectRanking &lt;= $num)
+           #if ($num &lt;= 50)
+               #set($projectRanking = "&lt;strong&gt;top ${num}%&lt;/strong&gt;")
+           #else
+               #set($projectRanking = "&lt;strong&gt;bottom $mathtool.sub(110, ${num})%&lt;/strong&gt;")
+           #end
+           #break
+       #end
+   #end
+   ##
+#end
+## Calculate analysis score
+#macro(getProjectScore2 $analysisSessionDoc)
+   #set($asDoc = $analysisSessionDoc)
+   #set($riskEvaluation = $asDoc.getObject('RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationClass'))
+   #if ($riskEvaluation.getProperty('result').value != '')
+      #set($analysisResults = $jsontool.parse($riskEvaluation.getProperty('result').getValue()))
+      #set($projectScore = 1)
+      #foreach($result in $analysisResults)
+         #set($resultScore = $result.value.positive)
+         #set($projectScore = $mathtool.mul($projectScore,$resultScore))
+      #end
+      #set($projectScore = $mathtool.roundTo(4,$projectScore))
+   #else
+      #set($projectScore = 0)
+   #end
+#end   
+
+## Calculate the top ten analysis average score
+#macro(calculateTopTenProjectsAverageScore)
+   #set($query = "from doc.object(RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationClass) as session")
+   #set($riskAnlysisSessions = $services.query.xwql($query).execute())
+   #set($projectsScores = [])
+   #foreach($riskAnalysis in $riskAnlysisSessions)
+      #set($raDoc = $xwiki.getDocument($riskAnalysis))
+      #set($riskEvaluation = $raDoc.getObject('RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationClass'))
+      #if ($riskEvaluation.getProperty('result').value != '')
+         #set($analysisResults = $jsontool.parse($riskEvaluation.getProperty('result').getValue()))
+         #set($score = 1)
+         #foreach($result in $analysisResults)
+            #set($resultScore = $result.value.positive)
+            #set($score = $mathtool.mul($score,$resultScore))
+         #end
+         #set($score = $mathtool.roundTo(4,$score))
+         #set($discard = $projectsScores.add($score))
+      #end
+   #end   
+   ## Sort projects scores
+   #set($projectsScores = $sorttool.sort($projectsScores))
+   #set($topTenProjectsScores = $projectsScores)
+   #if($projectsScores.size() &gt; 10)
+      #set($topTenProjectsScores = $projectsScores.subList($mathtool.sub($projectsScores.size(),10), $projectsScores.size()))
+   #end
+   ## Calculate the average top ten score
+   #set($topTenProjectsScoresAverage = $mathtool.getAverage($topTenProjectsScores))
+#end     
+{{/velocity}}</content>
+</xwikidoc>

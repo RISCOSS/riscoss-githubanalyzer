@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc>
+  <web>RISCOSSPlatformCode</web>
+  <name>GitHubLiveTableResults</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformCode.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>1435330604000</creationDate>
+  <date>1444132209000</date>
+  <contentUpdateDate>1444132209000</contentUpdateDate>
+  <version>1.1</version>
+  <title/>
+  <template/>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>{{velocity wiki="false"}}
+## -*- Mode:Velocity
+## Output fields:
+##   project
+##   enabledisable
+##   analysstatus
+## Filterable fields:
+##   
+##   
+## Orderable fields:
+##   
+##   
+
+## Globals
+#set($API = $xwiki.parseGroovyFromPage("RISCOSSPlatformCode.CreateFromGithubGroovy"))
+##
+
+#set($offset = $mathtool.toInteger($request.get('offset')))
+## offset starts from 0 in velocity and 1 in javascript
+#set($offset = $offset - 1)
+#if (!$offset || $offset &lt; 0)##&gt;## syntax highligher bug
+  #set($offset = 0)
+#end
+#set($limit = $mathtool.toInteger($request.get('limit')))
+#if (!$limit)
+  #set ($limit = 15)
+#end
+
+## List github projects
+#set($userName = $xwiki.getDocument($context.user).name)
+#set($githubUser = $userName.replace("github_", ""))
+
+## Increasing the unauthenticated rate limit for OAuth applications
+## If your OAuth application needs to make unauthenticated calls with a higher rate limit, 
+## you can pass your app’s client ID and secret as part of the query string.
+## As mentionned here : https://developer.github.com/v3/#rate-limiting
+## Get RISCOSS platform configuration information
+#set($confDoc = $xwiki.getDocument("RISCOSSPlatformCode.RISCOSSConfiguration"))
+#set($superConf = $confDoc.getObject("RISCOSSPlatformCode.RISCOSSConfiguration"))
+#set($clientID = $superConf.getProperty("githubAppClientID").getValue())
+#set($clientSecret = $superConf.getProperty("githubAppClientSecret").getValue())
+#set($sourceURL = "https://api.github.com/users/${githubUser}/repos?client_id=${clientID}&amp;client_secret=${clientSecret}")
+
+#if($userName.startsWith("github_"))
+   #set($jsonResp = $xwiki.getURLContent($sourceURL))
+   ## Connected user github projects
+   #set($gitHubProjects = $jsontool.parse($jsonResp))
+#else
+   #set($gitHubProjects = [])
+#end
+
+## Get projects created by the user but not in his github projects list
+#set($githubProjectURLs = [])
+
+#if("$!gitHubProjects.message" != '' and $gitHubProjects.message == "Not Found")
+   #set($gitHubProjects = [])
+#else
+#foreach($p in $gitHubProjects)
+   #set($discard = $githubProjectURLs.add($p.clone_url))
+#end
+#end
+
+#if($githubProjectURLs.size() == 0)
+   #set($githubProjectURLs = [""])
+#end
+
+#set($xwql = "SELECT DISTINCT layer.website, layer.name, layer.description FROM Document doc, " +
+    "doc.object(RISCOSSPlatformLayerManagerCode.EntityClass) AS entity, doc.object(RISCOSSPlatformLayers.OSSComponent) AS layer" + 
+    " WHERE " +
+    " doc.space='RISCOSSPlatformEntities${userName}' and doc.author='$xcontext.user' and layer.website NOT IN (:githubProjectURLs) and entity.layer='RISCOSSPlatformLayers.OSSComponent'")
+#set($results = $services.query.xwql($xwql).bindValue("githubProjectURLs", $githubProjectURLs).execute())
+#set($otherGithubProjects = [])
+#foreach($p in $results)
+   #set($v = {"clone_url": $p[0], "name": $p[1], "description": $p[2], "id": "id"})
+   #set($discard = $otherGithubProjects.add($v))   
+#end
+
+#if($gitHubProjects.size() == 0)
+   #set($gitHubProjects = $otherGithubProjects)
+#else
+   #set($discard = $gitHubProjects.addAll($otherGithubProjects))
+#end
+
+#set($totalrows = $gitHubProjects.size())
+
+## Build the result JSON
+#set($resultMap = {})
+#set($discard = $resultMap.put("totalrows", $totalrows))
+#set($returnedProjects = [])
+#if($limit &gt;= 0)
+   #set($returnedProjects = $gitHubProjects.subList($offset, $mathtool.min($mathtool.add($offset, $limit),$totalrows)))
+#end
+#set($discard = $resultMap.put("returnedrows", $returnedProjects.size()))
+#set($discard = $resultMap.put("offset", $mathtool.add($offset, 1)))
+#set($discard = $resultMap.put("reqNo", $util.parseInt($request.reqNo)))
+#set($rows = [])
+#foreach($project in $returnedProjects)
+  #set($row = {})
+  #set($discard = $row.put("doc_viewable", true))
+  #set($entityDocRef = $API.docNameForGithubURL($project.clone_url, $userName))
+  ## Manage projects that contains dots in the name
+  #set($entitySpace = "RISCOSSPlatformEntities${userName}.")
+  #set($entityDocRef = $escapetool.url($entityDocRef).replace("%5C",""))
+  #set($entityDocName = $entityDocRef.substring($entitySpace.length())) ## (24 == $entitySpace.length)
+  #set($entityDocName = $entityDocName.replace(".","\."))
+  #set($entityDocRef = $entitySpace + $entityDocName)
+  ##
+  #set($enabled = $xwiki.exists($entityDocRef))
+  #if($enabled)
+     #set($projectPageURL = $xwiki.getURL("RISCOSSPlatformCode.ProjectPage", "view", "project=${escapetool.url($entityDocRef)}"))
+     #set($discard = $row.put("project", "&lt;a href='$projectPageURL' class='projectLink'&gt;${project.name}&lt;/a&gt;"))
+  #else
+     #set($discard = $row.put("project", "$project.name"))
+  #end
+    
+  ## Get associated sessions
+  #set($query = "from doc.object(RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationClass) as session where session.entity='${entityDocRef}' and session.riskConfiguration='RISCOSSPlatformRiskConfigurations.BasicRiskConfiguration' and doc.space='RISCOSSPlatformRiskAnalysisSessions${userName}'")
+  #set($riskAnlysisSessions = $services.query.xwql($query).setLimit(1).execute())
+  #set($checked = '')
+  #set($analysisStatus = "Disabled")
+  #set($alreadyEvaluated = false)
+  #if($enabled &amp;&amp; $riskAnlysisSessions.size() &gt; 0)
+     #set($checked = 'checked="checked"')
+     #set($riskEvaluationDocRef = $riskAnlysisSessions[0])
+     #set($riskEvaluationDoc = $xwiki.getDocument($riskEvaluationDocRef))
+     #set($riskEvaluationObj = $riskEvaluationDoc.getObject("RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationClass"))
+     #if("$!riskEvaluationObj" != '')
+        #set($alreadyEvaluated = true)
+        #if("$!riskEvaluationObj.getProperty('timeLastRun').getValue()" != '')
+           #set($evaluationTimeLastRun =  $xwiki.getDate($riskEvaluationObj.getProperty('timeLastRun').getValue()))
+        #end
+        #set($analysisStatus = "Last evaluation : $!evaluationTimeLastRun")
+     #end
+  #end
+  #set($description = $escapetool.xml($project.description))
+  #set($projectDescription = "&lt;input id='projectDescription${project.id}' value='${description}' style='display:none;'/&gt;")
+  #set($discard = $row.put("enabledisable", "&lt;input type='checkbox' class='enabdisabchk' value='${project.clone_url}|${project.id}' $checked/&gt;${projectDescription}"))
+  #set($discard = $row.put("analysisstatus", "&lt;div class='analysistatus' id='analysisstatus${project.id}'&gt;${analysisStatus}&lt;/div&gt;"))
+  #if($alreadyEvaluated)
+     #set($discard = $row.put("reevaluate","&lt;a href='javascript:;' class='reevaluateBtn' title='Re-evaluate' rel='${project.clone_url}|${entityDocRef}|${project.id}'&gt;&lt;/a&gt;"))
+  #else
+     #set($discard = $row.put("reevaluate","---"))
+  #end
+ 
+  #set($discard = $rows.add($row))
+#end
+#set($discard = $resultMap.put("rows", $rows))
+
+$jsontool.serialize($resultMap)
+
+{{/velocity}}</content>
+</xwikidoc>

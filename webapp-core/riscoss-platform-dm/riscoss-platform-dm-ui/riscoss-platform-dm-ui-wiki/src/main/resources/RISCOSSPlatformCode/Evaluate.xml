@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc>
+  <web>RISCOSSPlatformCode</web>
+  <name>Evaluate</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>RISCOSSPlatformRiskAnalysisManagerCode.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>1430839816000</creationDate>
+  <date>1357696926000</date>
+  <contentUpdateDate>1357696926000</contentUpdateDate>
+  <version>1.1</version>
+  <title>Evaluate '$request.entity'</title>
+  <template/>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>{{velocity}}
+## -*- Mode: Velocity
+##
+#set($EVAL_GROOVY_PG = "RISCOSSPlatformRiskAnalysisManagerCode.EvaluateGroovy")
+#set ($analyserAPI = $xwiki.parseGroovyFromPage($EVAL_GROOVY_PG))
+##
+#set($ok = false)
+#set($riskAnalysisSession = $request.getParameter('riskAnalysisSession'))
+#if (!$riskAnalysisSession)
+  #if("$!request.getParameter('oss')" == "")
+    {{error}}Missing "entity" parameter{{/error}}
+  #elseif("$!request.getParameter('oss')" == "")
+    {{error}}Missing "entity" parameter{{/error}}
+  #elseif("$!request.getParameter('riskConfiguration')" == "")
+    {{error}}Missing "riskConfiguration" parameter{{/error}}
+  #else
+    #set($sessionDoc = $analyserAPI.getSessionDoc($xwiki,
+                                                  $request.getParameter('entity'),
+                                                  $request.getParameter('riskConfiguration'),
+                                                  true))
+    #if("$!sessionDoc" == "ERROR_riskConfig_nonexistant")
+      {{error}}Parameter "riskConfiguration" points to nonexistant document{{/error}}
+    #elseif("$!sessionDoc" == "ERROR_targetName_nonexistant")
+      {{error}}Parameter "entity" points to nonexistant document{{/error}}
+    #else
+      #set($riskAnalysisSession = $sessionDoc.getFullName())
+      #set($ok = true)
+    #end
+  #end
+#else
+  #set($sessionDoc = $xwiki.getDocument($riskAnalysisSession))
+  #if($sessionDoc.isNew())
+    {{error}}Parameter "riskAnalysisSession" points to nonexistant document{{/error}}
+  #else
+    #set($ok = true)
+  #end
+#end
+##
+#if($ok == true)
+  #set($inputs = $analyserAPI.getInputs($xcontext, $sessionDoc))
+  #if ($inputs.getString("ret") != "0" || "$!inputs.optJSONObject('output')" == "")
+    #set($ok = false)
+    {{error}}
+      Failed to get input values
+      RETCODE: $inputs.getString("ret")
+
+      STDOUT:
+
+      {{code language=none}}
+        $inputs.getString("stdout")
+      {{/code}}
+
+      STDERR:
+
+      {{code language=none}}
+        $inputs.getString("stderr")
+      {{/code}}
+
+    {{/error}}
+  #end
+#end
+##
+#if($ok == true)
+  #set($entityDoc = $xwiki.getDocument($analyserAPI.targetForSession($sessionDoc)))
+  #set($riskData =
+    $analyserAPI.getRiskData($services, $inputs, $analyserAPI.getRDRPath($xwiki), $entityDoc.name))
+  #set($errout = $riskData.optJSONArray("errors"))
+  #if("$!errout" == "" || $errout.length() &gt; 0)
+    #set($ok = false)
+    {{error}}
+      Failed to data from RDR
+      #foreach($err in $errout)
+
+        {{code language=none}}$err{{/code}}
+
+      #end
+
+      RAWOUT: {{code language=none}}$riskData{{/code}}
+
+    {{/error}}
+  #end
+#end
+##
+#if($ok == true)
+  #set($interpretedRiskData = $analyserAPI.interpret($xcontext, $sessionDoc, $riskData))
+  #set($output = "")
+  #set($output = $interpretedRiskData.optJSONObject("output"))
+  #if("$!output" == "")
+    #set($ok = false)
+    {{error}}
+      Failed to interpret risk data
+      COMMAND: $interpretedRiskData.getString("command")
+
+      RETCODE: $interpretedRiskData.getString("ret")
+      STDOUT:
+
+      {{code language=none}}
+        $interpretedRiskData.getString("stdout")
+      {{/code}}
+
+      STDERR:
+
+      {{code language=none}}
+        $interpretedRiskData.getString("stderr")
+      {{/code}}
+
+      INPUT:
+
+      {{code language=none}}
+        $riskData.toString(2)
+      {{/code}}
+
+    {{/error}}
+  #end
+#end
+##
+#if($ok == true)
+  #set($outRaw = $analyserAPI.evaluate($xcontext, $sessionDoc, $interpretedRiskData))
+  #set($output = $outRaw.optJSONObject("output"))
+  #set($result = "")
+  #if($output)
+    #set($result = $output.optJSONObject("result"))
+  #end
+  #if("$!result" == "")
+    #set($ok = false)
+    {{error}}
+      Failed to run evaluation
+      COMMAND: $outRaw.getString("command")
+
+      RETCODE: $outRaw.getString("ret")
+      STDOUT:
+
+      {{code language=none}}
+        $outRaw.getString("stdout")
+      {{/code}}
+
+      STDERR:
+
+      {{code language=none}}
+        $outRaw.getString("stderr")
+      {{/code}}
+
+      INPUT:
+
+      {{code language=none}}
+        $interpretedRiskData.toString(2)
+      {{/code}}
+
+    {{/error}}
+  #end
+#end
+##
+#if($ok == true)
+  $analyserAPI.storeResults($sessionDoc, $result, $riskData, $outRaw, $interpretedRiskData, 0)##
+  #if ("$!request.getProperty('xredirect')" != "")
+    $response.sendRedirect($request.getProperty('xredirect'))
+  #else
+    $response.sendRedirect($sessionDoc.getURL())
+  #end
+#end
+{{/velocity}}
+</content>
+</xwikidoc>

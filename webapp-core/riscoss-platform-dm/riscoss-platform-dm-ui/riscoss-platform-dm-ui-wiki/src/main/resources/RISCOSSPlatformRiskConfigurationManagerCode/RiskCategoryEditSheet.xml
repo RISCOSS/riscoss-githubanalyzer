@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
 <xwikidoc>
   <web>RISCOSSPlatformRiskConfigurationManagerCode</web>
   <name>RiskCategoryEditSheet</name>
@@ -11,17 +31,28 @@
   <author>xwiki:XWiki.Admin</author>
   <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <creationDate>0</creationDate>
+  <creationDate>1430839818000</creationDate>
   <date>0</date>
   <contentUpdateDate>0</contentUpdateDate>
   <version>1.1</version>
   <title>#if($doc.name == 'RiskCategorySheet')RiskCategory Sheet#{else}$services.display.title($doc, {'displayerHint': 'default'})#end</title>
+  <template/>
   <defaultTemplate/>
   <validationScript/>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
+  <content>{{velocity}}
+## You can modify this page to customize the presentation of your object.
+## At first you should keep the default presentation and just save the document.
+
+#set($class = $doc.getObject('RISCOSSPlatformRiskConfigurationManagerCode.RiskCategoryClass').xWikiClass)
+#foreach($prop in $class.properties)
+  ; $prop.prettyName
+  : $doc.display($prop.getName())
+#end
+{{/velocity}}</content>
   <object>
     <class>
       <name>XWiki.SheetDescriptorClass</name>
@@ -33,35 +64,25 @@
       <nameField/>
       <validationScript/>
       <action>
-        <customDisplay/>
         <disabled>0</disabled>
         <name>action</name>
         <number>1</number>
-        <picker>0</picker>
         <prettyName>Action</prettyName>
-        <size>30</size>
         <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+        <customDisplay/>
+        <picker>0</picker>
         <validationMessage/>
         <validationRegExp/>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </action>
     </class>
     <name>RISCOSSPlatformRiskConfigurationManagerCode.RiskCategoryEditSheet</name>
-    <number>0</number>
+    <number>1</number>
     <className>XWiki.SheetDescriptorClass</className>
-    <guid>7ea0e566-cc95-4884-ae7d-b6abb5d0a546</guid>
+    <guid>0340fe5a-bf06-460c-b358-85c6f9fafd1e</guid>
     <property>
       <action>edit</action>
     </property>
   </object>
-  <content>{{velocity}}
-## You can modify this page to customize the presentation of your object.
-## At first you should keep the default presentation and just save the document.
-
-#set($class = $doc.getObject('RISCOSSPlatformRiskConfigurationManagerCode.RiskCategoryClass').xWikiClass)
-#foreach($prop in $class.properties)
-  ; $prop.prettyName
-  : $doc.display($prop.getName())
-#end
-{{/velocity}}</content>
 </xwikidoc>

@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc>
+  <web>RISCOSSPlatformCode</web>
+  <name>ProjectPage</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>Main.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>1435675874000</creationDate>
+  <date>1444733119000</date>
+  <contentUpdateDate>1444733119000</contentUpdateDate>
+  <version>1.1</version>
+  <title>Project $xwiki.getDocument($request.project).title.replace('_', '/') Analysis</title>
+  <template/>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>{{include document="RISCOSSPlatformCode.githubProjectMacros" /}}
+
+{{velocity}}
+## This page shows the risk analysis reuslts of a given project
+##
+## Globals
+#set($projectDocRef = $request.project)
+#set($userName = $xwiki.getDocument($xcontext.user).name)
+#if ("$!projectDocRef" != '' &amp;&amp; $xwiki.exists($projectDocRef))
+   ## Get associated sessions
+   #set($query = "from doc.object(RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationClass) as session where session.entity=:projectDocRef and session.riskConfiguration='RISCOSSPlatformRiskConfigurations.BasicRiskConfiguration' and doc.space like 'RISCOSSPlatformRiskAnalysisSessions%'")
+   #set($riskAnlysisSessions = $services.query.xwql($query).bindValue("projectDocRef","${projectDocRef}").setLimit(1).execute())
+   #if ($riskAnlysisSessions.size() &gt; 0)
+      #set($RiskEvaluationViewSheet_analisysSessionDoc = $xwiki.getDocument($riskAnlysisSessions[0]))
+      ## Calculate project score
+      #getProjectScore($RiskEvaluationViewSheet_analisysSessionDoc)
+      #set($projectLink = $doc.getExternalURL("view","project=${escapetool.url($projectDocRef)}"))
+      ## Calculate the project ranking value
+      #getProjectRanking($RiskEvaluationViewSheet_analisysSessionDoc)
+      ## Project information
+      #set($projectDoc = $xwiki.getDocument($projectDocRef))
+      #set($obj = $projectDoc.getObject("RISCOSSPlatformLayers.OSSComponent"))
+      #set($prjRanking = $projectRanking.replace("&lt;strong&gt;", "").replace("&lt;/strong&gt;", ""))
+      #set($projectName = $projectDoc.name)
+      #set($t = $projectName.split("_"))
+      #if($t.size() &gt;= 2)
+         #set($projectName = $t[$mathtool.sub($t.size(), 1)])
+      #end
+      #set($tweet = "#${projectName} ranked in the ${prjRanking} on #riscoss ${projectLink}")
+      {{html}}
+      &lt;table class="bigtable"&gt;
+      &lt;tr&gt;
+      &lt;td style="width:70%;" class="bttd"&gt;
+      &lt;table class="analysis-res-table" style="width:100%;"&gt;
+      &lt;tr&gt;&lt;th&gt;Project name&lt;/th&gt;&lt;td&gt;$!obj.getProperty("name").value.replace('_', '/')&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;th&gt;Description&lt;/th&gt;&lt;td&gt;$!obj.getProperty("description").value&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;th&gt;Web site&lt;/th&gt;&lt;td&gt;&lt;a href="$obj.getProperty("website").value"&gt;$obj.getProperty("website").value&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;
+      &lt;/table&gt;
+      &lt;/td&gt;
+      &lt;td class="bttd"&gt;
+      &lt;div class="tweetScore"&gt;&lt;div class="tweetLabel"&gt;$services.localization.render("riscossPlatform.githubprojects.projectpage.tweetthisscore")&lt;/div&gt;&lt;div class="tweetBtn"&gt;&lt;a href="https://twitter.com/share" class="twitter-share-button" data-url="" data-text="$tweet" data-size="large" data-count="none"&gt;Tweet&lt;/a&gt;
+      &lt;script&gt;!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');&lt;/script&gt;&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div style="clear:both;"&gt;&lt;/div&gt;
+      &lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;/table&gt;
+      {{/html}}
+      
+      ## Ranking/Twitter btn
+      {{html}}
+      &lt;h2 id="projectRanking"&gt;$services.localization.render("riscossPlatform.githubprojects.projectpage.projectscore") : &lt;strong&gt;$projectScore&lt;/strong&gt; - This project ranks $projectRanking&lt;/h2&gt;
+      {{/html}}
+
+      {{info}}
+      The project score is a composite indicator resulting from combining individual risk results. 
+      The project ranking results from sorting the project scores. 
+      The higher the score the better the project is ranked.
+      {{/info}}
+
+      ## Display analysis results
+      = Basic Risk Analysis =
+      A basic risk analysis is an analysis of a project without any context information about how it will be used, this can provide hints about possible areas of concern. You should always balance these results with the specifics of your project and use case.
+
+      #set($displayInProjectPage = "true")
+      {{include reference="RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationViewSheet" /}}
+   #else
+      {{info}}
+         $services.localization.render("riscossPlatform.githubprojects.projectpage.analysisinprogress")
+      {{/info}}
+   #end
+#else
+{{warning}}
+$services.localization.render("riscossPlatform.githubprojects.projectpage.analysisinprogress")
+{{/warning}}
+#end
+
+== DISCLAIMER
+
+{{box}}
+DISCLAIMER. THIS ONLINE SERVICE IS PROVIDED FOR RESEARCH PURPOSE ONLY. IT DOES NOT CONSTITUTE AN OPINION OF THE PROJECTS THAT ARE ANALYSED NOR AN ADVICE TO USE OR NOT A PROJECT. THIS ONLINE SERVICE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE SERVICE PROVIDER NOR ANY CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS ONLINE SERVICE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+{{/box}}
+{{/velocity}}</content>
+  <object>
+    <class>
+      <name>XWiki.StyleSheetExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <disabled>0</disabled>
+        <name>cache</name>
+        <number>1</number>
+        <prettyName>Caching policy</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+        <cache>0</cache>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <values>long|short|default|forbid</values>
+      </cache>
+      <code>
+        <disabled>0</disabled>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+        <rows>20</rows>
+        <size>50</size>
+      </code>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>3</number>
+        <prettyName>Name</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+      </parse>
+      <use>
+        <disabled>0</disabled>
+        <name>use</name>
+        <number>5</number>
+        <prettyName>Use this extension</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+        <cache>0</cache>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <values>currentPage=Always on this page|onDemand=On demand|always=Always on this wiki</values>
+      </use>
+    </class>
+    <name>RISCOSSPlatformCode.ProjectPage</name>
+    <number>1</number>
+    <className>XWiki.StyleSheetExtension</className>
+    <guid>a5abf00e-a8ba-4f70-bb6f-69c9fe6c2f8f</guid>
+    <property>
+      <cache>long</cache>
+    </property>
+    <property>
+      <code>.tweetScore{
+   text-align: center;
+}
+.tweetLabel{
+   padding-top: 2px;
+   padding-right: 5px;
+   font-size: 1.5em;
+}
+#projectRanking{
+   text-align: center;
+   border: 0;
+   background: #F3F3F3;
+   padding: 1em;
+   margin: 0;
+}
+#document-title{
+   display: block !important;
+}
+
+.bigtable{
+   width:100% !important;
+}
+
+.bttd{
+   border:0 !important;
+   margin: 0 !important;
+}</code>
+    </property>
+    <property>
+      <name/>
+    </property>
+    <property>
+      <parse>0</parse>
+    </property>
+    <property>
+      <use>currentPage</use>
+    </property>
+  </object>
+</xwikidoc>

@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
 <xwikidoc>
   <web>RISCOSSPlatformDataCollectorCode</web>
   <name>DataCollectorManager</name>
@@ -11,9 +31,9 @@
   <author>xwiki:XWiki.Admin</author>
   <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <creationDate>0</creationDate>
-  <date>0</date>
-  <contentUpdateDate>0</contentUpdateDate>
+  <creationDate>1430839817000</creationDate>
+  <date>1357696926000</date>
+  <contentUpdateDate>1357696926000</contentUpdateDate>
   <version>1.1</version>
   <title/>
   <template/>
@@ -23,41 +43,59 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
-  <content>{{velocity output="false"}}##
+  <content>{{velocity output="false"}}
 ## -*- Mode:Velocity
 ## Data Collector Configuration.
 ##
+#set($EVAL_GROOVY_PG  = "RISCOSSPlatformRiskAnalysisManagerCode.EvaluateGroovy")
+#set($THIS_SCRIPT_PG  = "RISCOSSPlatformDataCollectorCode.DataCollectorManager")
+#set($AJAX_PG         = "RISCOSSPlatformDataCollectorCode.DataCollectorManagerAjax")
+#set($SCHEDULER_PG    = "RISCOSSPlatformDataCollectorCode.DataCollectorScheduler")
+#set($DATA_COL_CLS_PG = "RISCOSSPlatformDataCollectorCode.DataCollectorClass")
+#set($ENTITY_CLS_PG   = "RISCOSSPlatformLayerManagerCode.EntityClass")
 
 ## Load the jsx which this code will send data to.
-$xwiki.jsx.use('RISCOSSPlatformDataCollectorCode.DataCollectorManager', {"minify":"false"})
+$xwiki.jsx.use($THIS_SCRIPT_PG, {"minify":"false"})
+#set ($analyserAPI = $xwiki.parseGroovyFromPage($EVAL_GROOVY_PG))
 
 ## The final output
 #set ($outConf = {})
 
+#if ("$!request.getParameter('entityDoc')" != "")
+  #set($entityDoc = $xwiki.getDocument($request.getParameter('entityDoc')))
+#else
+  #set($entityDoc = $doc)
+#end
+
 ## URL for removing objects, used by the jsx
-#set ($removeDC = 'RISCOSSPlatformDataCollectorCode.RemoveDataCollector')
-$outConf.put("objRemoveURL", $xwiki.getURL($removeDC, 'get', "docName=$doc.getFullName()"))
+$outConf.put("ajaxURL", $xwiki.getURL($AJAX_PG, 'get'))
+$outConf.put("displayURL", $xwiki.getURL($THIS_SCRIPT_PG, 'get'))
+$outConf.put("entityDoc", $entityDoc.getFullName())
+$outConf.put("canEdit", $xwiki.hasAccessLevel('edit', $xcontext.getUser(), $entityDoc))
 
 ## List of data collectors
 #set ($collectors = [])
 $outConf.put("collectors", $collectors)
 
-#set ($schedulesList = $doc.getObjects("RISCOSSPlatformDataCollectorCode.DataCollectorScheduler"))
-#set ($schedulesMap = {})
-#foreach ($s in $schedulesList)
-  #if ("$!s.getProperty('collectorName')" != "")
+#set($schedulesList = $entityDoc.getObjects($SCHEDULER_PG))
+#set($schedulesMap = {})
+#foreach($s in $schedulesList)
+  #if("$!s.getProperty('collectorName')" != "")
     $schedulesMap.put($s.getProperty("collectorName").getValue(), $s)
   #end
 #end
 
-#set ($collectorDocNames =
-  $services.query.xwql(
-    'from doc.object(RISCOSSPlatformDataCollectorCode.DataCollectorClass) as x').execute())
+#set($entityObj = $entityDoc.getObject($ENTITY_CLS_PG))
+#set($layer = $entityObj.getProperty("layer").getValue())
+
+#set($collectorDocNames =
+  $services.query.xwql("from doc.object($DATA_COL_CLS_PG) as x where x.layer = :layer").bindValue("layer", $layer).execute())
+#set($autoEnableDataCollectors = "$!request.getParameter('autoEnableDataCollectors')")
 #foreach($collectorName in $collectorDocNames)
-  #set ($collectorOut = {})
+  #set($collectorOut = {})
   $collectors.add($collectorOut)
-  #set ($col = $xwiki.getDocument($collectorName))
-  #set ($cobj = $doc.getObject($collectorName))
+  #set($col = $xwiki.getDocument($collectorName))
+  #set($cobj = $entityDoc.getObject($collectorName))
 
   $collectorOut.put("title", $col.getTitle())
   $collectorOut.put("fullName", $col.getFullName())
@@ -65,12 +103,16 @@ $outConf.put("collectors", $collectors)
   #set($schedule = $schedulesMap.get($col.getFullName()))
   #if ("$!schedule" == "")
     ## We're not going to save this object at the moment, just make it ready to save later...
-    #set($schedule = $doc.newObject("RISCOSSPlatformDataCollectorCode.DataCollectorScheduler"))
+    #set($schedule = $entityDoc.newObject($SCHEDULER_PG))
+    #if($autoEnableDataCollectors.indexOf($col.getFullName()))
+      $collectorOut.put('enabled', 'true')
+    #end
   #else
     $collectorOut.put('enabled', 'true')
   #end
-  $collectorOut.put("periodicity_edit", "$!schedule.display('periodicity', 'edit')")
-  $collectorOut.put("periodicity_view", "$!schedule.getProperty('periodicity').getValue()")
+  $collectorOut.put("frequency_edit", "$!schedule.display('frequency', 'edit')")
+  $collectorOut.put("frequency_view", "$!schedule.getProperty('frequency').getValue()")
+  $collectorOut.put("timeLastRun", "$!schedule.getProperty('timeLastRun').getValue()")
 
   #set($props = [])
   $collectorOut.put("properties", $props)
@@ -168,7 +210,7 @@ $outConf.put("collectors", $collectors)
     <name>RISCOSSPlatformDataCollectorCode.DataCollectorManager</name>
     <number>1</number>
     <className>XWiki.JavaScriptExtension</className>
-    <guid>21594e02-6c54-4eff-a89d-e404b589661b</guid>
+    <guid>c4f3417e-3c8f-48e3-9e09-7b391beefa23</guid>
     <property>
       <name/>
     </property>
@@ -180,8 +222,19 @@ $outConf.put("collectors", $collectors)
     deletingObject: 'Deleting Object',
     doneDeletingObject: 'Done',
     errorDeletingObject: 'Error',
-    periodicity: 'Frequency'
+    rerunningCollector: 'Rerunning collector',
+    doneRerunningCollector: 'Done',
+    errorRerunningCollector: 'Error',
+    frequency: 'Frequency',
+    running: 'Running...',
+    rerun: "Rerun",
+    timeLastCollected: "Time Last Collected",
+    collectorFrequency: "Collection Frequency",
+    collectorName: "Data Collector Name",
+    errFailedToRedisplayTable: "Failed to redisplay table"
   };
+
+  var RERUN_ICON = '/' + XWiki.webapppath + 'resources/icons/silk/arrow_rotate_clockwise.png';
 
   var uid = function () { return 'uid-' + Math.random().toString(32).substring(2); };
   var appendElem = function ($container, type, id) {
@@ -216,13 +269,14 @@ $outConf.put("collectors", $collectors)
     $label.text(labelTxt);
     var $inputDD = appendElem($list, 'dd');
     return appendElem($inputDD, elementType, id);
-  }
-
-  var getObjRemoveURL = function (baseObjRemoveURL, className) {
-    return baseObjRemoveURL + '&amp;xpage=plain&amp;deleteCollector=' + className;
   };
 
-  var editCollector = function (col, $elem, objRemoveURL) {
+  var buildAjaxURL = function (conf, action, className) {
+    return conf.ajaxURL + '?xpage=plain&amp;entityDoc=' + conf.entityDoc +
+      '&amp;action=' + action + '&amp;collector=' + className;
+  };
+
+  var editCollector = function (col, $elem, config) {
 
     var $checkbox = makeLabeledElement($elem, col.title, 'input');
     $checkbox.attr('type', 'checkbox');
@@ -243,13 +297,13 @@ $outConf.put("collectors", $collectors)
       $input.attr('value', prop.value || '');
     }
 
-    var $input = makeLabeledElement($list, MESSAGES.periodicity, 'input');
-    var freqEdit = col.periodicity_edit.replace(/^{{[^}]+}}/, '').replace(/{{[^}]+}}$/, '');
+    var $input = makeLabeledElement($list, MESSAGES.frequency, 'input');
+    var freqEdit = col.frequency_edit.replace(/^{{[^}]+}}/, '').replace(/{{[^}]+}}$/, '');
     var $freqDD = $($input[0].parentNode);
     var inputId = $input.attr('id');
     $input.remove();
     $freqDD.append(freqEdit);
-    var name = $freqDD.find('select').attr('name').replace(/_periodicity$/, '_collectorName');
+    var name = $freqDD.find('select').attr('name').replace(/_frequency$/, '_collectorName');
     $freqDD.append('&lt;input type="hidden" name="' + name + '" value="' + col.fullName + '"&gt;');
     $freqDD.find('select').attr('id', inputId).attr('class', 'post-input');
     $freqDD.find('input').attr('class', 'post-input');
@@ -264,7 +318,7 @@ $outConf.put("collectors", $collectors)
       if (col.enabled) {
         var inProgress = new XWiki.widgets.Notification(MESSAGES.deletingObject, "inprogress");
         $.ajax({
-          url: getObjRemoveURL(objRemoveURL, col.fullName),
+          url: buildAjaxURL(config, 'remove', col.fullName),
           method: 'POST',
           success: function () {
             inProgress.hide();
@@ -282,6 +336,7 @@ $outConf.put("collectors", $collectors)
   };
 
   var edit = function (config, $elem) {
+    if (!config.collectors.length) { return; }
     var $updateOrCreate = appendElem($elem, 'input');
     $updateOrCreate.attr('type', 'hidden');
     $updateOrCreate.attr('value', 'updateOrCreate');
@@ -291,28 +346,105 @@ $outConf.put("collectors", $collectors)
     $dl.append('&lt;dt&gt;'+MESSAGES.dataCollectors+'&lt;/dt&gt;');
     var $dd = appendElem($dl, 'dd');
     for (var i = 0; i &lt; config.collectors.length; i++) {
-      editCollector(config.collectors[i], $dd, config.objRemoveURL);
+      editCollector(config.collectors[i], $dd, config);
     }
   };
 
-  var viewCollector = function (col, $ul) {
+  var redisplay = function (config, $elem, callback) {
+    $.ajax({
+      url: config.displayURL + '?xpage=plain&amp;entityDoc=' + config.entityDoc,
+      method: 'POST',
+      success: function (data) {
+        try {
+            var parsed = parseData($(data));
+            $elem.empty();
+            view(parsed, $elem);
+        } catch (e) { console.log("error: [" + data + "]"); }
+        callback(null);
+      },
+      error: function (jqXHR, error) {
+        callback(error);
+      }
+    });
+  };
+
+  var viewCollector = function (col, $tbody, config, $elem) {
     if (!col.enabled) { return; }
-    var $li = appendElem($ul, 'li');
-    $li.text(col.title + ' - Running ' + col.periodicity_view);
+    var $tr = appendElem($tbody, 'tr');
+    var $td = appendElem($tr, 'td');
+    $td.text(col.title);
+
+    $td = appendElem($tr, 'td');
+    $td.text(col.frequency_view);
+
+    var lastRun = MESSAGES.running;
+    if (col.timeLastRun) { lastRun = new Date(Number(col.timeLastRun)).toGMTString(); }
+    $td = appendElem($tr, 'td');
+    $td.text(lastRun);
+
+    if (!config.canEdit) { return (lastRun === MESSAGES.running); }
+
+    $td = appendElem($tr, 'td');
+    $td.append('&lt;center&gt;&lt;img style="cursor: pointer;" src="'+RERUN_ICON+'"&gt;&lt;/img&gt;&lt;/center&gt;');
+    $td.find('img').click(function () {
+      var inProgress = new XWiki.widgets.Notification(MESSAGES.rerunningCollector, "inprogress");
+      var showError = function (error) {
+          inProgress.hide();
+          new XWiki.widgets.Notification(MESSAGES.errorRerunningCollector + ' ' + error, "error");
+      };
+      $.ajax({
+        url: buildAjaxURL(config, 'rerun', col.fullName),
+        method: 'POST',
+        success: function () {
+          redisplay(config, $elem, function (err) {
+              if (err) {
+                  showError(MESSAGES.errFailedToRedisplayTable);
+              } else {
+                  inProgress.hide();
+                  new XWiki.widgets.Notification(MESSAGES.doneRerunningCollector, "done");
+              }
+          });
+        },
+        error: function (jqXHR, error) {
+          showError(error);
+        }
+      });
+    });
+
+    return (lastRun === MESSAGES.running);
+  };
+
+  var parseData = function ($elem) {
+    return JSON.parse(decodeURIComponent($elem.text().replace(/\+/g, '%20')));
   };
 
   var view = function (config, $elem) {
-    var $dl = appendElem($elem, 'dl');
-    $dl.append('&lt;dt&gt;&lt;h1&gt;'+MESSAGES.dataCollectors+'&lt;/h1&gt;&lt;/dt&gt;');
-    var $dd = appendElem($dl, 'dd');
-    var $ul = appendElem($dd, 'ul');
+    if (!config.collectors.length) { return; }
+    $elem.append('&lt;h1&gt;'+MESSAGES.dataCollectors+'&lt;/h1&gt;');
+    var $table = appendElem($elem, 'table');
+    var $tbody = appendElem($table, 'tbody');
+    var $headerTr = appendElem($tbody, 'tr');
+    var $th = appendElem($headerTr, 'th');
+    $th.text(MESSAGES.collectorName);
+    $th = appendElem($headerTr, 'th');
+    $th.text(MESSAGES.collectorFrequency);
+    $th = appendElem($headerTr, 'th');
+    $th.text(MESSAGES.timeLastCollected);
+    if (config.canEdit) {
+      $th = appendElem($headerTr, 'th');
+      $th.text(MESSAGES.rerun);
+    }
+    var needsRecheck = 0;
     for (var i = 0; i &lt; config.collectors.length; i++) {
-      viewCollector(config.collectors[i], $ul);
+      needsRecheck |= viewCollector(config.collectors[i], $tbody, config, $elem);
+    }
+    if (needsRecheck) {
+        setTimeout(function () { redisplay(config, $elem, function () { }); }, 10000);
     }
   };
 
   var $elem = $('.data-collectors');
-  var config = JSON.parse(decodeURIComponent($elem.text().replace(/\+/g, '%20')));
+  var config = parseData($elem);
   $elem.text('');
   $elem.removeAttr('style');
   $elem.append('&lt;hr /&gt;');

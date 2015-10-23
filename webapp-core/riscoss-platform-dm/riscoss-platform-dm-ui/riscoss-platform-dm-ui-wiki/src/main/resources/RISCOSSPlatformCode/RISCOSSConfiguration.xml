@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
 <xwikidoc>
   <web>RISCOSSPlatformCode</web>
   <name>RISCOSSConfiguration</name>
@@ -11,20 +31,110 @@
   <author>xwiki:XWiki.Admin</author>
   <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <creationDate>0</creationDate>
-  <date>0</date>
-  <contentUpdateDate>0</contentUpdateDate>
+  <creationDate>1429197418000</creationDate>
+  <date>1444382042000</date>
+  <contentUpdateDate>1438005160000</contentUpdateDate>
   <version>1.1</version>
   <title/>
+  <template/>
   <defaultTemplate/>
   <validationScript/>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
+  <content/>
+  <class>
+    <name>RISCOSSPlatformCode.RISCOSSConfiguration</name>
+    <customClass/>
+    <customMapping/>
+    <defaultViewSheet/>
+    <defaultEditSheet/>
+    <defaultWeb/>
+    <nameField/>
+    <validationScript/>
+    <expertFeedbackURL>
+      <disabled>0</disabled>
+      <name>expertFeedbackURL</name>
+      <number>1</number>
+      <prettyName>Optional Expert Assessment URL</prettyName>
+      <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      <size>255</size>
+      <customDisplay/>
+      <picker>0</picker>
+      <validationMessage/>
+      <validationRegExp/>
+    </expertFeedbackURL>
+    <feedbackURL>
+      <disabled>0</disabled>
+      <name>feedbackURL</name>
+      <number>2</number>
+      <prettyName>Optional User Feedback URL</prettyName>
+      <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      <size>255</size>
+      <customDisplay/>
+      <picker>0</picker>
+      <validationMessage/>
+      <validationRegExp/>
+    </feedbackURL>
+    <githubAppClientID>
+      <disabled>0</disabled>
+      <name>githubAppClientID</name>
+      <number>3</number>
+      <prettyName>githubAppClientID</prettyName>
+      <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      <size>30</size>
+      <customDisplay/>
+      <picker>0</picker>
+      <validationMessage/>
+      <validationRegExp/>
+    </githubAppClientID>
+    <githubAppClientSecret>
+      <disabled>0</disabled>
+      <name>githubAppClientSecret</name>
+      <number>4</number>
+      <prettyName>githubAppClientSecret</prettyName>
+      <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      <size>30</size>
+      <customDisplay/>
+      <picker>0</picker>
+      <validationMessage/>
+      <validationRegExp/>
+    </githubAppClientSecret>
+    <oauthPublicKey>
+      <disabled>0</disabled>
+      <name>oauthPublicKey</name>
+      <number>5</number>
+      <prettyName>OauthPublicKey</prettyName>
+      <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      <size>30</size>
+      <customDisplay/>
+      <picker>0</picker>
+      <validationMessage/>
+      <validationRegExp/>
+    </oauthPublicKey>
+    <rdr>
+      <disabled>0</disabled>
+      <name>rdr</name>
+      <number>6</number>
+      <prettyName>Risk Data Repository URL</prettyName>
+      <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      <size>255</size>
+      <customDisplay/>
+      <picker>0</picker>
+      <validationMessage/>
+      <validationRegExp/>
+    </rdr>
+  </class>
   <object>
     <class>
-      <name>RISCOSSPlatformCode.RISCOSSConfigurationClass</name>
+      <name>RISCOSSPlatformCode.RISCOSSConfiguration</name>
       <customClass/>
       <customMapping/>
       <defaultViewSheet/>
@@ -32,27 +142,253 @@
       <defaultWeb/>
       <nameField/>
       <validationScript/>
-      <rdr>
-        <customDisplay/>
+      <expertFeedbackURL>
         <disabled>0</disabled>
-        <name>rdr</name>
+        <name>expertFeedbackURL</name>
         <number>1</number>
-        <picker>0</picker>
-        <prettyName>rdr</prettyName>
-        <size>30</size>
+        <prettyName>Optional Expert Assessment URL</prettyName>
         <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>255</size>
+        <customDisplay/>
+        <picker>0</picker>
         <validationMessage/>
         <validationRegExp/>
+      </expertFeedbackURL>
+      <feedbackURL>
+        <disabled>0</disabled>
+        <name>feedbackURL</name>
+        <number>2</number>
+        <prettyName>Optional User Feedback URL</prettyName>
+        <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>255</size>
+        <customDisplay/>
+        <picker>0</picker>
+        <validationMessage/>
+        <validationRegExp/>
+      </feedbackURL>
+      <githubAppClientID>
+        <disabled>0</disabled>
+        <name>githubAppClientID</name>
+        <number>3</number>
+        <prettyName>githubAppClientID</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+        <customDisplay/>
+        <picker>0</picker>
+        <validationMessage/>
+        <validationRegExp/>
+      </githubAppClientID>
+      <githubAppClientSecret>
+        <disabled>0</disabled>
+        <name>githubAppClientSecret</name>
+        <number>4</number>
+        <prettyName>githubAppClientSecret</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+        <customDisplay/>
+        <picker>0</picker>
+        <validationMessage/>
+        <validationRegExp/>
+      </githubAppClientSecret>
+      <oauthPublicKey>
+        <disabled>0</disabled>
+        <name>oauthPublicKey</name>
+        <number>5</number>
+        <prettyName>OauthPublicKey</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+        <customDisplay/>
+        <picker>0</picker>
+        <validationMessage/>
+        <validationRegExp/>
+      </oauthPublicKey>
+      <rdr>
+        <disabled>0</disabled>
+        <name>rdr</name>
+        <number>6</number>
+        <prettyName>Risk Data Repository URL</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>255</size>
+        <customDisplay/>
+        <picker>0</picker>
+        <validationMessage/>
+        <validationRegExp/>
       </rdr>
     </class>
     <name>RISCOSSPlatformCode.RISCOSSConfiguration</name>
-    <number>0</number>
-    <className>RISCOSSPlatformCode.RISCOSSConfigurationClass</className>
-    <guid>9cd7f3b9-3b62-4235-9685-4989aeafe4db</guid>
+    <number>1</number>
+    <className>RISCOSSPlatformCode.RISCOSSConfiguration</className>
+    <guid>4e65edea-88ce-4bd9-ad6e-0b50b643ca9d</guid>
     <property>
-      <rdr>http://localhost:8080/rdr</rdr>
+      <expertFeedbackURL/>
+    </property>
+    <property>
+      <feedbackURL>http://limesurvey.merit.unu.edu/index.php/97378/lang-en</feedbackURL>
+    </property>
+    <property>
+      <githubAppClientID>66cf9545328e82e039ac</githubAppClientID>
+    </property>
+    <property>
+      <githubAppClientSecret>a51d1b4ab85f9520091b580a674c69d24d826503</githubAppClientSecret>
+    </property>
+    <property>
+      <oauthPublicKey>UI-dXouxI4J18UhIAXr-J0yK9H8</oauthPublicKey>
+    </property>
+    <property>
+      <rdr>http://localhost:8080/riscoss-rdr</rdr>
     </property>
   </object>
-  <content/>
+  <object>
+    <class>
+      <name>XWiki.ConfigurableClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <codeToExecute>
+        <disabled>0</disabled>
+        <name>codeToExecute</name>
+        <number>1</number>
+        <prettyName>codeToExecute</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+        <rows>5</rows>
+        <size>40</size>
+        <editor>---</editor>
+        <picker>0</picker>
+        <validationMessage/>
+        <validationRegExp/>
+      </codeToExecute>
+      <configurationClass>
+        <disabled>0</disabled>
+        <name>configurationClass</name>
+        <number>2</number>
+        <prettyName>configurationClass</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+        <picker>0</picker>
+        <validationMessage/>
+        <validationRegExp/>
+      </configurationClass>
+      <configureGlobally>
+        <disabled>0</disabled>
+        <name>configureGlobally</name>
+        <number>3</number>
+        <prettyName>configureGlobally</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+        <displayFormType>checkbox</displayFormType>
+        <displayType/>
+        <defaultValue/>
+        <validationMessage/>
+        <validationRegExp/>
+      </configureGlobally>
+      <displayInSection>
+        <disabled>0</disabled>
+        <name>displayInSection</name>
+        <number>4</number>
+        <prettyName>displayInSection</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+        <picker>0</picker>
+        <validationMessage/>
+        <validationRegExp/>
+      </displayInSection>
+      <heading>
+        <disabled>0</disabled>
+        <name>heading</name>
+        <number>5</number>
+        <prettyName>heading</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+        <picker>0</picker>
+        <validationMessage/>
+        <validationRegExp/>
+      </heading>
+      <iconAttachment>
+        <disabled>0</disabled>
+        <name>iconAttachment</name>
+        <number>6</number>
+        <prettyName>iconAttachment</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+        <picker>0</picker>
+        <validationMessage/>
+        <validationRegExp/>
+      </iconAttachment>
+      <linkPrefix>
+        <disabled>0</disabled>
+        <name>linkPrefix</name>
+        <number>7</number>
+        <prettyName>linkPrefix</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+        <picker>0</picker>
+        <validationMessage/>
+        <validationRegExp/>
+      </linkPrefix>
+      <propertiesToShow>
+        <disabled>0</disabled>
+        <name>propertiesToShow</name>
+        <number>8</number>
+        <prettyName>propertiesToShow</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+        <cache>0</cache>
+        <displayType>input</displayType>
+        <multiSelect>1</multiSelect>
+        <relationalStorage>1</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>20</size>
+        <values/>
+        <picker>0</picker>
+        <sort>none</sort>
+        <validationMessage/>
+        <validationRegExp/>
+      </propertiesToShow>
+    </class>
+    <name>RISCOSSPlatformCode.RISCOSSConfiguration</name>
+    <number>2</number>
+    <className>XWiki.ConfigurableClass</className>
+    <guid>3964dbe5-9351-4900-945d-70adf8e9b5c7</guid>
+    <property>
+      <codeToExecute/>
+    </property>
+    <property>
+      <configurationClass>RISCOSSPlatformCode.RISCOSSConfiguration</configurationClass>
+    </property>
+    <property>
+      <configureGlobally>1</configureGlobally>
+    </property>
+    <property>
+      <displayInSection>RISCOSS</displayInSection>
+    </property>
+    <property>
+      <heading>RISCOSS Platform Configuration</heading>
+    </property>
+    <property>
+      <iconAttachment/>
+    </property>
+    <property>
+      <linkPrefix/>
+    </property>
+    <property>
+      <propertiesToShow/>
+    </property>
+  </object>
 </xwikidoc>

@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
 <xwikidoc>
   <web>RISCOSSPlatformRiskAnalysisManagerCode</web>
   <name>RiskEvaluationClass</name>
@@ -11,17 +31,25 @@
   <author>xwiki:XWiki.Admin</author>
   <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <creationDate>0</creationDate>
-  <date>0</date>
-  <contentUpdateDate>0</contentUpdateDate>
+  <creationDate>1430839814000</creationDate>
+  <date>1437990160000</date>
+  <contentUpdateDate>1437990160000</contentUpdateDate>
   <version>1.1</version>
   <title>RiskEvaluation Class</title>
+  <template/>
   <defaultTemplate/>
   <validationScript/>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.0</syntaxId>
   <hidden>false</hidden>
+  <content>{{velocity}}
+## Replace the default space with the space where you want your documents to be created.
+## Replace the default parent with the one of your choice and save the document.
+##
+#set($defaultSpace = $doc.space)
+#set($defaultParent = $doc.fullName)
+{{/velocity}}</content>
   <class>
     <name>RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationClass</name>
     <customClass/>
@@ -31,50 +59,164 @@
     <defaultWeb/>
     <nameField/>
     <validationScript/>
-    <inputData>
-      <customDisplay/>
+    <entity>
       <disabled>0</disabled>
-      <editor>---</editor>
+      <name>entity</name>
+      <number>1</number>
+      <prettyName>Entity</prettyName>
+      <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      <size>30</size>
+      <customDisplay/>
+      <picker>0</picker>
+      <validationMessage/>
+      <validationRegExp/>
+    </entity>
+    <inputData>
+      <disabled>0</disabled>
       <name>inputData</name>
       <number>2</number>
-      <picker>0</picker>
-      <prettyName>inputData</prettyName>
+      <prettyName>Engine Input Data</prettyName>
+      <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
       <rows>5</rows>
       <size>40</size>
-      <unmodifiable>0</unmodifiable>
-      <validationMessage/>
-      <validationRegExp/>
-      <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-    </inputData>
-    <result>
       <customDisplay/>
-      <disabled>0</disabled>
       <editor>---</editor>
-      <name>result</name>
-      <number>3</number>
       <picker>0</picker>
-      <prettyName>result</prettyName>
-      <rows>5</rows>
-      <size>40</size>
-      <unmodifiable>0</unmodifiable>
       <validationMessage/>
       <validationRegExp/>
+    </inputData>
+    <interpretedInput>
+      <disabled>0</disabled>
+      <name>interpretedInput</name>
+      <number>3</number>
+      <prettyName>Interpreted Input</prettyName>
+      <unmodifiable>0</unmodifiable>
       <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      <rows>5</rows>
+      <size>40</size>
+      <customDisplay/>
+      <editor>---</editor>
+      <picker>0</picker>
+      <validationMessage/>
+      <validationRegExp/>
+    </interpretedInput>
+    <rawOutput>
+      <disabled>0</disabled>
+      <name>rawOutput</name>
+      <number>4</number>
+      <prettyName>Engine Raw Output</prettyName>
+      <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      <rows>5</rows>
+      <size>40</size>
+      <customDisplay/>
+      <editor>---</editor>
+      <picker>0</picker>
+      <validationMessage/>
+      <validationRegExp/>
+    </rawOutput>
+    <result>
+      <disabled>0</disabled>
+      <name>result</name>
+      <number>5</number>
+      <prettyName>Engine Result</prettyName>
+      <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      <rows>5</rows>
+      <size>40</size>
+      <customDisplay/>
+      <editor>---</editor>
+      <picker>0</picker>
+      <validationMessage/>
+      <validationRegExp/>
     </result>
     <riskConfiguration>
-      <customDisplay/>
       <disabled>0</disabled>
       <name>riskConfiguration</name>
-      <number>1</number>
-      <picker>0</picker>
-      <prettyName>riskConfiguration</prettyName>
-      <size>30</size>
+      <number>6</number>
+      <prettyName>Risk Configuration (models)</prettyName>
       <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      <size>30</size>
+      <customDisplay/>
+      <picker>0</picker>
       <validationMessage/>
       <validationRegExp/>
-      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
     </riskConfiguration>
+    <score>
+      <disabled>0</disabled>
+      <name>score</name>
+      <number>7</number>
+      <prettyName>score</prettyName>
+      <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.NumberClass</classType>
+      <size>30</size>
+      <numberType>double</numberType>
+      <customDisplay/>
+      <validationMessage/>
+      <validationRegExp/>
+    </score>
+    <timeLastRun>
+      <disabled>0</disabled>
+      <name>timeLastRun</name>
+      <number>8</number>
+      <prettyName>Time Last Evaluated</prettyName>
+      <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.NumberClass</classType>
+      <size>255</size>
+      <numberType>long</numberType>
+      <customDisplay/>
+      <validationMessage/>
+      <validationRegExp/>
+    </timeLastRun>
+    <useCase>
+      <disabled>0</disabled>
+      <name>useCase</name>
+      <number>9</number>
+      <prettyName>Use Case</prettyName>
+      <unmodifiable>0</unmodifiable>
+      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      <size>30</size>
+      <customDisplay/>
+      <picker>0</picker>
+      <validationMessage/>
+      <validationRegExp/>
+    </useCase>
   </class>
+  <object>
+    <class>
+      <name>XWiki.ClassSheetBinding</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <sheet>
+        <disabled>0</disabled>
+        <name>sheet</name>
+        <number>1</number>
+        <prettyName>Sheet</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+        <customDisplay/>
+        <picker>0</picker>
+        <validationMessage/>
+        <validationRegExp/>
+      </sheet>
+    </class>
+    <name>RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationClass</name>
+    <number>1</number>
+    <className>XWiki.ClassSheetBinding</className>
+    <guid>c8035cbc-6749-4124-a10d-366e313696c6</guid>
+    <property>
+      <sheet>RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationViewSheet</sheet>
+    </property>
+  </object>
   <object>
     <class>
       <name>XWiki.DocumentSheetBinding</name>
@@ -86,32 +228,25 @@
       <nameField/>
       <validationScript/>
       <sheet>
-        <customDisplay/>
         <disabled>0</disabled>
         <name>sheet</name>
         <number>1</number>
-        <picker>0</picker>
         <prettyName>Sheet</prettyName>
-        <size>30</size>
         <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+        <customDisplay/>
+        <picker>0</picker>
         <validationMessage/>
         <validationRegExp/>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </sheet>
     </class>
     <name>RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationClass</name>
-    <number>0</number>
+    <number>2</number>
     <className>XWiki.DocumentSheetBinding</className>
-    <guid>800ea5ab-9d44-4208-b713-0c426117e21c</guid>
+    <guid>a5d190f7-3eeb-4ef4-b0d2-3415e3eeffb8</guid>
     <property>
       <sheet>XWiki.ClassSheet</sheet>
     </property>
   </object>
-  <content>{{velocity}}
-## Replace the default space with the space where you want your documents to be created.
-## Replace the default parent with the one of your choice and save the document.
-##
-#set($defaultSpace = $doc.space)
-#set($defaultParent = $doc.fullName)
-{{/velocity}}</content>
 </xwikidoc>

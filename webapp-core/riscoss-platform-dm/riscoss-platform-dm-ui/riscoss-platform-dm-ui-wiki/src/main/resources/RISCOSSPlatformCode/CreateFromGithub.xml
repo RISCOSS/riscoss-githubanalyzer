@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc>
+  <web>RISCOSSPlatformCode</web>
+  <name>CreateFromGithub</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <parent>xwiki:XWiki.WebHome</parent>
+  <creator>xwiki:XWiki.Admin</creator>
+  <author>xwiki:XWiki.Admin</author>
+  <customClass/>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <creationDate>1430839817000</creationDate>
+  <date>1427712970000</date>
+  <contentUpdateDate>1427711754000</contentUpdateDate>
+  <version>1.1</version>
+  <title/>
+  <template/>
+  <defaultTemplate/>
+  <validationScript/>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>{{velocity}}
+## -*- Mode:Velocity
+#set ($githubRepo = $request.getParameter('githubRepo'))
+#set($API = $xwiki.parseGroovyFromPage("RISCOSSPlatformCode.CreateFromGithubGroovy"))
+#if ("$!githubRepo" != "")
+  #if (!$API.isOkGithubURL($githubRepo))
+    {{error}}Invalid GitHub project URL, please make sure it is in the same form as https://github.com/xwiki-labs/cryptpad.git{{/error}}
+  #else
+    #set($entityDoc = $xwiki.getDocument($API.docNameForGithubURL($githubRepo)))
+    #if (!$entityDoc.isNew())
+      {{error}}Project for [$githubRepo] already exists: [[$entityDoc.getTitle()&gt;&gt;$entityDoc]]{{/error}}
+    #else
+      #set($cancelRedirect = $xwiki.getURL("Main.WebHome"))
+      #set($title = $escapetool.url($API.titleForGithubURL($githubRepo)))
+      #set($qs = "template=RISCOSSPlatformLayers.OSSComponentTemplate")
+      #set($qs = "$qs&amp;parent=$entityDoc.getSpace().WebHome")
+      #set($qs = "$qs&amp;title=$title")
+      #set($qs = "$qs&amp;cancelredirect=${cancelRedirect}") 
+      #set($qs = "$qs&amp;RISCOSSPlatformLayers.OSSComponent_0_website=$escapetool.url($githubRepo)")
+      #set($qs = "$qs&amp;RISCOSSPlatformLayers.OSSComponent_0_name=$title")
+      $response.sendRedirect($entityDoc.getURL("edit", $qs))
+    #end
+  #end
+#else
+== Create Project from Github ==
+#set($discard = $xwiki.jsx.use("RISCOSSPlatformCode.CreateFromGithub"))
+{{html clean="false"}}
+&lt;form action="$xwiki.getURL('RISCOSSPlatformCode.CreateFromGithub')" method="POST" class="xform third createForm" id="creategithubform"&gt;
+    &lt;input type="hidden" name="autoEnableDataCollectors" value="['RISCOSSPlatformRiskDataCollectors.GitHub']" /&gt;
+    &lt;dl&gt;
+      &lt;dt&gt;
+        &lt;label for="githubRepo"&gt;
+          GitHub Repository
+        &lt;/label&gt;
+      &lt;/dt&gt;
+      &lt;dt&gt;
+        &lt;input type="text" name="githubRepo" id="githubRepo" /&gt;&lt;span id="gitValidationStatus"&gt;&lt;/span&gt;
+      &lt;/dt&gt;
+    &lt;/dl&gt;
+    &lt;br/&gt;
+    &lt;span class="buttonwrapper"&gt;
+      &lt;input type="submit" class="button" name="submit" value="Create" id="githubsubmitbtn"/&gt;
+    &lt;/span&gt;
+&lt;/form&gt;
+{{/html}}
+#end
+{{/velocity}}
+</content>
+  <object>
+    <class>
+      <name>XWiki.JavaScriptExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+      </name>
+      <code>
+        <disabled>0</disabled>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+        <rows>20</rows>
+        <size>50</size>
+      </code>
+      <use>
+        <disabled>0</disabled>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+        <cache>0</cache>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <values>currentPage=Always on this page|onDemand=On demand|always=Always on this wiki</values>
+      </use>
+      <parse>
+        <disabled>0</disabled>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+      </parse>
+      <cache>
+        <disabled>0</disabled>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+        <cache>0</cache>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <values>long|short|default|forbid</values>
+      </cache>
+    </class>
+    <name>RISCOSSPlatformCode.CreateFromGithub</name>
+    <number>1</number>
+    <className>XWiki.JavaScriptExtension</className>
+    <guid>df7dd078-3e4d-4b80-afd5-aab11926579b</guid>
+    <property>
+      <name>Validate the github rep URL</name>
+    </property>
+    <property>
+      <code>require(['jquery'],function($){
+function isGithubRepoURL(s) {
+   var regexp = /((^https:\/\/github.com{1}?)(\/([\w#!:.?+=&amp;%@!\-\/]))+)?(\.git$)/
+   return regexp.test(s);
+}
+
+$(function(){
+
+var messages = {errorMsg:"Please enter a valid Github repository URL.","successMsg":"OK."}
+$('#githubRepo').on('input', function() {
+   var val = $(this).val();
+   $("#gitValidationStatus").html("");
+   if(!isGithubRepoURL(val)){
+     $("#gitValidationStatus").css("color","red");
+     $("#gitValidationStatus").html(messages.errorMsg);
+   }
+   else
+   {
+     $("#gitValidationStatus").css("color","green");
+     $("#gitValidationStatus").html(messages.successMsg);    
+   }
+});
+
+$("#githubsubmitbtn").click(function(event) {
+   var githubRepoURL = $("#githubRepo").val();
+   if(isGithubRepoURL(githubRepoURL)){
+     $("creategithubform").get(0).submit();
+   }
+   else
+   {
+     $("#gitValidationStatus").css("color","red");
+     $("#gitValidationStatus").html(messages.errorMsg);
+   }
+   event.preventDefault();
+});
+
+});
+});</code>
+    </property>
+    <property>
+      <use>onDemand</use>
+    </property>
+    <property>
+      <parse>0</parse>
+    </property>
+    <property>
+      <cache>long</cache>
+    </property>
+  </object>
+</xwikidoc>

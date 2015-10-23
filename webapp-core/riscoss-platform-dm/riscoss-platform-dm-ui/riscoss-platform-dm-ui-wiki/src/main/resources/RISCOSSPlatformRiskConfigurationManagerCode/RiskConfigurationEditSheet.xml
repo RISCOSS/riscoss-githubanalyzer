@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
 <xwikidoc>
   <web>RISCOSSPlatformRiskConfigurationManagerCode</web>
   <name>RiskConfigurationEditSheet</name>
@@ -11,17 +31,33 @@
   <author>xwiki:XWiki.Admin</author>
   <customClass/>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <creationDate>0</creationDate>
+  <creationDate>1430839818000</creationDate>
   <date>0</date>
   <contentUpdateDate>0</contentUpdateDate>
   <version>1.1</version>
   <title>#if($doc.name == 'RiskConfigurationSheet')RiskConfiguration Sheet#{else}$services.display.title($doc, {'displayerHint': 'default'})#end</title>
+  <template/>
   <defaultTemplate/>
   <validationScript/>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
+  <content>{{velocity}}
+## -*- Mode:Velocity
+
+#set($object = $doc.getObject('RISCOSSPlatformRiskConfigurationManagerCode.RiskConfigurationClass'))
+#set($class = $object.xWikiClass)
+#foreach($prop in $class.properties)
+; $prop.prettyName
+
+: $doc.display($prop.getName())
+
+
+#end
+
+{{/velocity}}
+</content>
   <object>
     <class>
       <name>XWiki.JavaScriptExtension</name>
@@ -32,74 +68,74 @@
       <defaultWeb/>
       <nameField/>
       <validationScript/>
-      <cache>
-        <cache>0</cache>
-        <disabled>0</disabled>
-        <displayType>select</displayType>
-        <multiSelect>0</multiSelect>
-        <name>cache</name>
-        <number>5</number>
-        <prettyName>Caching policy</prettyName>
-        <relationalStorage>0</relationalStorage>
-        <separator> </separator>
-        <separators> ,|</separators>
-        <size>1</size>
-        <unmodifiable>0</unmodifiable>
-        <values>long|short|default|forbid</values>
-        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-      </cache>
-      <code>
-        <disabled>0</disabled>
-        <name>code</name>
-        <number>2</number>
-        <prettyName>Code</prettyName>
-        <rows>20</rows>
-        <size>50</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-      </code>
       <name>
         <disabled>0</disabled>
         <name>name</name>
         <number>1</number>
         <prettyName>Name</prettyName>
-        <size>30</size>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
       </name>
+      <code>
+        <disabled>0</disabled>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+        <rows>20</rows>
+        <size>50</size>
+      </code>
+      <use>
+        <disabled>0</disabled>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+        <cache>0</cache>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators> ,|</separators>
+        <size>1</size>
+        <values>currentPage=Always on this page|onDemand=On demand|always=Always on this wiki</values>
+      </use>
       <parse>
         <disabled>0</disabled>
-        <displayFormType>select</displayFormType>
-        <displayType>yesno</displayType>
         <name>parse</name>
         <number>4</number>
         <prettyName>Parse content</prettyName>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
       </parse>
-      <use>
-        <cache>0</cache>
+      <cache>
         <disabled>0</disabled>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+        <cache>0</cache>
         <displayType>select</displayType>
         <multiSelect>0</multiSelect>
-        <name>use</name>
-        <number>3</number>
-        <prettyName>Use this extension</prettyName>
         <relationalStorage>0</relationalStorage>
         <separator> </separator>
         <separators> ,|</separators>
         <size>1</size>
-        <unmodifiable>0</unmodifiable>
-        <values>currentPage=Always on this page|onDemand=On demand|always=Always on this wiki</values>
-        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-      </use>
+        <values>long|short|default|forbid</values>
+      </cache>
     </class>
     <name>RISCOSSPlatformRiskConfigurationManagerCode.RiskConfigurationEditSheet</name>
-    <number>0</number>
+    <number>1</number>
     <className>XWiki.JavaScriptExtension</className>
-    <guid>eaa1362f-f1fd-4912-9a06-f1996f1fc0b8</guid>
+    <guid>8cc4a6c3-7973-4034-80db-7dd5a3481f9e</guid>
     <property>
-      <cache>forbid</cache>
+      <name/>
     </property>
     <property>
       <code>var XWiki = (function(XWiki) {
@@ -155,13 +191,13 @@
 } (XWiki || {}))</code>
     </property>
     <property>
-      <name/>
+      <use>onDemand</use>
     </property>
     <property>
       <parse>1</parse>
     </property>
     <property>
-      <use>onDemand</use>
+      <cache>forbid</cache>
     </property>
   </object>
   <object>
@@ -175,23 +211,23 @@
       <nameField/>
       <validationScript/>
       <action>
-        <customDisplay/>
         <disabled>0</disabled>
         <name>action</name>
         <number>1</number>
-        <picker>0</picker>
         <prettyName>Action</prettyName>
-        <size>30</size>
         <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
+        <customDisplay/>
+        <picker>0</picker>
         <validationMessage/>
         <validationRegExp/>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
       </action>
     </class>
     <name>RISCOSSPlatformRiskConfigurationManagerCode.RiskConfigurationEditSheet</name>
-    <number>0</number>
+    <number>2</number>
     <className>XWiki.SheetDescriptorClass</className>
-    <guid>890d9974-6453-45b6-8cf8-f391b1cb0f9b</guid>
+    <guid>adf645be-eea5-4b67-8479-68affe8e306b</guid>
     <property>
       <action>edit</action>
     </property>
@@ -211,115 +247,115 @@
         <name>author</name>
         <number>1</number>
         <prettyName>Author</prettyName>
-        <size>30</size>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
       </author>
       <comment>
         <disabled>0</disabled>
         <name>comment</name>
-        <number>5</number>
+        <number>2</number>
         <prettyName>Comment</prettyName>
-        <rows>5</rows>
-        <size>40</size>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+        <rows>5</rows>
+        <size>40</size>
       </comment>
       <date>
-        <dateFormat>dd/MM/yyyy HH:mm:ss</dateFormat>
         <disabled>0</disabled>
-        <emptyIsToday>1</emptyIsToday>
         <name>date</name>
-        <number>4</number>
-        <picker>1</picker>
+        <number>3</number>
         <prettyName>Date</prettyName>
-        <size>20</size>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.DateClass</classType>
+        <size>20</size>
+        <dateFormat>dd/MM/yyyy HH:mm:ss</dateFormat>
+        <emptyIsToday>1</emptyIsToday>
+        <picker>1</picker>
       </date>
       <highlight>
         <disabled>0</disabled>
         <name>highlight</name>
-        <number>2</number>
+        <number>4</number>
         <prettyName>Highlighted Text</prettyName>
-        <rows>2</rows>
-        <size>40</size>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+        <rows>2</rows>
+        <size>40</size>
       </highlight>
       <originalSelection>
         <disabled>0</disabled>
         <name>originalSelection</name>
-        <number>9</number>
+        <number>5</number>
         <prettyName>Original Selection</prettyName>
-        <rows>5</rows>
-        <size>40</size>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+        <rows>5</rows>
+        <size>40</size>
       </originalSelection>
       <replyto>
         <disabled>0</disabled>
         <name>replyto</name>
-        <number>3</number>
-        <numberType>integer</numberType>
+        <number>6</number>
         <prettyName>Reply To</prettyName>
-        <size>5</size>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.NumberClass</classType>
+        <size>5</size>
+        <numberType>integer</numberType>
       </replyto>
       <selection>
         <disabled>0</disabled>
         <name>selection</name>
-        <number>6</number>
+        <number>7</number>
         <prettyName>Selection</prettyName>
-        <rows>5</rows>
-        <size>40</size>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+        <rows>5</rows>
+        <size>40</size>
       </selection>
       <selectionLeftContext>
         <disabled>0</disabled>
         <name>selectionLeftContext</name>
-        <number>7</number>
+        <number>8</number>
         <prettyName>Selection Left Context</prettyName>
-        <rows>5</rows>
-        <size>40</size>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+        <rows>5</rows>
+        <size>40</size>
       </selectionLeftContext>
       <selectionRightContext>
         <disabled>0</disabled>
         <name>selectionRightContext</name>
-        <number>8</number>
+        <number>9</number>
         <prettyName>Selection Right Context</prettyName>
-        <rows>5</rows>
-        <size>40</size>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+        <rows>5</rows>
+        <size>40</size>
       </selectionRightContext>
       <state>
         <disabled>0</disabled>
         <name>state</name>
-        <number>11</number>
+        <number>10</number>
         <prettyName>State</prettyName>
-        <size>30</size>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
       </state>
       <target>
         <disabled>0</disabled>
         <name>target</name>
-        <number>10</number>
+        <number>11</number>
         <prettyName>Target</prettyName>
-        <size>30</size>
         <unmodifiable>0</unmodifiable>
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <size>30</size>
       </target>
     </class>
     <name>RISCOSSPlatformRiskConfigurationManagerCode.RiskConfigurationEditSheet</name>
-    <number>0</number>
+    <number>3</number>
     <className>XWiki.XWikiComments</className>
-    <guid>281dd8a9-6e4a-4463-a761-57207c3edad1</guid>
+    <guid>deca181e-b765-4b2c-bf1a-7fb07887a925</guid>
     <property>
       <author>XWiki.Admin</author>
     </property>
@@ -351,7 +387,7 @@ How it works:
 </comment>
     </property>
     <property>
-      <date>0</date>
+      <date>2015-05-05 17:30:13.35</date>
     </property>
     <property>
       <highlight/>
@@ -378,15 +414,4 @@ How it works:
       <target/>
     </property>
   </object>
-  <content>{{velocity}}
-
-#set($object = $doc.getObject('RISCOSSPlatformRiskConfigurationManagerCode.RiskConfigurationClass'))
-#set($class = $object.xWikiClass)
-#foreach($prop in $class.properties)
-; $prop.prettyName  
-: $doc.display($prop.getName())
-#end
-
-{{/velocity}}
-</content>
 </xwikidoc>
