@@ -273,9 +273,11 @@ private void runJob(Ctx ctx, Object entityDoc, Object collectorConf, Object sche
     def collectorDoc = ctx.xwiki.getDocument(getValue(scheduleConf, "collectorName"));
     def collectorObj = collectorDoc.getObject("RISCOSSPlatformDataCollectorCode.DataCollectorClass");
     String command = getValue(collectorObj, "command");
+    String repo = getValue(entityDoc, "website").replace("https://github.com/", "").replace(".git", "");
     String rdrPath = getRDRInfo(ctx);
     def out = new JSONObject();
     out.put("targetEntity", entityDoc.getName());
+    out.put("repository", repo)
     out.put("timeLastRun", getValue(scheduleConf, "timeLastRun"));
     if (collectorConf != null) {
         for (String propName : collectorConf.getxWikiClass().getEnabledPropertyNames()) {
@@ -347,6 +349,7 @@ private void runSchedule(Ctx ctx, Object doc, Object scheduleConf) {
 public void runDataCollectorOnDemand(Object xcontext, Object services, Object xwiki, entityDocRef){
    Ctx ctx = mkCtx(xwiki, services, xcontext);
    def entityDoc = ctx.xwiki.getDocument(entityDocRef);
+   def entityObj = entityDoc.getObject("RISCOSSPlatformLayers.OSSComponent");
    def collectorDoc = ctx.xwiki.getDocument("RISCOSSPlatformRiskDataCollectors.GitHub");
    def collectorObj = collectorDoc.getObject("RISCOSSPlatformDataCollectorCode.DataCollectorClass");
    def scheduleConf = null;
@@ -354,6 +357,10 @@ public void runDataCollectorOnDemand(Object xcontext, Object services, Object xw
    String rdrPath = getRDRInfo(ctx);
    def out = new JSONObject();
    out.put("targetEntity", entityDoc.getName());
+
+   String repo = getValue(entityObj, "website").replace("https://github.com/", "").replace(".git", "");
+   out.put("repository", repo);
+
    CmdReturn res = runCmd(
         ctx, command, out.toString(), getAttachDir(ctx.services, ctx.xcontext, collectorDoc));
     System.out.println("debug: stdout: " + res.stdout);

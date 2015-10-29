@@ -48,6 +48,21 @@ curl -v -H 'Content-type: application/octet-stream' \
     --data-binary @./webapp-core/riscoss-platform-dm/riscoss-platform-dm-distribution/riscoss-platform-dm-ui-wiki-all/target/riscoss-platform-dm-ui-wiki-all.xar \
     'http://localhost:8080/riscoss/rest/wikis/gha?backup=true&history=RESET'
 
+curl \
+    --user superadmin:system \
+    -T ./riscoss-commons/riscoss-data-collector/riscoss-rdc-app/target/riscoss-rdc-app-*-jar-with-dependencies.jar \
+    http://localhost:8080/riscoss/rest/wikis/gha/spaces/RISCOSSPlatformRiskDataCollectors/pages/GitHub/attachments/collector.jar
+
+curl \
+    --user superadmin:system \
+    -T ./riscoss-commons/riscoss-analyser/riscoss-remote-risk-analyser/target/riscoss-remote-risk-analyser-0.3-SNAPSHOT-jar-with-dependencies.jar \
+    http://localhost:8080/riscoss/rest/wikis/gha/spaces/RISCOSSPlatformAnalysers/pages/LogicAnalyser/attachments/analyser.jar
+
+curl \
+    --user superadmin:system \
+    -T ./riscoss-commons/riscoss-risk-modeling/risk-models/github_maintenance_risk.xml \
+    http://localhost:8080/riscoss/rest/wikis/gha/spaces/RISCOSSPlatformRiskModels/pages/BasicRiskModel/attachments/model.xml
+
 echo
 echo 'done';
 echo

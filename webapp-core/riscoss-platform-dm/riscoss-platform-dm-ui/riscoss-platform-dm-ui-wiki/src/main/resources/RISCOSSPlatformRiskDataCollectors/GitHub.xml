@@ -202,7 +202,7 @@ KSB7IHJ1bihKU09OLnBhcnNlKGRhdGEpKTsgfSk7Cn07Cm1haW4oKTsK
     <className>RISCOSSPlatformDataCollectorCode.DataCollectorClass</className>
     <guid>bb3219d3-a22c-4626-908b-c2e9bd22486b</guid>
     <property>
-      <command>node ./github.js -u cjdelisle:151306ab6720835fc7ea5c777cbb758e740352d6</command>
+      <command>java -jar collector.jar -print -rdc=Github --stdin-conf</command>
     </property>
     <property>
       <layer>RISCOSSPlatformLayers.OSSComponent</layer>
