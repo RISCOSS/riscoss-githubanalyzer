@@ -168,7 +168,7 @@ public JSONObject evaluate(Object xcontext, Object sessionDoc, JSONObject interp
     JSONObject output;
     if(interpretedRiskData.has("output")){
        if(interpretedRiskData.getJSONObject("output").has("output")){
-          output = interpretedRiskData.getJSONObject("output").getJSONObject("output"); 
+          output = interpretedRiskData.getJSONObject("output").getJSONObject("output");
        }
        else
        {
@@ -530,7 +530,7 @@ public Object getSessionDoc2(Object xwiki,
     {
        docName = targetName.substring(targetName.lastIndexOf('.')+1);
     }
-    
+
     if (useCaseName != null) {
         docName += "_for_" + useCaseName.substring(useCaseName.lastIndexOf('.')+1);
     }
@@ -574,9 +574,9 @@ public def storeResults(Object sessionDoc,
     if (sessionDoc.isNew()) { throw new RuntimeException(); }
     // Calculate the analysis score
     def score = 1;
-    for(key in results.keys()){ 
+    for(key in results.keys()){
        def riskScore = results.getJSONObject(key).getJSONObject("value").get("positive");
-       score = score * riskScore;
+       score = score * ( riskScore + 1);
     }
     def riskEvalObj = sessionDoc.getObject(RISK_EVAL_CLS, false);
     riskEvalObj.set("inputData", inputs ? inputs.toString() : "");

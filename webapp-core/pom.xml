@@ -21,8 +21,8 @@
   <modules>
     <module>riscoss-platform-rdr</module>
     <module>riscoss-platform-dm</module>
-    <module>../../riscoss-commons/riscoss-analyser</module>
-    <module>../../riscoss-commons/riscoss-data-collector</module>
+    <module>../externals/riscoss-analyser</module>
+    <module>../externals/riscoss-data-collector</module>
   </modules>
 
   <dependencyManagement>

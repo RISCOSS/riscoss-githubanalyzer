@@ -2,7 +2,7 @@
 die() { echo $1; exit 1; }
 node -e 'console.log("hello world")' | grep 'hello world' >/dev/null || die "ERROR: Nodejs required"
 mvn -v | grep 'Apache Maven 3.' >/dev/null || die "ERROR: Maven 3.x required"
-ls ./riscoss-commons >/dev/null || die "ERROR: please run ./update first"
+ls ./externals >/dev/null || die "ERROR: please run ./update first"
 tar --version | grep '^tar ' >/dev/null || die "ERROR: please install TAR first"
 
 VERSION='0.3-SNAPSHOT'
@@ -23,7 +23,7 @@ cp -r ./webapp-core/riscoss-platform-rdr/riscoss-platform-rdr-war/target/riscoss
 ( cd result && tar -xf ../resources/apache-tomcat* ) || die "Tar tomcat failed";
 cp ./resources/start.sh ./result || die "copy start.sh failed"
 
-cp ./riscoss-commons/riscoss-data-collector/riscoss-rdc-app/target/riscoss-rdc-app-*-jar-with-dependencies.jar ./result/riscoss-data-collector-$VERSION.jar || die "Copy rdc jar failed";
+cp ./externals/riscoss-data-collector/riscoss-rdc-app/target/riscoss-rdc-app-*-jar-with-dependencies.jar ./result/riscoss-data-collector-$VERSION.jar || die "Copy rdc jar failed";
 
 ## Wait while start gets the server up
 ( cd ./result && ./start.sh )
@@ -50,17 +50,17 @@ curl -v -H 'Content-type: application/octet-stream' \
 
 curl \
     --user superadmin:system \
-    -T ./riscoss-commons/riscoss-data-collector/riscoss-rdc-app/target/riscoss-rdc-app-*-jar-with-dependencies.jar \
+    -T ./externals/riscoss-data-collector/riscoss-rdc-app/target/riscoss-rdc-app-*-jar-with-dependencies.jar \
     http://localhost:8080/riscoss/rest/wikis/gha/spaces/RISCOSSPlatformRiskDataCollectors/pages/GitHub/attachments/collector.jar
 
 curl \
     --user superadmin:system \
-    -T ./riscoss-commons/riscoss-analyser/riscoss-remote-risk-analyser/target/riscoss-remote-risk-analyser-0.3-SNAPSHOT-jar-with-dependencies.jar \
+    -T ./externals/riscoss-analyser/riscoss-remote-risk-analyser/target/riscoss-remote-risk-analyser-0.3-SNAPSHOT-jar-with-dependencies.jar \
     http://localhost:8080/riscoss/rest/wikis/gha/spaces/RISCOSSPlatformAnalysers/pages/LogicAnalyser/attachments/analyser.jar
 
 curl \
     --user superadmin:system \
-    -T ./riscoss-commons/riscoss-risk-modeling/risk-models/github_maintenance_risk.xml \
+    -T ./externals/riscoss-risk-modeling/risk-models/github\ maintenance\ risks/github_maintenance_risk.xml \
     http://localhost:8080/riscoss/rest/wikis/gha/spaces/RISCOSSPlatformRiskModels/pages/BasicRiskModel/attachments/model.xml
 
 echo

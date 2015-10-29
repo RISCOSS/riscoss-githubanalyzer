@@ -52,7 +52,7 @@
    #set($riskEvaluation = $asDoc.getObject('RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationClass'))
    #if ("$!riskEvaluation.getProperty('score').value" != '')
       #set($projectScore = $riskEvaluation.getProperty('score').getValue())
-      #set($projectScore = $mathtool.toInteger($mathtool.mul($projectScore, 1000)))
+      #set($projectScore = $mathtool.toInteger($mathtool.mul($projectScore, 100)))
    #else
       #set($projectScore = 0)
    #end
@@ -85,50 +85,6 @@
    #end
    ##
 #end
-## Calculate analysis score
-#macro(getProjectScore2 $analysisSessionDoc)
-   #set($asDoc = $analysisSessionDoc)
-   #set($riskEvaluation = $asDoc.getObject('RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationClass'))
-   #if ($riskEvaluation.getProperty('result').value != '')
-      #set($analysisResults = $jsontool.parse($riskEvaluation.getProperty('result').getValue()))
-      #set($projectScore = 1)
-      #foreach($result in $analysisResults)
-         #set($resultScore = $result.value.positive)
-         #set($projectScore = $mathtool.mul($projectScore,$resultScore))
-      #end
-      #set($projectScore = $mathtool.roundTo(4,$projectScore))
-   #else
-      #set($projectScore = 0)
-   #end
-#end   
 
-## Calculate the top ten analysis average score
-#macro(calculateTopTenProjectsAverageScore)
-   #set($query = "from doc.object(RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationClass) as session")
-   #set($riskAnlysisSessions = $services.query.xwql($query).execute())
-   #set($projectsScores = [])
-   #foreach($riskAnalysis in $riskAnlysisSessions)
-      #set($raDoc = $xwiki.getDocument($riskAnalysis))
-      #set($riskEvaluation = $raDoc.getObject('RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationClass'))
-      #if ($riskEvaluation.getProperty('result').value != '')
-         #set($analysisResults = $jsontool.parse($riskEvaluation.getProperty('result').getValue()))
-         #set($score = 1)
-         #foreach($result in $analysisResults)
-            #set($resultScore = $result.value.positive)
-            #set($score = $mathtool.mul($score,$resultScore))
-         #end
-         #set($score = $mathtool.roundTo(4,$score))
-         #set($discard = $projectsScores.add($score))
-      #end
-   #end   
-   ## Sort projects scores
-   #set($projectsScores = $sorttool.sort($projectsScores))
-   #set($topTenProjectsScores = $projectsScores)
-   #if($projectsScores.size() &gt; 10)
-      #set($topTenProjectsScores = $projectsScores.subList($mathtool.sub($projectsScores.size(),10), $projectsScores.size()))
-   #end
-   ## Calculate the average top ten score
-   #set($topTenProjectsScoresAverage = $mathtool.getAverage($topTenProjectsScores))
-#end     
 {{/velocity}}</content>
 </xwikidoc>

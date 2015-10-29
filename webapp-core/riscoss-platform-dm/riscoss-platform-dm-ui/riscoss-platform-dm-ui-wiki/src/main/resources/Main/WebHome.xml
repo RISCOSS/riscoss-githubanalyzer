@@ -605,7 +605,7 @@ ul.xwikitabbar {
 .xwikitabbar li a, .xwikitabbar li a:visited, .xwikitabbar li a:active {
   padding: 3px 10px 10px 10px;
 }
-#document-title, #xdocFooter, .xdocLastModification {
+#xdocFooter, .xdocLastModification {
    display: none;
 }
 tbody.xwiki-livetable-display-body td.ranking {

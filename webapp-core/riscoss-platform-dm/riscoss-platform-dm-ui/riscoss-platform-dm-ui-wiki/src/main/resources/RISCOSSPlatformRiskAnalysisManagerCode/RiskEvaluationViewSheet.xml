@@ -65,7 +65,7 @@ $xwiki.ssx.use("RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationViewSheet",
   )))
 
   (% id="resultCharts" %)(((
-  ))) 
+  )))
 
   == Input Values ==
   (% class="resultInput" style="display:none;" %)(((
@@ -182,23 +182,8 @@ $xwiki.ssx.use("RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationViewSheet",
     "Very High Risk",
     "Unknown"
   ];
-  var INPUTS_LABELS = {
-     "OSSComp:github:repo:contributors": "Contributors",
-     "OSSComp:github:repo:size" : "Size",
-     "OSSComp:github:repo:watchers" : "Watchers",
-     "OSSComp:github:repo:open_issues_count" : "Number of open issues",
-     "OSSComp:github:repo:has_wiki" : "Has wiki",
-     "OSSComp:github:repo:stargazers_count" : "Number of stargazers",
-     "OSSComp:github:repo:subscribers_count" : "Number of subscribers",
-     "OSSComp:github:repo:created_at" : "Created at",
-     "OSSComp:github:repo:license" : "License",
-     "OSSComp:github:repo:updated_at" : "Updated at",
-     "OSSComp:github:repo:forks_count" : "Number of forks",
-     "OSSComp:github:repo:closed_issues" : "Number of closed issues",
-     "OSSComp:github:repo:ci_link" : "Ci link"
-  }
 
-  var RISK_DEFINITIONS = {"Obsolescence Risk":"This type of risk mainly refers to the lack of activeness of the development  community, which causes the risk of the  software component being out-of-date.", "Bug Risk":"This type of risk refers to possible presence of bugs in the code due to either the size of the repository (difficult to be kept under control), or to a high open/closed issue ratio, which may mean low effectiveness in closing bugs.", "Analysability Risk": "This type of risk refers to the lack of quality of the software, which could make it difficult to understand it from the adopter.", "Maintenance Risk":"In a nutshell, Maintenance risk refers to the existence of one or more of the above risks."};
+  var RISK_DEFINITIONS = {"Obsolescence Risk":"This type of risk mainly refers to the lack of activeness of the development  community, which causes the risk of the  software component being out-of-date.", "Bug Risk":"This type of risk refers to possible presence of bugs in the code due to either the size of the repository (difficult to be kept under control), or to a high open/closed issue ratio, which may mean low effectiveness in closing bugs.", "Analysability Risk": "This type of risk refers to the lack of quality of the software, which could make it difficult to understand it from the adopter.", "Project Activity Risk":"This type of risk implies poor activity for the project and the possibility of the project being abandoned or superseded."};
 
   var createTextElement = function(value) {
     var element = document.createElement('div');
@@ -218,17 +203,17 @@ $xwiki.ssx.use("RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationViewSheet",
 
   var createEvidenceElement = function(evidence) {
     var div = new Element('div');
-    
+
     var gauge = new Element('img', {
       src: EVIDENCE_GAUGE_URL + '?positive=' + evidence.positive + '&amp;negative=' + evidence.negative});
-    
+
     var textDiv = new Element('div');
     textDiv.setStyle({float: 'right'});
     textDiv.innerHTML = '&lt;ul&gt;&lt;li&gt;Positive: ' + toPercent(evidence.positive) + '&lt;/li&gt;&lt;li&gt;Negative: ' + toPercent(evidence.negative) + '&lt;/li&gt;&lt;/ul&gt;';
-    
+
     div.insert({top: gauge});
     div.insert({bottom: textDiv});
-    
+
     return div;
   };
 
@@ -252,28 +237,28 @@ $xwiki.ssx.use("RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationViewSheet",
     context.beginPath();
     context.rect(0, 0, canvas.width, canvas.height);
     context.stroke();
-    
+
     var barHeight = Math.floor(canvas.height / distribution.values.length);
     var fontSize = Math.min(barHeight, 10) ;
     context.font = "bold " + fontSize + "px sans-serif"
     var maxTextWidth = context.measureText('999.99%').width;
-        
+
     for(i = 0; i &lt; distribution.values.length; i++) {
       context.beginPath();
       context.rect(0, i * barHeight, Math.floor(canvas.width  * distribution.values[i]), barHeight);
-      context.fillStyle = DISTRIBUTION_COLORS[i];      
+      context.fillStyle = DISTRIBUTION_COLORS[i];
       context.fill();
       context.fillStyle = '#303030';
       context.textBaseline = "top";
-      
+
       context.fillText('' + Math.floor(10000 * distribution.values[i]) / 100 + "%",
           Math.min((canvas.width * distribution.values[i]) + 5, canvas.width - maxTextWidth - 5),
           (barHeight * i) + (barHeight - fontSize) / 2);
     }
-    
+
     return canvas;
   };
-    
+
   /* We expect data to be a map from a category to a map of results, where each
    * result is a map of an id to a map with 3 elements (description, type, value)
    */
@@ -284,7 +269,6 @@ $xwiki.ssx.use("RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationViewSheet",
       var description = data[category].description || category;
       // TODO: Stop requiring unused inputs!
       if (description === 'unused') { continue; }
-      description = INPUTS_LABELS[description] ? INPUTS_LABELS[description] : description;
       html = html + '&lt;tr&gt;&lt;th&gt;' + description + '&lt;/th&gt;&lt;td class="td1"&gt;&lt;div class="result" data-category="' +
           category + '" style="display: none"&gt;&lt;/div&gt;&lt;/td&gt;';
       if (category.indexOf("Risk")&gt;=0)
@@ -292,10 +276,10 @@ $xwiki.ssx.use("RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationViewSheet",
       html += '&lt;/tr&gt;';
     }
     html = html + '&lt;/table&gt;';
-    
+
     element.innerHTML = html;
     element.setAttribute('style', '');
-    
+
     var resultElements = $('.result');
     for(var i = 0; i &lt; resultElements.length; i++) {
       var resultElement = resultElements[i];
@@ -323,7 +307,7 @@ $xwiki.ssx.use("RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationViewSheet",
     }
   };
 
-  /* 
+  /*
    * Display results barcharts
    */
   var displayCharts = function(data) {
@@ -337,7 +321,7 @@ $xwiki.ssx.use("RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationViewSheet",
            html += '&lt;tr&gt;&lt;td rowspan="4" class="charts-td"&gt;' + rep + '&lt;/td&gt;&lt;td&gt;&lt;p class="risk-def"&gt;&lt;span class="analysis-risk-title"&gt;&amp;nbsp;Obsolescence Risk&lt;/span&gt;' + RISK_DEFINITIONS["Obsolescence Risk"] + '&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;';
            html += '&lt;tr&gt;&lt;td&gt;&lt;p class="risk-def"&gt;&lt;span class="analysis-risk-title blue"&gt;&amp;nbsp;Bug Risk&lt;/span&gt;' + RISK_DEFINITIONS["Bug Risk"] + '&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;';
            html += '&lt;tr&gt;&lt;td&gt;&lt;p class="risk-def"&gt;&lt;span class="analysis-risk-title green"&gt;&amp;nbsp;Analysability Risk&lt;/span&gt;' + RISK_DEFINITIONS["Analysability Risk"] + '&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;';
-           html += '&lt;tr&gt;&lt;td&gt;&lt;p class="risk-def"&gt;&lt;span class="analysis-risk-title yellow"&gt;&amp;nbsp;Maintenance Risk&lt;/span&gt;' + RISK_DEFINITIONS["Maintenance Risk"] + '&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;';
+           html += '&lt;tr&gt;&lt;td&gt;&lt;p class="risk-def"&gt;&lt;span class="analysis-risk-title yellow"&gt;&amp;nbsp;Project Activity Risk&lt;/span&gt;' + RISK_DEFINITIONS["Project Activity Risk"] + '&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;';
            html += '&lt;/table&gt;';
        $("#resultCharts").html(html);
     });
@@ -584,28 +568,28 @@ formatDate = function(time) {
     color: #ece9a2;
 }
 #collected-data{
-   width: 70%;   
+   width: 70%;
 }
 #collected-data table{
-   width: 100%;   
+   width: 100%;
 }
 #collected-data table th, #collected-data table td{
    padding: 1em;
 }
 #collected-data table th{
-   width: 20%;   
+   width: 20%;
 }
 .data-collectors{
-   width: 70%;   
+   width: 70%;
 }
 .data-collectors table{
-   width: 100%;   
+   width: 100%;
 }
 .data-collectors table th, .data-collectors table td{
    padding: 1em;
 }
 .data-collectors table th{
-   width: 20%;   
+   width: 20%;
 }
 .entity-btns table th, .entity-btns table td{
    border: 0;

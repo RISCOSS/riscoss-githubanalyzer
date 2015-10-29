@@ -60,7 +60,7 @@
 ## Enable/Disable analysis
    #if ($action == 'enableDisableAnalysis')
       #set($githubRepo = $request.githubRepo)
-      #set($entity = "") 
+      #set($entity = "")
       #set($status = $request.status)
       #if ($status == "enable")
          #set($entityCreationStatus = false)
@@ -119,7 +119,7 @@
                #set($discard = $xwiki.getDocument($session).delete())
             #end
             {"analysisStatusDisabling": true}
-         #end 
+         #end
       #end
    #elseif($action == "runDataCollector")
       #if("$!request.entity" != '')
@@ -133,7 +133,7 @@
                #set($entityDocName = $entityDocFullName.substring($entitySpace.length()))
                #set($entityDocName = $entityDocName.replace(".","\."))
                #set($entityDocFullName = $entitySpace + $entityDocName)
-            #end  
+            #end
          #else
             ## Manage projects that contains dots in the name
             #set($entitySpace = "RISCOSSPlatformEntities${userName}.")
@@ -151,7 +151,7 @@
    #elseif($action == "displayProjectResultsCharts")
       #if("$request.data" != '')
          #set($analysisResults = $jsontool.parse($request.data))
-         #set($riskLabels = ["Obsolescence Risk","Bug Risk","Analysability Risk","Maintenance Risk"])
+         #set($riskLabels = ["Obsolescence Risk","Bug Risk","Analysability Risk","Project Activity Risk"])
          #set($cols = "|=")
          #set($values = "|")
          #foreach($rlabel in $riskLabels)
@@ -162,7 +162,7 @@
          {{chart type="bar3D" source="inline" params="range:B2-E2;series:columns;colors:81bfff,c8c8c8,f9dbf9,ece9a2" title="Risk analysis results" width="500" height="300"}}
          $cols
          $values
-         {{/chart}}         
+         {{/chart}}
       #end
     #elseif($action == "checkProjectExists")
        #set($projectExists = 1) ## The project already exists int the projects list of the connected user
@@ -182,7 +182,7 @@
              #end
           #end
           #set($xwql = "from " +
-          "doc.object(RISCOSSPlatformLayerManagerCode.EntityClass) AS entity, doc.object(RISCOSSPlatformLayers.OSSComponent) AS layer WHERE" + 
+          "doc.object(RISCOSSPlatformLayerManagerCode.EntityClass) AS entity, doc.object(RISCOSSPlatformLayers.OSSComponent) AS layer WHERE" +
           " doc.space like 'RISCOSSPlatformEntities%' and doc.space&lt;&gt;'RISCOSSPlatformEntities' and layer.website='$githubRepo' and entity.layer='RISCOSSPlatformLayers.OSSComponent'")
           #set($results = $services.query.xwql($xwql).setLimit(5).execute())
           #if($results.size() == 0 &amp;&amp; !$githubProjectURLs.contains($githubRepo))
@@ -191,7 +191,7 @@
              #if($results.size() &gt; 0)
                 #set($entityDocRef = $results[0][0])
                 #if($xwiki.exists($entityDocRef) &amp;&amp; $xwiki.getDocument($entityDocRef).getAuthor() != $xcontext.user)
-                   #set($projectExists = 2) ## The project was already analysed by another user 
+                   #set($projectExists = 2) ## The project was already analysed by another user
                 #end
                 #set($projectPageURL = $xwiki.getURL("RISCOSSPlatformCode.ProjectPage", "view", "project=${escapetool.url($entityDocRef)}"))
              #end
@@ -200,10 +200,10 @@
        {"projectExists": $projectExists, "projectPageURL": "$!projectPageURL"}
     #elseif($action == "getAllGithubProjects")
        #set($xwql = "SELECT DISTINCT doc.fullName, doc.title FROM Document doc, " +
-       "doc.object(RISCOSSPlatformLayerManagerCode.EntityClass) AS entity " + 
+       "doc.object(RISCOSSPlatformLayerManagerCode.EntityClass) AS entity " +
        " , Document doc2, doc2.object(RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationClass) AS session" +
        " WHERE " +
-       " session.entity=doc.fullName and session.riskConfiguration='RISCOSSPlatformRiskConfigurations.BasicRiskConfiguration'" +  
+       " session.entity=doc.fullName and session.riskConfiguration='RISCOSSPlatformRiskConfigurations.BasicRiskConfiguration'" +
        " AND doc.space like 'RISCOSSPlatformEntities%' AND doc.space &lt;&gt;'RISCOSSPlatformEntities' ORDER BY doc.title")
        #set($results = $services.query.xwql($xwql).execute())
        #set($projects = [])

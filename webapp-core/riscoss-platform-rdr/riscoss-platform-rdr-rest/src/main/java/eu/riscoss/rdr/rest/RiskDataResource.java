@@ -101,37 +101,50 @@ public class RiskDataResource
         }
 
         for (int i = 0; i < riskDataArray.size(); i++) {
-            JsonObject riskDataObject = riskDataArray.get(i).getAsJsonObject();
+            try {
+                JsonObject riskDataObject = riskDataArray.get(i).getAsJsonObject();
 
-            String id = riskDataObject.get("id").getAsString();
-            String target = riskDataObject.get("target").getAsString();
-            RiskDataType type = RiskDataType.valueOf(riskDataObject.get("type").getAsString().toUpperCase());
+                String id = riskDataObject.get("id").getAsString();
+                String target = riskDataObject.get("target").getAsString();
+                RiskDataType type = RiskDataType.valueOf(riskDataObject.get("type").getAsString().toUpperCase());
 
-            JsonElement valueElement = riskDataObject.get("value");
+                JsonElement valueElement = riskDataObject.get("value");
 
-            Object value = null;
-            switch (type) {
-                case NUMBER:
-                    value = valueElement.getAsDouble();
-                    break;
-                case EVIDENCE:
-                    JsonArray array = valueElement.getAsJsonArray();
-                    value = new Evidence(array.get(0).getAsDouble(), array.get(1).getAsDouble());
-                    break;
-                case DISTRIBUTION:
-                    array = valueElement.getAsJsonArray();
-                    List<Double> values = new ArrayList<Double>();
-                    for (int j = 0; j < array.size(); j++) {
-                        values.add(array.get(j).getAsDouble());
+                Object value = null;
+                JsonArray array = null;
+                switch (type) {
+                    case NUMBER:
+                        value = valueElement.getAsDouble();
+                        break;
+                    case EVIDENCE:
+                        array = valueElement.getAsJsonArray();
+                        value = new Evidence(array.get(0).getAsDouble(), array.get(1).getAsDouble());
+                        break;
+                    case DISTRIBUTION:
+                        try {
+                            array = valueElement.getAsJsonArray();
+                        } catch (Exception e) { }
+                        List<Double> values = new ArrayList<Double>();
+                        if (array != null) {
+                            for (int j = 0; j < array.size(); j++) {
+                                values.add(array.get(j).getAsDouble());
+                            }
+                        } else {
+                            String str = valueElement.getAsString();
+                            String[] nums = str.split(";");
+                            for (String num : nums) {
+                                values.add(Double.parseDouble(num));
+                            }
+                        }
+
+                        value = new Distribution(values.toArray(new Double[0]));
+                        break;
                     }
 
-                    value = new Distribution(values.toArray(new Double[0]));
-                    break;
-            }
+                RiskData riskData = RiskDataFactory.createRiskData(id, target, new Date(), type, value);
 
-            RiskData riskData = RiskDataFactory.createRiskData(id, target, new Date(), type, value);
-
-            riskDataRepository.storeRiskData(riskData);
+                riskDataRepository.storeRiskData(riskData);
+            } catch (Exception e) { }
         }
 
         return Response.status(Response.Status.ACCEPTED).build();

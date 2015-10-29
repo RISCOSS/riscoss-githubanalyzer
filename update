@@ -5,7 +5,7 @@ git checkout master && git pull || die "failed to pull main repo"
 cd externals
 echo 'riscoss-risk-modeling
 riscoss-data-collector
-riscoss-analyzer' | while read repo
+riscoss-analyser' | while read repo
 do
     [ -e "./${repo}/.git" ] || rm -rf "./${repo}/" 2>/dev/null;
     [ -e "./${repo}/" ] || git clone "git://github.com/riscoss/${repo}.git";
