@@ -71,12 +71,12 @@ $xwiki.jsx.use("RISCOSSPlatformCode.ShowInDialog") ##
 #else## isGuest
 #if($currentWikiId == 'xwiki' || ($mainWikiId != $currentWikiId))
   #set($wikiName = $services.wiki.getById($services.wiki.getCurrentWikiId()).prettyName)
-  #if($hasAdmin) 
+  #if($hasAdmin &amp;&amp; false) ## disabled
 * $services.localization.render("riscossPlatform.domain") **$!wikiName**
 ** [[$services.localization.render("riscossPlatform.adminUsers")&gt;&gt;RISCOSSPlatformCode.AdminUsers]]
 ** $services.localization.render("riscossPlatform.adminRoles")
 ** ----
-** [[$services.localization.render("logout")&gt;&gt;$xwiki.getDocument("XWiki.XWikiLogout").getExternalURL("logout")]]   
+** [[$services.localization.render("logout")&gt;&gt;$xwiki.getDocument("XWiki.XWikiLogout").getExternalURL("logout")]]
 #else
 * **[[$services.localization.render("logout")&gt;&gt;$xwiki.getDocument("XWiki.XWikiLogout").getExternalURL("logout")]]
 #if("$!feedbackURL" != '')
@@ -97,7 +97,7 @@ $xwiki.jsx.use("RISCOSSPlatformCode.ShowInDialog") ##
 * **$services.localization.render("riscossPlatform.domainManager")**
 #end
 ##
-#if($hasAdmin)
+#if($hasAdmin &amp;&amp; false) ## disabled
   #if($currentWikiId == 'xwiki' || ($mainWikiId != $currentWikiId))
     #set($layers = $services.query.xwql("SELECT doc.fullName, doc.title FROM Document doc, doc.object(RISCOSSPlatformLayerManagerCode.LayerClass) as layer WHERE doc.space = 'RISCOSSPlatformLayers'").execute())
 * $services.localization.render("riscossPlatform.layerManager")
@@ -111,10 +111,10 @@ $xwiki.jsx.use("RISCOSSPlatformCode.ShowInDialog") ##
 ** $services.localization.render("riscossPlatform.layerManager.newEntity")
     #foreach($layer in $layers)
 *** #generateCreateDialogLink({
-      "space": "RISCOSSPlatformEntities", 
-      "template": "${layer[0]}Template", 
-      "linkLabel": $layer[1], 
-      "dialogTitle": "$services.localization.render('riscossPlatform.layerManager.createEntity.title') $layer[1]", 
+      "space": "RISCOSSPlatformEntities",
+      "template": "${layer[0]}Template",
+      "linkLabel": $layer[1],
+      "dialogTitle": "$services.localization.render('riscossPlatform.layerManager.createEntity.title') $layer[1]",
       "fieldLabel": "$services.localization.render('riscossPlatform.layerManager.createEntity.entityName', $layer[1])"
     })
     #end
@@ -141,7 +141,7 @@ $xwiki.jsx.use("RISCOSSPlatformCode.ShowInDialog") ##
 ** [[$services.localization.render("riscossPlatform.riskConfigurationManager.riskCategoryIndex")&gt;&gt;RISCOSSPlatformRiskCategories.WebHome]]
 * Risk Analysis
 ** [[New risk analysis session&gt;&gt;RISCOSSPlatformRiskAnalysisManagerCode.ConfigureAnalysis]]
-## ** #generateCustomCreateDialogLink({     
+## ** #generateCustomCreateDialogLink({
 ##     "action": "$xwiki.getURL('RISCOSSPlatformRiskAnalysisManagerCode.SetRiskAnalysisSessionData')",
 ##     "space": "RISCOSSPlatformRiskAnalysisSessions",
 ##     "linkLabel": "New risk analysis session",
@@ -168,7 +168,7 @@ $xwiki.jsx.use("RISCOSSPlatformCode.ShowInDialog") ##
 ** ----
 ** [[$services.localization.render("riscossPlatform.modelManager.riskModelIndex")&gt;&gt;RISCOSSPlatformRiskModels.WebHome]]
 ** [[$services.localization.render("riscossPlatform.modelManager.goalModelIndex")&gt;&gt;RISCOSSPlatformGoalModels.WebHome]]
-  #end  
+  #end
 #end
 #end
 {{/velocity}}

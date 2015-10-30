@@ -55,7 +55,7 @@ curl \
 
 curl \
     --user superadmin:system \
-    -T ./externals/riscoss-analyser/riscoss-remote-risk-analyser/target/riscoss-remote-risk-analyser-0.3-SNAPSHOT-jar-with-dependencies.jar \
+    -T ./externals/riscoss-analyser/riscoss-remote-risk-analyser/target/riscoss-remote-risk-analyser-*-jar-with-dependencies.jar \
     http://localhost:8080/riscoss/rest/wikis/gha/spaces/RISCOSSPlatformAnalysers/pages/LogicAnalyser/attachments/analyser.jar
 
 curl \

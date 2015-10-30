@@ -39,7 +39,7 @@
 #set($offset = $mathtool.toInteger($request.get('offset')))
 ## offset starts from 0 in velocity and 1 in javascript
 #set($offset = $offset - 1)
-#if (!$offset || $offset &lt; 0)##>## syntax highligher bug
+#if (!$offset || $offset &lt; 0)##&gt;## syntax highligher bug
   #set($offset = 0)
 #end
 #set($limit = $mathtool.toInteger($request.get('limit')))
@@ -162,13 +162,13 @@
      #set($projectName = $projectName.replace('%255F','_'))
      #set($entityDoc = $xwiki.getDocument($entityDocRef))
      #set($discard = $row.put("author", $xwiki.getLocalUserName($entityDoc.author, true)))
-     #set($discard = $row.put("project", "&lt;a href='$projectPageURL' class='projectLink'>$projectName&lt;/a>"))
+     #set($discard = $row.put("project", "&lt;a href='$projectPageURL' class='projectLink'&gt;$projectName&lt;/a&gt;"))
      #set($entityDoc = $xwiki.getDocument($entityDocRef))
      #set($osscObj = $entityDoc.getObject("RISCOSSPlatformLayers.OSSComponent"))
      ## Get associated session
      #set($query = "from doc.object(RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationClass) as session where session.entity=:entityDocRef and session.riskConfiguration='RISCOSSPlatformRiskConfigurations.BasicRiskConfiguration' and doc.space like 'RISCOSSPlatformRiskAnalysisSessions%' and doc.space&lt;&gt;'RISCOSSPlatformRiskAnalysisSessions'")
      #set($riskAnlysisSessions = $services.query.xwql($query).bindValue("entityDocRef","${entityDocRef}").setLimit(1).execute())
-     #if ($riskAnlysisSessions.size() > 0)
+     #if ($riskAnlysisSessions.size() &gt; 0)
          #set($analisysSessionDoc = $xwiki.getDocument($riskAnlysisSessions[0]))
          ## Calculate project score
          #getProjectScore($analisysSessionDoc)
