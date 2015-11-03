@@ -266,9 +266,7 @@ $xwiki.ssx.use("RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationViewSheet",
     var html = '&lt;table class="analysis-res-table"&gt;';
     for(var category in data) {
       //html = html + '&lt;tr&gt;&lt;th colspan="2"&gt;' + category + '&lt;/th&gt;&lt;/tr&gt;';
-      var description = data[category].description || category;
-      // TODO: Stop requiring unused inputs!
-      if (description === 'unused') { continue; }
+      var description = data[category].label || data[category].description || category;
       html = html + '&lt;tr&gt;&lt;th&gt;' + description + '&lt;/th&gt;&lt;td class="td1"&gt;&lt;div class="result" data-category="' +
           category + '" style="display: none"&gt;&lt;/div&gt;&lt;/td&gt;';
       if (category.indexOf("Risk")&gt;=0)
@@ -362,12 +360,10 @@ formatDate = function(time) {
     var keys = Object.keys(interpretedInput);
     for (var i = 0; i &lt; keys.length; i++) {
       var entry = interpretedInput[keys[i]];
-      // hax
-      if (entry.description === 'unused') { continue; }
 
       var $tr = appendElem($tbody, 'tr');
       var $td = appendElem($tr, 'td');
-      $td.text(entry.description || keys[i]);
+      $td.text(entry.label || entry.description || keys[i]);
 
       $td = appendElem($tr, 'td');
       if (entry.rawValue) {
