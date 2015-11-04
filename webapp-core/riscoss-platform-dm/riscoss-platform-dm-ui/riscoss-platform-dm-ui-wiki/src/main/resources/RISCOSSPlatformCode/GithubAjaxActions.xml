@@ -189,7 +189,7 @@
              #set($projectExists = -1)
           #else
              #if($results.size() &gt; 0)
-                #set($entityDocRef = $results[0][0])
+                #set($entityDocRef = $results[0])
                 #if($xwiki.exists($entityDocRef) &amp;&amp; $xwiki.getDocument($entityDocRef).getAuthor() != $xcontext.user)
                    #set($projectExists = 2) ## The project was already analysed by another user
                 #end
