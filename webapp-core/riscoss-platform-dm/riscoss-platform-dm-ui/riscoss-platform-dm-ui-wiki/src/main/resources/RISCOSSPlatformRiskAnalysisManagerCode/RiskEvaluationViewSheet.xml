@@ -168,7 +168,14 @@ $xwiki.ssx.use("RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationViewSheet",
       <name/>
     </property>
     <property>
-      <code>require(['jquery'], function ($) {
+      <code>require(['jquery'], function (jQuery) {
+
+  // VELOCITY
+  var OBSOLESCENCE_RISK = "$services.localization.render('riscossPlatform.projectPage.obsolescenceRiskDescription')";
+  var BUG_RISK = "$services.localization.render('riscossPlatform.projectPage.bugRiskDescription')";
+  var ANALYSABILITY_RISK = "$services.localization.render('riscossPlatform.projectPage.analysabilityRiskDescription')";
+  var ACTIVITY_RISK = "$services.localization.render('riscossPlatform.projectPage.activityRiskDescription')";
+  // END_VELOCITY
 
   var EVIDENCE_GAUGE_URL = new XWiki.Document('EvidenceGauge', 'RISCOSSPlatformCode').getURL('get');
   var displayResultsChartsURL =  new XWiki.Document('GithubAjaxActions', 'RISCOSSPlatformCode').getURL('view') + "?" + "xpage=plain";
@@ -183,7 +190,12 @@ $xwiki.ssx.use("RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationViewSheet",
     "Unknown"
   ];
 
-  var RISK_DEFINITIONS = {"Obsolescence Risk":"This type of risk mainly refers to the lack of activeness of the development  community, which causes the risk of the  software component being out-of-date.", "Bug Risk":"This type of risk refers to possible presence of bugs in the code due to either the size of the repository (difficult to be kept under control), or to a high open/closed issue ratio, which may mean low effectiveness in closing bugs.", "Analysability Risk": "This type of risk refers to the lack of quality of the software, which could make it difficult to understand it from the adopter.", "Project Activity Risk":"This type of risk implies poor activity for the project and the possibility of the project being abandoned or superseded."};
+  var RISK_DEFINITIONS = {
+      "Obsolescence Risk": OBSOLESCENCE_RISK,
+      "Bug Risk": BUG_RISK,
+      "Analysability Risk": ANALYSABILITY_RISK,
+      "Project Activity Risk": ACTIVITY_RISK
+  };
 
   var createTextElement = function(value) {
     var element = document.createElement('div');
@@ -278,7 +290,7 @@ $xwiki.ssx.use("RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationViewSheet",
     element.innerHTML = html;
     element.setAttribute('style', '');
 
-    var resultElements = $('.result');
+    var resultElements = jQuery('.result');
     for(var i = 0; i &lt; resultElements.length; i++) {
       var resultElement = resultElements[i];
       var category = resultElement.getAttribute("data-category");
@@ -309,7 +321,7 @@ $xwiki.ssx.use("RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationViewSheet",
    * Display results barcharts
    */
   var displayCharts = function(data) {
-    $.ajax({
+    jQuery.ajax({
        url: displayResultsChartsURL + "&amp;action=displayProjectResultsCharts",
        method: "POST",
        dataType: "html",
@@ -321,7 +333,7 @@ $xwiki.ssx.use("RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationViewSheet",
            html += '&lt;tr&gt;&lt;td&gt;&lt;p class="risk-def"&gt;&lt;span class="analysis-risk-title green"&gt;&amp;nbsp;Analysability Risk&lt;/span&gt;' + RISK_DEFINITIONS["Analysability Risk"] + '&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;';
            html += '&lt;tr&gt;&lt;td&gt;&lt;p class="risk-def"&gt;&lt;span class="analysis-risk-title yellow"&gt;&amp;nbsp;Project Activity Risk&lt;/span&gt;' + RISK_DEFINITIONS["Project Activity Risk"] + '&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;';
            html += '&lt;/table&gt;';
-       $("#resultCharts").html(html);
+       jQuery("#resultCharts").html(html);
     });
   };
 
@@ -337,45 +349,45 @@ formatDate = function(time) {
 
   // Copied from DataCollectorManager, TODO: fix
   var uid = function () { return 'uid-' + Math.random().toString(32).substring(2); };
-  var appendElem = function ($container, type, id) {
+  var appendElem = function (container, type, id) {
     id = id || uid();
-    $container.append("&lt;"+type+" id="+id+"&gt;&lt;/"+type+"&gt;");
-    return $('#'+id);
+    container.append("&lt;"+type+" id="+id+"&gt;&lt;/"+type+"&gt;");
+    return jQuery('#'+id);
   };
 
-  var showInput = function ($div, interpretedInput) {
-    $div.html('');
-    $div.attr('style', '');
-    var $table = appendElem($div, 'table');
-    var $tbody = appendElem($table, 'tbody');
+  var showInput = function (div, interpretedInput) {
+    div.html('');
+    div.attr('style', '');
+    var table = appendElem(div, 'table');
+    var tbody = appendElem(table, 'tbody');
 
-    var $headerTr = appendElem($tbody, 'tr');
-    var $th = appendElem($headerTr, 'th');
-    $th.text("Risk Data Point");
-    $th = appendElem($headerTr, 'th');
-    $th.text("Collected Value");
-    $th = appendElem($headerTr, 'th');
-    $th.text("Interpreted Risk");
+    var headerTr = appendElem(tbody, 'tr');
+    var th = appendElem(headerTr, 'th');
+    th.text("Risk Data Point");
+    th = appendElem(headerTr, 'th');
+    th.text("Collected Value");
+    th = appendElem(headerTr, 'th');
+    th.text("Interpreted Risk");
 
     var keys = Object.keys(interpretedInput);
     for (var i = 0; i &lt; keys.length; i++) {
       var entry = interpretedInput[keys[i]];
 
-      var $tr = appendElem($tbody, 'tr');
-      var $td = appendElem($tr, 'td');
-      $td.text(entry.label || entry.description || keys[i]);
+      var tr = appendElem(tbody, 'tr');
+      var td = appendElem(tr, 'td');
+      td.text(entry.label || entry.description || keys[i]);
 
-      $td = appendElem($tr, 'td');
+      td = appendElem(tr, 'td');
       if (entry.rawValue) {
-          $td.append(entry.rawValue);
-      } else if (["NUMBER","INTEGER","REAL"].indexOf(entry.type) &gt; -1) {
-          $td.append(entry.value);
+          td.append(entry.rawValue);
+      } else if (["NUMBER","INTEGER","REAL"].indexOf(entry.type) > -1) {
+          td.append(entry.value);
       } else {
-          $td.append(-1);
+          td.append(-1);
       }
 
-      $td = appendElem($tr, 'td');
-      $td.append(createDeterminentDistributionElement(interpretedInput[keys[i]].value.values));
+      td = appendElem(tr, 'td');
+      td.append(createDeterminentDistributionElement(interpretedInput[keys[i]].value.values));
     }
   };
 
@@ -384,11 +396,11 @@ formatDate = function(time) {
   };
 
   var main = function () {
-    var dat = getData($('.resultData'));
-    //displayData($('.resultData')[0], dat);
+    var dat = getData(jQuery('.resultData'));
+    //displayData(jQuery('.resultData')[0], dat);
     displayCharts(dat);
-    var input = getData($('.resultInput'));
-    displayData($('.resultInput')[0], input.output.result);
+    var input = getData(jQuery('.resultInput'));
+    displayData(jQuery('.resultInput')[0], input.output.result);
   };
   main();
 });

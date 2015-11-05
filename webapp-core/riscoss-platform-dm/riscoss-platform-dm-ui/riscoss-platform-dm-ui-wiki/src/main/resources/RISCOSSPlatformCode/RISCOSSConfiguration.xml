@@ -367,7 +367,7 @@
     <className>XWiki.ConfigurableClass</className>
     <guid>3964dbe5-9351-4900-945d-70adf8e9b5c7</guid>
     <property>
-      <codeToExecute/>
+      <codeToExecute>To change the text which is displayed in the project, see the link [[RISCOSSUserData.TextContent]]</codeToExecute>
     </property>
     <property>
       <configurationClass>RISCOSSPlatformCode.RISCOSSConfiguration</configurationClass>
