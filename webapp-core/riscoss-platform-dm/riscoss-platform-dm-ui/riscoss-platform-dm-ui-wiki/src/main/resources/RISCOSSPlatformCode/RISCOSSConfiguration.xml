@@ -53,19 +53,6 @@
     <defaultWeb/>
     <nameField/>
     <validationScript/>
-    <expertFeedbackURL>
-      <disabled>0</disabled>
-      <name>expertFeedbackURL</name>
-      <number>1</number>
-      <prettyName>Optional Expert Assessment URL</prettyName>
-      <unmodifiable>0</unmodifiable>
-      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      <size>255</size>
-      <customDisplay/>
-      <picker>0</picker>
-      <validationMessage/>
-      <validationRegExp/>
-    </expertFeedbackURL>
     <feedbackURL>
       <disabled>0</disabled>
       <name>feedbackURL</name>
@@ -367,7 +354,9 @@
     <className>XWiki.ConfigurableClass</className>
     <guid>3964dbe5-9351-4900-945d-70adf8e9b5c7</guid>
     <property>
-      <codeToExecute>To change the text which is displayed in the project, see the link [[RISCOSSUserData.TextContent]]</codeToExecute>
+      <codeToExecute>To change the textual content which is displayed in code pages, edit {{html clean=false}}&lt;a href="$xwiki.getURL('RISCOSSUserData.TextContent', 'edit', 'editor=wiki')">Text Content&lt;/a>{{/html}}
+To change the model used to evaluate projects go to {{html clean=false}}&lt;a href="$xwiki.getURL('RISCOSSPlatformRiskModels.BasicRiskModel', 'edit')">Upload Model&lt;/a>{{/html}}
+      </codeToExecute>
     </property>
     <property>
       <configurationClass>RISCOSSPlatformCode.RISCOSSConfiguration</configurationClass>
