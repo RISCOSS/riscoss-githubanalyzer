@@ -578,6 +578,7 @@ public def storeResults(Object sessionDoc,
        def riskScore = results.getJSONObject(key).getJSONObject("value").get("positive");
        score = score * ( riskScore + 1);
     }
+    score = 1 / ( score / results.keys().size() );
     def riskEvalObj = sessionDoc.getObject(RISK_EVAL_CLS, false);
     riskEvalObj.set("inputData", inputs ? inputs.toString() : "");
     riskEvalObj.set("result", results ? results.toString() : "");
