@@ -66,7 +66,7 @@ $xwiki.jsx.use("RISCOSSPlatformCode.ShowInDialog") ##
 #if ("$!oauthPublicKey" != '')
    #set($discard = $xwiki.jsx.use("RISCOSSPlatformCode.GithubLogin"))
    #set($discard = $xwiki.ssx.use("RISCOSSPlatformCode.GithubLogin"))
-   [[Connect with Github&gt;&gt;||id="connectGithub"]] | [[$services.localization.render("login")&gt;&gt;$doc.getExternalURL("login")||id="loginlink"]] | [[Register&gt;&gt;RISCOSSPlatformCode.Register||id="registerlink"]]#if("$!feedbackURL" != '') | [[Feedback&gt;&gt;$feedbackURL||class="guestmenuitem"]]#end | [[About Riscoss&gt;&gt;http://www.riscoss.eu/bin/view/About/GitHubAnalyzer||class="guestmenuitem"]]
+   [[Connect with Github&gt;&gt;||class="connectGithub connectGithubPanel"]] | [[$services.localization.render("login")&gt;&gt;$doc.getExternalURL("login")||id="loginlink"]] | [[Register&gt;&gt;RISCOSSPlatformCode.Register||id="registerlink"]]#if("$!feedbackURL" != '') | [[Feedback&gt;&gt;$feedbackURL||class="guestmenuitem"]]#end | [[About Riscoss&gt;&gt;http://www.riscoss.eu/bin/view/About/GitHubAnalyzer||class="guestmenuitem"]]
 #end
 #else## isGuest
 #if($currentWikiId == 'xwiki' || ($mainWikiId != $currentWikiId))

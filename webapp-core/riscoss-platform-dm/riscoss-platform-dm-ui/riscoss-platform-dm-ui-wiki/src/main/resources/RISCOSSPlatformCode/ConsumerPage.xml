@@ -43,7 +43,28 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
-  <content>{{include reference="RISCOSSPlatformCode.AddProjectFromGithubWidget"/}}
+  <content>
+{{velocity}}
+#if ($isGuest)
+## JS/CSS of the Github login functionality
+## Get RISCOSS platform configuration information
+#set($confDoc = $xwiki.getDocument("RISCOSSPlatformCode.RISCOSSConfiguration"))
+#set($confObj = $confDoc.getObject("RISCOSSPlatformCode.RISCOSSConfiguration"))
+#set($oauthPublicKey = $confObj.getProperty("oauthPublicKey").getValue())
+#if("$!oauthPublicKey" != "")
+   #set($discard = $xwiki.jsx.use("RISCOSSPlatformCode.GithubLogin"))
+   #set($discard = $xwiki.ssx.use("RISCOSSPlatformCode.GithubLogin"))
+#end
+(% style="background-color:#f6f6f6;" %)|(% class="buttonwrapper" %)(((
+    [[Register>>RISCOSSPlatformCode.Register]]
+)))|(% class="buttonwrapper" %)(((
+    [[$services.localization.render("login")>>$doc.getExternalURL("login")]]
+)))|#if("$!oauthPublicKey" != "") [[Connect with Github>>||class="connectGithub"]] #end
+
+#end
+{{/velocity}}
+
+{{include reference="RISCOSSPlatformCode.AddProjectFromGithubWidget"/}}
 = Available Results =
 {{velocity}}
 ## -*- Mode:Velocity
