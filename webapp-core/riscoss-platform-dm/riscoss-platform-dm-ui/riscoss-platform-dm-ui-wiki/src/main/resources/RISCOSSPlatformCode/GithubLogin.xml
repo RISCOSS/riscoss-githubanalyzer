@@ -7882,6 +7882,7 @@ OAuth.popup(provider)
     height: 20px;
     font-size: larger;
     color: #ffffff;
+    padding-top: 3px;
 }
 a.connectGithub, a.connectGithubPanel {
 background-image: url("$doc.getAttachmentURL('github.png')");
@@ -7889,7 +7890,9 @@ background-position: left center;
 background-repeat: no-repeat;
 display: inline-block;
 padding-left: 22px;
-padding-top: 3px;
+}
+a.connectGithub {
+padding-top: 6px;
 }
 #loginlink, #registerlink, .guestmenuitem{
    font-size: larger;
