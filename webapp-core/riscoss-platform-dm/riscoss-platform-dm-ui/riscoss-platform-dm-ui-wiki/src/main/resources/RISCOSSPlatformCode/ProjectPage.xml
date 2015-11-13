@@ -91,21 +91,13 @@
       &lt;/tr&gt;
       &lt;/table&gt;
       {{/html}}
-      
+
       ## Ranking/Twitter btn
       {{html}}
       &lt;h2 id="projectRanking"&gt;$services.localization.render("riscossPlatform.githubprojects.projectpage.projectscore") : &lt;strong&gt;$projectScore&lt;/strong&gt; - This project ranks $projectRanking&lt;/h2&gt;
       {{/html}}
 
-      {{info}}
-      The project score is a composite indicator resulting from combining individual risk results. 
-      The project ranking results from sorting the project scores. 
-      The higher the score the better the project is ranked.
-      {{/info}}
-
-      ## Display analysis results
-      = Basic Risk Analysis =
-      A basic risk analysis is an analysis of a project without any context information about how it will be used, this can provide hints about possible areas of concern. You should always balance these results with the specifics of your project and use case.
+      {{include document="RISCOSSUserData.ProjectPageUpper" /}}
 
       #set($displayInProjectPage = "true")
       {{include reference="RISCOSSPlatformRiskAnalysisManagerCode.RiskEvaluationViewSheet" /}}
