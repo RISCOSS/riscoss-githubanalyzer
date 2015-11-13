@@ -159,7 +159,7 @@
             #set($result = $analysisResults[$rlabel])
             #set($values = "${values}|${result.value.positive}")
          #end
-         {{chart type="bar3D" source="inline" params="range:B2-E2;series:columns;colors:81bfff,c8c8c8,f9dbf9,ece9a2" title="Risk analysis results" width="500" height="300"}}
+         {{chart type="bar3D" source="inline" params="range:B2-E2;series:columns;colors:81bfff,c8c8c8,f9dbf9,ece9a2;range_axis_upper:0.9" title="Risk analysis results" width="500" height="300"}}
          $cols
          $values
          {{/chart}}
