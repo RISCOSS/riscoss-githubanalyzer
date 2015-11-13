@@ -503,7 +503,7 @@ public Object getSessionDoc2(Object xwiki,
     if (riskConfDoc.isNew()) { return "ERROR_riskConfig_nonexistant"; }
     def escapedTargetDocFullName;
     def entitySpace;
-    if(xwiki.getDocument(targetName).space != "RISCOSSPlatformEntities" + userName){
+    if(xwiki.exists(targetName) &amp;&amp; xwiki.getDocument(targetName).space != "RISCOSSPlatformEntities" + userName){
        entitySpace = xwiki.getDocument(targetName).space + ".";
        escapedTargetDocFullName = escapeXWikiDocWithDots(targetName, entitySpace);
     }
@@ -576,7 +576,7 @@ public def storeResults(Object sessionDoc,
     def score = 1;
     for(key in results.keys()){
        def riskScore = results.getJSONObject(key).getJSONObject("value").get("positive");
-       score = score * ( riskScore + 1);
+       score += riskScore;
     }
     score = 1 / ( score / results.keys().size() );
     def riskEvalObj = sessionDoc.getObject(RISK_EVAL_CLS, false);
