@@ -108,7 +108,7 @@
 #end
 #set ($adopters= $sorttool.sort($adopters))
 #set($projects = [])
-#foreach($dn in $services.query.xwql("where doc.space = 'RISCOSSPlatformEntities'").execute())
+#foreach($dn in $services.query.xwql("where doc.space like 'RISCOSSPlatformEntities%'").execute())
   #set($d = $xwiki.getDocument($dn))
   #if ($allMemberNames.indexOf($d.getCreator()) &lt; 0)
   #elseif ($RISCOSS_REGS.indexOf($d.getCreator()) &lt; 0)
@@ -161,50 +161,6 @@ The following table shows list of projects analysed in the past month, divide to
     |[[$d]]|[[$d.getCreator()]]|$d.getDate()
   #end
 #end
-
-
-= Mailing list participants =
-Needs to be collected manually
-
-= Number of downloads =
-This needs to be brainstormed how it can be done
-
-= Community members =
-Collect from here: https://github.com/orgs/RISCOSS/people manually remove people known to be in consortium.
-* https://github.com/JJ
-* https://github.com/davidediruscio
-* https://github.com/KoalaandDodo (?)
-* https://github.com/jrwilliams
-* https://github.com/ashimshahi (?)
-* https://github.com/alebagnato
-* https://github.com/acs
-* https://github.com/nmatra
-
-= Number of contributors =
-0
-* https://github.com/RISCOSS/riscoss-data-collector/graphs/contributors
-* https://github.com/RISCOSS/riscoss-risk-modeling/graphs/contributors
-* https://github.com/RISCOSS/riscoss-analyser/graphs/contributors
-* https://github.com/RISCOSS/riscoss-wiki-ui/graphs/contributors
-* https://github.com/RISCOSS/riscoss-wiki-config/graphs/contributors
-* https://github.com/RISCOSS/riscoss-platform-core/graphs/contributors
-* https://github.com/RISCOSS/riscoss-platform-build/graphs/contributors
-* https://github.com/RISCOSS/limesurvey-collector/graphs/contributors
-
-= Number of requests received =
-0
-* https://github.com/RISCOSS/riscoss-data-collector/issues?q=is%3Aissue
-* https://github.com/RISCOSS/riscoss-risk-modeling/issues?q=is%3Aissue
-* https://github.com/RISCOSS/riscoss-analyser/issues?q=is%3Aissue
-* https://github.com/RISCOSS/riscoss-wiki-ui/issues?q=is%3Aissue
-* https://github.com/RISCOSS/riscoss-wiki-config/issues?q=is%3Aissue
-* https://github.com/RISCOSS/riscoss-platform-core/issues?q=is%3Aissue
-* https://github.com/RISCOSS/riscoss-platform-build/issues?q=is%3Aissue
-* https://github.com/RISCOSS/limesurvey-collector/issues?q=is%3Aissue
-
-= Number of requests resolved =
-0
-
 
 {{/velocity}}</content>
 </xwikidoc>
