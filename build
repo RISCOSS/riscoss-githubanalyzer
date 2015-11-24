@@ -60,7 +60,7 @@ curl \
 
 curl \
     --user superadmin:system \
-    -T ./externals/riscoss-risk-modeling/risk-models/github\ maintenance\ risks/github_maintenance_risk.xml \
+    -T ./externals/riscoss-risk-modeling/risk-models/Maintenance/github_risk_new-1446714752911.xml \
     http://localhost:8080/riscoss/rest/wikis/gha/spaces/RISCOSSPlatformRiskModels/pages/BasicRiskModel/attachments/model.xml
 
 echo
