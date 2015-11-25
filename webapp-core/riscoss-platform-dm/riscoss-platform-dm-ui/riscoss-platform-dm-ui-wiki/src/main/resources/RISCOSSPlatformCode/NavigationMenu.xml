@@ -327,6 +327,9 @@ h8QlfTlAIJ2ZfG+VtcKaF6Lai7kYwQM/izZOq2z/yyBENqbn382ktezjj8MwbvtxVRsLMup3/j0A9A+U
     background-repeat: no-repeat;
     padding-left: 18px;
 }
+#headerglobal {
+    margin-top: -10px
+}
 .menu.menu-horizontal ul li:last-child {
   float: right;
   margin-right: 12px;
