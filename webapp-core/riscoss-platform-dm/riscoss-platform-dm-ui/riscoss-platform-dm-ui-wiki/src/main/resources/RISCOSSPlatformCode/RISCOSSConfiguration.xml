@@ -354,9 +354,9 @@
     <className>XWiki.ConfigurableClass</className>
     <guid>3964dbe5-9351-4900-945d-70adf8e9b5c7</guid>
     <property>
-      <codeToExecute>To change the textual content which is displayed in code pages, edit {{html clean=false}}&lt;a href="$xwiki.getURL('RISCOSSUserData.TextContent', 'edit', 'editor=wiki')">Text Content&lt;/a>{{/html}}
-To change the content and display of the upper section of the Project Page go to [[Project Page Upper Section>>RISCOSSUserData.ProjectPageUpper]]
-To change the model used to evaluate projects go to {{html clean=false}}&lt;a href="$xwiki.getURL('RISCOSSPlatformRiskModels.BasicRiskModel', 'edit')">Upload Model&lt;/a>{{/html}}
+      <codeToExecute>To change the textual content which is displayed in code pages, edit {{html clean=false}}&lt;a href="$xwiki.getURL('RISCOSSUserData.TextContent', 'edit', 'editor=wiki')"&gt;Text Content&lt;/a&gt;{{/html}}
+To change the content and display of the upper section of the Project Page go to [[Project Page Upper Section&gt;&gt;RISCOSSUserData.ProjectPageUpper]]
+To change the model used to evaluate projects go to {{html clean=false}}&lt;a href="$xwiki.getURL('RISCOSSPlatformRiskModels.BasicRiskModel', 'edit')"&gt;Upload Model&lt;/a&gt;{{/html}}
       </codeToExecute>
     </property>
     <property>

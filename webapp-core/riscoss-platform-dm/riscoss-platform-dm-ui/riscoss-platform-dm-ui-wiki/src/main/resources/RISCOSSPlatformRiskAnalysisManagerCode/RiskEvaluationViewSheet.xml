@@ -380,7 +380,7 @@ formatDate = function(time) {
       td = appendElem(tr, 'td');
       if (entry.rawValue) {
           td.append(entry.rawValue);
-      } else if (["NUMBER","INTEGER","REAL"].indexOf(entry.type) > -1) {
+      } else if (["NUMBER","INTEGER","REAL"].indexOf(entry.type) &gt; -1) {
           td.append(entry.value);
       } else {
           td.append(-1);

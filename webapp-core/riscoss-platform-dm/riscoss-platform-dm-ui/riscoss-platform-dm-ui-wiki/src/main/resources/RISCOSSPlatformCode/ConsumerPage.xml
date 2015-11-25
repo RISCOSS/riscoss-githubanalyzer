@@ -56,10 +56,10 @@
    #set($discard = $xwiki.ssx.use("RISCOSSPlatformCode.GithubLogin"))
 #end
 (% style="background-color:#f6f6f6;" %)|(% class="buttonwrapper" %)(((
-    [[Register>>RISCOSSPlatformCode.Register]]
+    [[Register&gt;&gt;RISCOSSPlatformCode.Register]]
 )))|(% class="buttonwrapper" %)(((
-    [[$services.localization.render("login")>>$doc.getExternalURL("login")]]
-)))|#if("$!oauthPublicKey" != "") [[Connect with Github>>||class="connectGithub"]] #end
+    [[$services.localization.render("login")&gt;&gt;$doc.getExternalURL("login")]]
+)))|#if("$!oauthPublicKey" != "") [[Connect with Github&gt;&gt;||class="connectGithub"]] #end
 
 #end
 {{/velocity}}

@@ -24,7 +24,7 @@
   <web>RISCOSSPlatformRiskAnalysisManagerCode</web>
   <name>Translations</name>
   <language/>
-  <defaultLanguage/>
+  <defaultLanguage>en</defaultLanguage>
   <translation>0</translation>
   <parent>RISCOSSPlatformRiskAnalysisManagerCode.WebHome</parent>
   <creator>xwiki:XWiki.Admin</creator>

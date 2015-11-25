@@ -24,7 +24,7 @@
   <web>RISCOSSPlatformLayerManagerCode</web>
   <name>Translations</name>
   <language/>
-  <defaultLanguage/>
+  <defaultLanguage>en</defaultLanguage>
   <translation>0</translation>
   <parent>RISCOSSPlatformLayerManagerCode.WebHome</parent>
   <creator>xwiki:XWiki.Admin</creator>
