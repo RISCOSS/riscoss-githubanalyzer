@@ -5,7 +5,7 @@ mvn -v | grep 'Apache Maven 3.' >/dev/null || die "ERROR: Maven 3.x required"
 ls ./externals >/dev/null || die "ERROR: please run ./update first"
 tar --version | grep '^tar ' >/dev/null || die "ERROR: please install TAR first"
 
-VERSION='0.3-SNAPSHOT'
+VERSION='0.4-SNAPSHOT'
 
 mkdir result || die "Please delete result directory before building again"
 (

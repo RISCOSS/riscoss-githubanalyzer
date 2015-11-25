@@ -6,7 +6,7 @@
   <parent>
     <artifactId>riscoss-platform-dm</artifactId>
     <groupId>eu.riscoss</groupId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.4-SNAPSHOT</version>
   </parent>
   <artifactId>riscoss-platform-dm-war</artifactId>
   <packaging>war</packaging>
@@ -26,19 +26,6 @@
       <artifactId>xwiki-enterprise-web</artifactId>
       <version>${xwiki.version}</version>
       <type>war</type>
-    </dependency>
-
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-legacy-oldcore</artifactId>
-      <version>${xwiki.version}</version>
-      <classifier>objectpolicy</classifier>
-      <exclusions>
-        <exclusion>
-          <groupId>org.xwiki.platform</groupId>
-          <artifactId>xwiki-platform-oldcore</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -63,18 +50,6 @@
         </executions>
       </plugin>
 
-      <plugin>
-        <artifactId>maven-war-plugin</artifactId>
-        <configuration>
-          <packagingExcludes>
-            %regex[WEB-INF/lib/xwiki-platform-legacy-oldcore-[0-9].[0-9].jar],
-            %regex[WEB-INF/lib/xwiki-platform-oldcore-[0-9].[0-9].jar],
-            %regex[WEB-INF/lib/xwiki-platform-legacy-oldcore-[0-9].[0.9]-SNAPSHOT.jar],
-            %regex[WEB-INF/lib/xwiki-platform-oldcore-[0-9].[0-9]-SNAPSHOT.jar]
-          </packagingExcludes>
-        </configuration>
-      </plugin>
-
       <!-- Don't check for legacy dependency usages since we depend on oldcore for the patch -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -92,10 +67,4 @@
     </plugins>
   </build>
 
-  <repositories>
-    <repository>
-      <id>local-repository</id>
-      <url>file://${basedir}/local-repository</url>
-    </repository>
-  </repositories>
 </project>

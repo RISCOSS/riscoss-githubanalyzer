@@ -6,7 +6,7 @@
   <parent>
     <artifactId>riscoss-platform</artifactId>
     <groupId>eu.riscoss</groupId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.4-SNAPSHOT</version>
   </parent>
   <artifactId>riscoss-platform-rdr</artifactId>
   <packaging>pom</packaging>

@@ -6,7 +6,7 @@
   <parent>
     <artifactId>riscoss-platform-dm-ui</artifactId>
     <groupId>eu.riscoss</groupId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.4-SNAPSHOT</version>
   </parent>
   <artifactId>riscoss-platform-dm-ui-common</artifactId>
   <packaging>xar</packaging>
