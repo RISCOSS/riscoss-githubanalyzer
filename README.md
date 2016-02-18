@@ -10,6 +10,25 @@ This is the main repository for the RISCOSS Platform code. Detailed information 
 
 Please refer to the [RISCOSS White Paper](http://www.riscoss.eu/bin/download/Discover/Whitepaper/RISCOSS-Whitepaper.pdf) for a more detailed description.
 
+# How to build
+
+Make sure you have the requirements for building:
+
+* bash
+* curl
+* git
+* java
+* Maven 3
+
+Execute the following commands:
+
+    git clone https://github.com/RISCOSS/riscoss-githubanalyzer.git
+    cd riscoss-githubanalyzer
+    ./update
+    ./build
+
+Navigate a web browser to: `http://localhost:8080/riscoss/wiki/gha/`.
+
 #Project Partners
 ![](https://github.com/riscoss/riscoss-githubanalyzer/wiki/images/logos/partners/upc_logo.jpg) [Universitat Politècnica de Catalunya](http://www.upc.edu/) (Spain) <br>
  ![](https://github.com/riscoss/riscoss-githubanalyzer/wiki/images/logos/partners/ericsson_logo.jpg) [ERICSSON Telecomunicazioni](http://www.ericsson.com/it) (Italy) <br>
